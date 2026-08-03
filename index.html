@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
+
+    <!-- PWA / Mobil Uygulama Ayarları -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ayetin Vakti">
     
     <!-- Sosyal Medya Önizleme Etiketleri -->
     <meta property="og:title" content="Ayetin Vakti | Dijital İslami Yardımcı">
@@ -96,6 +103,7 @@
             gap: 12px;
             transition: all 0.25s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            touch-action: manipulation;
         }
 
         .tool-card:hover {
@@ -183,6 +191,14 @@
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('PWA Servisi Aktif!'))
+      .catch((err) => console.log('PWA Hata:', err));
+  }
+</script>
 
 </body>
 </html>
