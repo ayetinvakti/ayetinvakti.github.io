@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
 
-    <!-- Apple & iOS İkon Tanımlaması (Fotoğraftaki Mavi Cami) -->
-    <link rel="apple-touch-icon" href="https://img.icons8.com/isometric-line/512/mosque.png">
+    <!-- Dahili Yüksek Kaliteli İslami Cami & Hilal İkonu (SVG Data URL) -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%230f172a'/><path d='M256 90c-80 0-145 65-145 145 0 63 40 116 96 136-12-20-19-43-19-68 0-72 58-130 130-130 25 0 48 7 68 19-20-56-73-96-130-96z' fill='%2310b981'/><path d='M256 200l15 45h47l-38 28 15 45-39-28-39 28 15-45-38-28h47z' fill='%23f59e0b'/><path d='M160 380h192v22H160zm32-40h128v20H192z' fill='%2310b981'/></svg>">
     
     <!-- PWA / Mobil Uygulama Ayarları -->
     <link rel="manifest" href="manifest.json">
@@ -14,11 +14,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Ayetin Vakti">
-    
-    <!-- Sosyal Medya Önizleme Etiketleri -->
-    <meta property="og:title" content="Ayetin Vakti | Dijital İslami Yardımcı">
-    <meta property="og:description" content="Namaz Vakitleri, Kıble Pusulası, Zikirmatik ve Günün Ayeti & Duası tek bir adreste.">
-    <meta property="og:type" content="website">
 
     <style>
         :root {
@@ -79,7 +74,6 @@
             font-size: 1rem;
         }
 
-        /* Araç Kartları Grid Yapısı */
         .tools-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -161,28 +155,24 @@
     </div>
 
     <div class="tools-grid">
-        <!-- Namaz Vakitleri -->
         <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="tool-card">
             <div class="tool-icon">🕌</div>
             <div class="tool-title">Namaz Vakitleri</div>
             <div class="tool-desc">Konum bazlı canlı vakitler ve geri sayım sayacı.</div>
         </a>
 
-        <!-- Kıble Pusulası -->
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="tool-card">
             <div class="tool-icon">🧭</div>
             <div class="tool-title">Kıble Pusulası</div>
             <div class="tool-desc">Ses ve titreşim geri bildirimli hassas pusula.</div>
         </a>
 
-        <!-- Zikirmatik -->
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="tool-card">
             <div class="tool-icon">📿</div>
             <div class="tool-title">Zikirmatik</div>
             <div class="tool-desc">Titreşim uyarılı ve hedef sayaçlı dijital tesbih.</div>
         </a>
 
-        <!-- Günün Ayeti & Duası -->
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="tool-card">
             <div class="tool-icon">✨</div>
             <div class="tool-title">Günün Ayeti & Duası</div>
@@ -194,14 +184,6 @@
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('PWA Servisi Aktif!'))
-      .catch((err) => console.log('PWA Hata:', err));
-  }
-</script>
 
 </body>
 </html>
