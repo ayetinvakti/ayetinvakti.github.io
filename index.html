@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
+    
+    <!-- Sosyal Medya Önizleme Etiketleri -->
+    <meta property="og:title" content="Ayetin Vakti | Dijital İslami Yardımcı">
+    <meta property="og:description" content="Namaz Vakitleri, Kıble Pusulası, Zikirmatik ve Günün Ayeti & Duası tek bir adreste.">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            color: var(--accent-color);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Araç Kartları Grid Yapısı */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tool-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            background-color: rgba(16, 185, 129, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .tool-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer span {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">🌙</div>
+        <h1>Ayetin Vakti</h1>
+        <p>Dijital İslami Araçlar ve Yaşam Portalı</p>
+    </div>
+
+    <div class="tools-grid">
+        <!-- Namaz Vakitleri -->
+        <a href="https://hercayi9-byte.github.io/namaz-vakitleri/" class="tool-card">
+            <div class="tool-icon">🕌</div>
+            <div class="tool-title">Namaz Vakitleri</div>
+            <div class="tool-desc">Konum bazlı canlı vakitler ve geri sayım sayacı.</div>
+        </a>
+
+        <!-- Kıble Pusulası -->
+        <a href="https://hercayi9-byte.github.io/kible-pusulasi/" class="tool-card">
+            <div class="tool-icon">🧭</div>
+            <div class="tool-title">Kıble Pusulası</div>
+            <div class="tool-desc">Ses ve titreşim geri bildirimli hassas pusula.</div>
+        </a>
+
+        <!-- Zikirmatik -->
+        <a href="https://hercayi9-byte.github.io/Zikirmatik/" class="tool-card">
+            <div class="tool-icon">📿</div>
+            <div class="tool-title">Zikirmatik</div>
+            <div class="tool-desc">Titreşim uyarılı ve hedef sayaçlı dijital tesbih.</div>
+        </a>
+
+        <!-- Günün Ayeti & Duası -->
+        <a href="https://hercayi9-byte.github.io/gunun-ayeti/" class="tool-card">
+            <div class="tool-icon">✨</div>
+            <div class="tool-title">Günün Ayeti & Duası</div>
+            <div class="tool-desc">Her gün yeni bir ayet, hadis ve dua paylaşın.</div>
+        </a>
+    </div>
+</div>
+
+<div class="footer">
+    © Ayetin Vakti • <span>Huzur ve İbadet Rehbeliğiniz</span>
+</div>
+
+</body>
+</html>
