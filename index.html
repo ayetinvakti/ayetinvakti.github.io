@@ -198,13 +198,15 @@
 </div>
 
 <script>
-    fetch('https://api.counterapi.dev/v1/ayetinvakti/visits/up')
+    // Timestamp ekleyerek tarayıcının önbellekten (cache) eski sayı getirmesini engelliyoruz
+    fetch('https://api.counterapi.dev/v1/ayetinvakti/visits/up?t=' + new Date().getTime())
         .then(res => res.json())
         .then(data => {
-            document.getElementById('visit-count').innerText = data.count || '1';
+            if(data && data.count) {
+                document.getElementById('visit-count').innerText = data.count;
+            }
         })
         .catch(() => {
-            // Eğer 'ayetinvakti_site' kelimesi uzun geldiyse 'ayetinvakti' ile direkt oluşturur.
             document.getElementById('visit-count').innerText = '1';
         });
 </script>
