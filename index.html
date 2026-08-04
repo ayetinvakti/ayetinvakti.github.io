@@ -198,16 +198,22 @@
 </div>
 
 <script>
-    // Timestamp ekleyerek tarayıcının önbellekten (cache) eski sayı getirmesini engelliyoruz
-    fetch('https://api.counterapi.dev/v1/ayetinvakti/visits/up?t=' + new Date().getTime())
+    fetch('https://api.hitvis.com/hit?name=ayetinvakti_visits')
         .then(res => res.json())
         .then(data => {
-            if(data && data.count) {
+            if(data && data.value) {
+                document.getElementById('visit-count').innerText = data.value;
+            } else if(data && data.count) {
                 document.getElementById('visit-count').innerText = data.count;
             }
         })
         .catch(() => {
-            document.getElementById('visit-count').innerText = '1';
+            // Alternatif yedek servis
+            fetch('https://countapi.hit.counter.dev/ayetinvakti_visits/count')
+                .then(res => res.json())
+                .then(data => {
+                    if(data) document.getElementById('visit-count').innerText = data;
+                });
         });
 </script>
 
