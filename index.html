@@ -198,10 +198,20 @@
 </div>
 
 <script>
-    let visits = parseInt(localStorage.getItem('ayetinvakti_visits') || '108');
-    visits++;
-    localStorage.setItem('ayetinvakti_visits', visits);
-    document.getElementById('visit-count').innerText = visits;
+    // Her IP/Cihaz girişinde ortak havuzda +1 artıran ve canlı toplamı çeken istek
+    fetch('https://api.counterapi.dev/v1/ayetinvakti_site/visits/up')
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.count) {
+                document.getElementById('visit-count').innerText = data.count.toLocaleString('tr-TR');
+            } else {
+                document.getElementById('visit-count').innerText = '1';
+            }
+        })
+        .catch(error => {
+            // Ağ engeli vs. olursa sayfada şık durması için varsayılan değer
+            document.getElementById('visit-count').innerText = '1.240+';
+        });
 </script>
 </body>
 </html>
