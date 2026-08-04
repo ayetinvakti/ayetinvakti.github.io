@@ -193,29 +193,10 @@
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
     <div style="margin-top: 10px; font-size: 0.85rem; color: #a0aec0; display: flex; align-items: center; justify-content: center; gap: 6px;">
         <span>👁️ Toplam Ziyaret:</span>
-        <span id="visit-count" style="background: rgba(16, 185, 129, 0.2); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.4);">...</span>
+        <img src="https://visit-counter.vercel.app/counter.png?page=ayetinvakti.github.io&c=10B981&bg=transparent&no=4" alt="Ziyaret Sayacı" style="vertical-align: middle; height: 20px;">
     </div>
 </div>
 
-<script>
-    fetch('https://api.hitvis.com/hit?name=ayetinvakti_visits')
-        .then(res => res.json())
-        .then(data => {
-            if(data && data.value) {
-                document.getElementById('visit-count').innerText = data.value;
-            } else if(data && data.count) {
-                document.getElementById('visit-count').innerText = data.count;
-            }
-        })
-        .catch(() => {
-            // Alternatif yedek servis
-            fetch('https://countapi.hit.counter.dev/ayetinvakti_visits/count')
-                .then(res => res.json())
-                .then(data => {
-                    if(data) document.getElementById('visit-count').innerText = data;
-                });
-        });
-</script>
 
 </body>
 </html>
