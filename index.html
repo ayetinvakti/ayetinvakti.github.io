@@ -191,11 +191,22 @@
 
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
-    <div style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;">
-        👁️ Toplam Ziyaret: <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fayetinvakti.github.io&count_bg=%2310B981&title_bg=%231F2937&icon=&icon_color=%23E7E7E7&title=Saya%C3%A7&edge_flat=false" alt="ziyaretci sayaci" style="vertical-align: middle; margin-left: 5px;"/>
+    <div style="margin-top: 10px; font-size: 0.85rem; color: #a0aec0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <span>👁️ Toplam Ziyaret:</span>
+        <span id="visit-count" style="background: rgba(16, 185, 129, 0.2); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.4);">...</span>
     </div>
 </div>
-</div>
+
+<script>
+    fetch('https://api.counterapi.dev/v1/ayetinvakti_site/visits/up')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('visit-count').innerText = data.count;
+        })
+        .catch(() => {
+            document.getElementById('visit-count').innerText = '1+';
+        });
+</script>
 
 </body>
 </html>
