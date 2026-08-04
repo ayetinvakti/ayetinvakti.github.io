@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJF28032MV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LJF28032MV');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
@@ -188,30 +197,9 @@
       </a>
     </div>
 </div>
-
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
-    <div style="margin-top: 10px; font-size: 0.85rem; color: #a0aec0; display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <span>👁️ Toplam Ziyaret:</span>
-        <span id="visit-count" style="background: rgba(16, 185, 129, 0.2); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.4);">...</span>
-    </div>
 </div>
 
-<script>
-    // Her IP/Cihaz girişinde ortak havuzda +1 artıran ve canlı toplamı çeken istek
-    fetch('https://api.counterapi.dev/v1/ayetinvakti_site/visits/up')
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.count) {
-                document.getElementById('visit-count').innerText = data.count.toLocaleString('tr-TR');
-            } else {
-                document.getElementById('visit-count').innerText = '1';
-            }
-        })
-        .catch(error => {
-            // Ağ engeli vs. olursa sayfada şık durması için varsayılan değer
-            document.getElementById('visit-count').innerText = '1.240+';
-        });
-</script>
 </body>
 </html>
