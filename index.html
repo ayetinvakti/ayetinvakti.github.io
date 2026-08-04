@@ -152,10 +152,62 @@
             color: var(--accent-color);
             font-weight: 600;
         }
+        /* Açık Tema (Light Mode) Stilleri */
+body.light-mode {
+    background-color: #f8fafc !important;
+    color: #1a202c !important;
+}
+
+body.light-mode .card, 
+body.light-mode .tool-card,
+body.light-mode .header {
+    background: #ffffff !important;
+    color: #1a202c !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-mode .tool-title,
+body.light-mode h1,
+body.light-mode h2 {
+    color: #2d3748 !important;
+}
+
+body.light-mode .tool-desc {
+    color: #718096 !important;
+}
+
+/* Tema Değiştirme Butonu */
+.theme-toggle-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+body.light-mode .theme-toggle-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #2d3748;
+}
     </style>
 </head>
 <body>
-
+<button class="theme-toggle-btn" onclick="toggleTheme()">
+    <span id="theme-icon">🌙</span> <span id="theme-text">Gece</span>
+</button>
 <div class="container">
     <div class="header">
         <div class="logo">🌙</div>
@@ -200,6 +252,27 @@
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('light-mode');
+        
+        const isLight = body.classList.contains('light-mode');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        
+        updateThemeUI(isLight);
+    }
 
+    function updateThemeUI(isLight) {
+        document.getElementById('theme-icon').innerText = isLight ? '☀️' : '🌙';
+        document.getElementById('theme-text').innerText = isLight ? 'Gündüz' : 'Gece';
+    }
+
+    // Kayıtlı temayı yükle
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeUI(true);
+    }
+</script>
 </body>
 </html>
