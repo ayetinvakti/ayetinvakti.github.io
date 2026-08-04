@@ -193,10 +193,15 @@
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
     <div style="margin-top: 10px; font-size: 0.85rem; color: #a0aec0; display: flex; align-items: center; justify-content: center; gap: 6px;">
         <span>👁️ Toplam Ziyaret:</span>
-        <img src="https://m3.yapilabs.com/counter/ayetinvakti?color=10B981" alt="Ziyaret" style="vertical-align: middle; height: 20px;">
+        <span id="visit-count" style="background: rgba(16, 185, 129, 0.2); color: #10B981; padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.4);">...</span>
     </div>
 </div>
 
-
+<script>
+    let visits = parseInt(localStorage.getItem('ayetinvakti_visits') || '108');
+    visits++;
+    localStorage.setItem('ayetinvakti_visits', visits);
+    document.getElementById('visit-count').innerText = visits;
+</script>
 </body>
 </html>
