@@ -198,13 +198,14 @@
 </div>
 
 <script>
-    fetch('https://api.counterapi.dev/v1/ayetinvakti_site/visits/up')
+    fetch('https://api.counterapi.dev/v1/ayetinvakti/visits/up')
         .then(res => res.json())
         .then(data => {
-            document.getElementById('visit-count').innerText = data.count;
+            document.getElementById('visit-count').innerText = data.count || '1';
         })
         .catch(() => {
-            document.getElementById('visit-count').innerText = '1+';
+            // Eğer 'ayetinvakti_site' kelimesi uzun geldiyse 'ayetinvakti' ile direkt oluşturur.
+            document.getElementById('visit-count').innerText = '1';
         });
 </script>
 
