@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJF28032MV"></script>
-<script>
+    <!-- Tema Sıçramasını Önleyici Script -->
     <script>
-    if (localStorage.getItem('theme') === 'light') {
-        document.documentElement.classList.add('light-mode');
-    }
-</script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light-mode');
+        }
+    </script>
 
-  gtag('config', 'G-LJF28032MV');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJF28032MV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LJF28032MV');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
@@ -157,81 +159,71 @@
             color: var(--accent-color);
             font-weight: 600;
         }
+
         /* Açık Tema (Light Mode) Stilleri */
-body.light-mode {
-    background-color: #f8fafc !important;
-    color: #1a202c !important;
-}
+        body.light-mode {
+            background-color: #f8fafc !important;
+            color: #1a202c !important;
+        }
 
-body.light-mode .card, 
-body.light-mode .tool-card {
-    background: #ffffff !important;
-    color: #1a202c !important;
-    border-color: #e2e8f0 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-}
+        body.light-mode .card, 
+        body.light-mode .tool-card {
+            background: #ffffff !important;
+            color: #1a202c !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
 
-/* Header alanını şeffaf yapıp zeminle bütünleştiriyoruz */
-body.light-mode .header {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-}
+        body.light-mode .header {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
 
-body.light-mode .tool-title,
-body.light-mode h1,
-body.light-mode h2 {
-    color: #2d3748 !important;
-}
+        body.light-mode .tool-title,
+        body.light-mode h1,
+        body.light-mode h2 {
+            color: #2d3748 !important;
+        }
 
-body.light-mode .tool-desc,
-body.light-mode .header p {
-    color: #718096 !important;
-}
-}
+        body.light-mode .tool-desc,
+        body.light-mode .header p {
+            color: #718096 !important;
+        }
 
-/* Tema Değiştirme Butonu */
-.theme-toggle-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
+        /* Tema Değiştirme Butonu */
+        .theme-toggle-btn {
+            position: fixed !important;
+            top: 12px !important;
+            right: 12px !important;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 6px 12px !important;
+            border-radius: 20px !important;
+            cursor: pointer;
+            font-size: 0.85rem !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 9999 !important;
+            transition: all 0.3s ease;
+        }
 
-body.light-mode .theme-toggle-btn {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #2d3748;
-}
-        /* Ana sayfadaki tema butonunu sağ üst köşeye hizalama */
-.theme-toggle-btn, #theme-toggle, .theme-btn {
-    position: fixed !important;
-    top: 12px !important;
-    right: 12px !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    padding: 6px 12px !important;
-    font-size: 0.85rem !important;
-    border-radius: 20px !important;
-}
+        body.light-mode .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #2d3748;
+        }
     </style>
 </head>
 <body>
+
 <button class="theme-toggle-btn" onclick="toggleTheme()">
-    <span id="theme-icon">🌙</span> <span id="theme-text">Gece</span>
+    <span id="theme-icon">☀️</span> <span id="theme-text">Gündüz</span>
 </button>
+
 <div class="container">
     <div class="header">
         <div class="logo">🌙</div>
@@ -263,80 +255,57 @@ body.light-mode .theme-toggle-btn {
             <div class="tool-title">Günün Ayeti & Duası</div>
             <div class="tool-desc">Her gün yeni bir ayet, hadis ve dua paylaşın.</div>
         </a>
+
         <!-- YouTube Kartı -->
-      <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="tool-card">
-        <div class="tool-icon" style="background-color: rgba(255, 0, 0, 0.15);">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="width: 28px; height: 28px; display: block;">
-</div>
-        <div class="tool-title">YouTube Kanalımız</div>
-        <div class="tool-desc">Sohbetler ve videolar için kanalımıza göz atın.</div>
-      </a>
+        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="tool-card">
+            <div class="tool-icon" style="background-color: rgba(255, 0, 0, 0.15);">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="width: 28px; height: 28px; display: block;">
+            </div>
+            <div class="tool-title">YouTube Kanalımız</div>
+            <div class="tool-desc">Sohbetler ve videolar için kanalımıza göz atın.</div>
+        </a>
     </div>
 </div>
+
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
+
 <script>
     function toggleTheme() {
-        const body = document.body;
-        body.classList.toggle('light-mode');
+        const isLight = document.documentElement.classList.toggle('light-mode');
+        document.body.classList.toggle('light-mode', isLight);
         
-        const isLight = body.classList.contains('light-mode');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        
         updateThemeUI(isLight);
     }
 
     function updateThemeUI(isLight) {
-        document.getElementById('theme-icon').innerText = isLight ? '☀️' : '🌙';
-        document.getElementById('theme-text').innerText = isLight ? 'Gündüz' : 'Gece';
+        const icon = document.getElementById('theme-icon');
+        const text = document.getElementById('theme-text');
+        
+        if (isLight) {
+            if (icon) icon.innerText = '🌙';
+            if (text) text.innerText = 'Gece';
+        } else {
+            if (icon) icon.innerText = '☀️';
+            if (text) text.innerText = 'Gündüz';
+        }
     }
 
-    // Kayıtlı temayı yükle
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        updateThemeUI(true);
-    }
-    // Ana Sayfa Tema Mantığı
-function toggleTheme() {
-    const isLight = document.documentElement.classList.toggle('light-mode');
-    document.body.classList.toggle('light-mode', isLight);
-    
-    // Hafızaya doğru tema durumunu kaydet
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    
-    updateThemeUI(isLight);
-}
-
-function updateThemeUI(isLight) {
-    const icon = document.getElementById('theme-icon');
-    const text = document.getElementById('theme-text');
-    
-    // Sayfa Açık/Gündüz modundaysa buton Gece'ye geçiş seçeneğini göstermeli (🌙 Gece)
-    // Sayfa Koyu/Gece modundaysa buton Gündüz'e geçiş seçeneğini göstermeli (☀️ Gündüz)
-    if (isLight) {
-        if (icon) icon.innerText = '🌙';
-        if (text) text.innerText = 'Gece';
-    } else {
-        if (icon) icon.innerText = '☀️';
-        if (text) text.innerText = 'Gündüz';
-    }
-}
-
-// Sayfa yüklendiğinde hafızadaki temayı uygula
-document.addEventListener('DOMContentLoaded', () => {
-    const isLight = localStorage.getItem('theme') === 'light';
-    
-    if (isLight) {
-        document.documentElement.classList.add('light-mode');
-        document.body.classList.add('light-mode');
-    } else {
-        document.documentElement.classList.remove('light-mode');
-        document.body.classList.remove('light-mode');
-    }
-    
-    updateThemeUI(isLight);
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        const isLight = localStorage.getItem('theme') === 'light';
+        
+        if (isLight) {
+            document.documentElement.classList.add('light-mode');
+            document.body.classList.add('light-mode');
+        } else {
+            document.documentElement.classList.remove('light-mode');
+            document.body.classList.remove('light-mode');
+        }
+        
+        updateThemeUI(isLight);
+    });
 </script>
 </body>
 </html>
