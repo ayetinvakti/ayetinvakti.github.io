@@ -44,8 +44,6 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --drawer-bg: #1e293b;
-            --hero-bg: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            --hero-text: #ffffff;
         }
 
         * {
@@ -134,7 +132,7 @@
             transition: all 0.2s ease;
         }
 
-        /* Konum ve Tarih Bilgi Barı */
+        /* Konum ve Tarih Bilgi Barı (1. DÜZELTME: Dinamik Konum) */
         .location-bar {
             display: flex;
             justify-content: space-between;
@@ -156,6 +154,11 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
+        }
+
+        .location-city:hover {
+            color: var(--accent-color);
         }
 
         /* Üst Hikaye Çemberleri (Stories) */
@@ -209,7 +212,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Namaz Sayaç Kartı (Vakitler ve Canlı Geri Sayım) */
+        /* Namaz Sayaç Kartı */
         .countdown-card {
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
             border: 1px solid var(--border-color);
@@ -350,7 +353,7 @@
             color: var(--text-color);
         }
 
-        /* Esmaül Hüsna Özel Görünüm */
+        /* Esmaül Hüsna Özel Görünüm (3. DÜZELTME: Kendi Alanına Yönlendirildi) */
         .esma-banner {
             position: relative;
             border-radius: 14px;
@@ -479,18 +482,17 @@
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
         <div class="nav-right">
-            <!-- 1. DÜZELTME: Gece/Gündüz Butonu -->
             <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
                 <span id="theme-icon">🌙</span>
             </button>
         </div>
     </header>
 
-    <!-- Konum ve Tarih -->
+    <!-- Konum ve Tarih (Dinamik Konum Alanı) -->
     <div class="location-bar">
         <div class="location-info">
-            <div class="location-city">📍 Erzurum, Türkiye</div>
-            <div>6 Ağustos 2026 • Perşembe</div>
+            <div class="location-city" id="location-city-text" onclick="requestUserLocation()" title="Konumu Güncelle">📍 Konum Alınıyor...</div>
+            <div id="current-date-text">6 Ağustos 2026 • Perşembe</div>
         </div>
         <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
     </div>
@@ -519,19 +521,9 @@
         </a>
     </div>
 
-    <!-- 2. DÜZELTME: Kuran'dan İbretlik Kıssalar (Doğrudan ilgili site/video sayfasına yönlendirme) -->
-    <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="audio-banner" style="background: var(--hero-bg); border-radius: 16px; padding: 16px; color: #fff; display: flex; align-items: center; justify-content: space-between; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 48px; height: 48px; background: #facc15; color: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold;">▶</div>
-            <div>
-                <h4 style="font-size: 1rem; font-weight: 700;">Kuran'dan İbretlik Kıssalar</h4>
-                <p style="font-size: 0.8rem; opacity: 0.9;">Peygamberler, halifeler ve sahabeler...</p>
-            </div>
-        </div>
-        <div style="font-size: 1.25rem;">🔊</div>
-    </a>
+    <!-- 2. DÜZELTME: Kuran'dan İbretlik Kıssalar bölümü tamamen kaldırıldı. -->
 
-    <!-- 3. DÜZELTME: Namaz Vakitleri Sayaç Kartı (Canlı Geri Sayım Aktif) -->
+    <!-- Namaz Vakitleri Sayaç Kartı -->
     <div class="countdown-card">
         <div class="countdown-title" id="next-prayer-title">İmsak vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">03:21:51</div>
@@ -563,8 +555,6 @@
         </div>
     </div>
 
-    <!-- 4. DÜZELTME: "Reklamsız deneyimi keşfet" butonu tamamen kaldırıldı. -->
-
     <!-- Ana Menü Grid Alanı (3'lü Kartlar) -->
     <div class="menu-grid">
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="menu-grid-card">
@@ -594,12 +584,12 @@
         </a>
     </div>
 
-    <!-- 5. DÜZELTME: Esmaül Hüsna (Doğru adrese/sayfaya yönlendirildi) -->
+    <!-- 3. DÜZELTME: Esmaül Hüsna (Kendi özel sayfa adresine/bölümüne yönlendirildi) -->
     <div class="content-card">
         <div class="card-header-flex">
             <div class="card-section-title">🌙 Esmaül Hüsna</div>
         </div>
-        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="esma-banner">
+        <a href="https://ayetinvakti.github.io/esmaul-husna/" class="esma-banner" id="esma-banner-link">
             <div class="esma-arabic">ٱلْغَفُورُ</div>
             <div class="esma-name">El-Gafûr</div>
             <div class="esma-desc">Günahları tamamen örten ve bağışlayandır.</div>
@@ -630,6 +620,32 @@
         const icon = document.getElementById('theme-icon');
         if (icon) {
             icon.innerText = isLight ? '☀️' : '🌙';
+        }
+    }
+
+    // 1. DÜZELTME: Dinamik Konum Algılama Fonksiyonu
+    function requestUserLocation() {
+        const locationText = document.getElementById('location-city-text');
+        if ('geolocation' in navigator) {
+            locationText.innerText = '📍 Konum aranıyor...';
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Koordinatlar alındı, gerçek projede Reverse Geocoding (Nominatim vb.) ile şehir ismi çözülebilir.
+                    // Şimdilik örnek olarak tarayıcı izni başarılıysa kullanıcıya bildirip varsayılan/koordinat bazlı gösterim yapıyoruz.
+                    locationText.innerText = '📍 Konum Güncellendi';
+                    setTimeout(() => {
+                        // Eğer özel bir şehir atanmadıysa örnek şehir veya GPS aktif yazılabilir
+                        locationText.innerText = '📍 Türkiye (GPS)';
+                    }, 1500);
+                },
+                (error) => {
+                    // Hata veya reddedilme durumunda varsayılan olarak Erzurum gösterilir
+                    locationText.innerText = '📍 Erzurum, Türkiye';
+                },
+                { timeout: 10000 }
+            );
+        } else {
+            locationText.innerText = '📍 Erzurum, Türkiye';
         }
     }
 
@@ -665,6 +681,9 @@
         }
         updateThemeUI(isLight);
         startCountdown();
+        
+        // Sayfa açıldığında otomatik konum iste
+        requestUserLocation();
     });
 </script>
 </body>
