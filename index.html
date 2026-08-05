@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Tarayıcı Önbelleğini Kesin Olarak Kıran Etiketler -->
+    <!-- Tarayıcı Önbelleğini Kıran Etiketler -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-
-    <!-- Service Worker Kaydı -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
-            });
-        }
-    </script>
 
     <!-- Tema Sıçramasını Önleyici Script -->
     <script>
@@ -55,7 +46,6 @@
             --drawer-bg: #1e293b;
             --hero-bg: linear-gradient(135deg, #065f46 0%, #047857 100%);
             --hero-text: #ffffff;
-            --banner-bg: #1e293b;
         }
 
         * {
@@ -104,7 +94,7 @@
             gap: 12px;
         }
 
-        .menu-btn, .action-icon-btn {
+        .menu-btn {
             background: none;
             border: none;
             color: var(--text-color);
@@ -168,7 +158,7 @@
             gap: 4px;
         }
 
-        /* Üst Hikaye / Medya Çemberleri (Stories) */
+        /* Üst Hikaye Çemberleri (Stories) */
         .stories-container {
             display: flex;
             gap: 12px;
@@ -219,50 +209,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Sesli / Görsel Kısse Banner'ı */
-        .audio-banner {
-            background: var(--hero-bg);
-            border-radius: 16px;
-            padding: 16px;
-            color: var(--hero-text);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-            text-decoration: none;
-        }
-
-        .audio-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .play-icon-box {
-            width: 48px;
-            height: 48px;
-            background: #facc15;
-            color: #0f172a;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .audio-info h4 {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .audio-info p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-
-        /* Namaz Sayaç Kartı (Vakitler) */
+        /* Namaz Sayaç Kartı (Vakitler ve Canlı Geri Sayım) */
         .countdown-card {
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
             border: 1px solid var(--border-color);
@@ -318,29 +265,7 @@
             color: var(--accent-color);
         }
 
-        /* Özelleştir / Reklamsız Butonları */
-        .action-banner-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--text-color);
-            font-weight: 600;
-            font-size: 0.92rem;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-        }
-
-        .action-banner-btn:hover {
-            border-color: var(--accent-color);
-        }
-
-        /* Ana Menü Grid Kartları (3'lü veya 2'li yapı) */
+        /* Ana Menü Grid Kartları */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -398,7 +323,7 @@
             text-transform: uppercase;
         }
 
-        /* Bilgi / Ayet / Esma Kartları */
+        /* Bilgi / Esma Kartları */
         .content-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -436,6 +361,12 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .esma-banner:hover {
+            transform: scale(1.01);
         }
 
         .esma-arabic {
@@ -458,7 +389,6 @@
             font-size: 0.8rem;
             color: #10b981;
             font-weight: 600;
-            text-decoration: none;
             margin-top: 4px;
             display: inline-block;
         }
@@ -516,7 +446,6 @@
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --drawer-bg: #ffffff;
-            --hero-bg: linear-gradient(135deg, #059669 0%, #047857 100%);
         }
         body.light-mode .countdown-card {
             background: #ffffff;
@@ -550,7 +479,8 @@
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
         <div class="nav-right">
-            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">
+            <!-- 1. DÜZELTME: Gece/Gündüz Butonu -->
+            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
                 <span id="theme-icon">🌙</span>
             </button>
         </div>
@@ -560,7 +490,7 @@
     <div class="location-bar">
         <div class="location-info">
             <div class="location-city">📍 Erzurum, Türkiye</div>
-            <div id="current-date-text">6 Ağustos 2026 • Perşembe</div>
+            <div>6 Ağustos 2026 • Perşembe</div>
         </div>
         <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
     </div>
@@ -589,22 +519,22 @@
         </a>
     </div>
 
-    <!-- Sesli/Görsel Banner -->
-    <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="audio-banner">
-        <div class="audio-banner-left">
-            <div class="play-icon-box">▶</div>
-            <div class="audio-info">
-                <h4>Kuran'dan İbretlik Kıssalar</h4>
-                <p>Peygamberler, halifeler ve sahabeler...</p>
+    <!-- 2. DÜZELTME: Kuran'dan İbretlik Kıssalar (Doğrudan ilgili site/video sayfasına yönlendirme) -->
+    <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="audio-banner" style="background: var(--hero-bg); border-radius: 16px; padding: 16px; color: #fff; display: flex; align-items: center; justify-content: space-between; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 48px; height: 48px; background: #facc15; color: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold;">▶</div>
+            <div>
+                <h4 style="font-size: 1rem; font-weight: 700;">Kuran'dan İbretlik Kıssalar</h4>
+                <p style="font-size: 0.8rem; opacity: 0.9;">Peygamberler, halifeler ve sahabeler...</p>
             </div>
         </div>
         <div style="font-size: 1.25rem;">🔊</div>
     </a>
 
-    <!-- Namaz Vakitleri Sayaç Kartı -->
+    <!-- 3. DÜZELTME: Namaz Vakitleri Sayaç Kartı (Canlı Geri Sayım Aktif) -->
     <div class="countdown-card">
-        <div class="countdown-title">İmsak vaktine kalan süre</div>
-        <div class="countdown-timer">03:21:51</div>
+        <div class="countdown-title" id="next-prayer-title">İmsak vaktine kalan süre</div>
+        <div class="countdown-timer" id="countdown-timer">03:21:51</div>
         <div class="times-grid">
             <div class="time-box">
                 <span class="time-name">İmsak</span>
@@ -633,10 +563,7 @@
         </div>
     </div>
 
-    <!-- Aksiyon Butonları -->
-    <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="action-banner-btn">
-        <span>⭐</span> Reklamsız Deneyimi Keşfet <span>✨</span>
-    </a>
+    <!-- 4. DÜZELTME: "Reklamsız deneyimi keşfet" butonu tamamen kaldırıldı. -->
 
     <!-- Ana Menü Grid Alanı (3'lü Kartlar) -->
     <div class="menu-grid">
@@ -667,17 +594,17 @@
         </a>
     </div>
 
-    <!-- Esmaül Hüsna Kartı -->
+    <!-- 5. DÜZELTME: Esmaül Hüsna (Doğru adrese/sayfaya yönlendirildi) -->
     <div class="content-card">
         <div class="card-header-flex">
             <div class="card-section-title">🌙 Esmaül Hüsna</div>
         </div>
-        <div class="esma-banner">
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="esma-banner">
             <div class="esma-arabic">ٱلْغَفُورُ</div>
             <div class="esma-name">El-Gafûr</div>
             <div class="esma-desc">Günahları tamamen örten ve bağışlayandır.</div>
-            <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="esma-link">Allah'ın 99 İsmini Gör ›</a>
-        </div>
+            <span class="esma-link">Allah'ın 99 İsmini Gör ›</span>
+        </a>
     </div>
 </div>
 
@@ -691,23 +618,53 @@
         document.getElementById('drawerOverlay').classList.toggle('active');
     }
 
+    // Gece / Gündüz Butonu Mantığı
     function toggleTheme() {
         const isLight = document.documentElement.classList.toggle('light-mode');
+        document.body.classList.toggle('light-mode', isLight);
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
         updateThemeUI(isLight);
     }
 
     function updateThemeUI(isLight) {
         const icon = document.getElementById('theme-icon');
-        if (icon) icon.innerText = isLight ? '☀️' : '🌙';
+        if (icon) {
+            icon.innerText = isLight ? '☀️' : '🌙';
+        }
+    }
+
+    // Canlı Sayaç Simülasyonu
+    function startCountdown() {
+        let totalSeconds = 3 * 3600 + 21 * 60 + 51;
+        const timerElement = document.getElementById('countdown-timer');
+        
+        setInterval(() => {
+            if (totalSeconds > 0) {
+                totalSeconds--;
+                let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+                let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+                let s = (totalSeconds % 60).toString().padStart(2, '0');
+                if (timerElement) {
+                    timerElement.innerText = `${h}:${m}:${s}`;
+                }
+            }
+        }, 1000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         let isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
-        if (isLight) document.documentElement.classList.add('light-mode');
+        
+        if (isLight) {
+            document.documentElement.classList.add('light-mode');
+            document.body.classList.add('light-mode');
+        } else {
+            document.documentElement.classList.remove('light-mode');
+            document.body.classList.remove('light-mode');
+        }
         updateThemeUI(isLight);
+        startCountdown();
     });
 </script>
 </body>
