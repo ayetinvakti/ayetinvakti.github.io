@@ -601,16 +601,17 @@
         }
     }
 
-    // IP Tabanlı Akıllı Konum Bulma (Tarayıcı GPS izin vermezse veya hata alırsa ipapi kullanır)
+    // Doğrudan Türkçe şehir bilgisi sağlayan alternatif güvenli servis
     function fetchUserLocation() {
         const locationText = document.getElementById('location-city-text');
         locationText.innerText = '📍 Konum algılanıyor...';
 
-        fetch('https://ipapi.co/json/')
+        fetch('https://ipwho.is/')
             .then(response => response.json())
             .then(data => {
-                if (data && data.city && data.country_name) {
-                    locationText.innerText = `📍 ${data.city}, ${data.country_name}`;
+                if (data && data.success && data.city && data.country) {
+                    // Şehir adını basıyoruz
+                    locationText.innerText = `📍 ${data.city}, ${data.country}`;
                 } else {
                     locationText.innerText = '📍 Erzurum, Türkiye';
                 }
@@ -620,13 +621,11 @@
             });
     }
 
-    // Vakitleri ve Kalan Süreyi Otomatik Hesaplayan Fonksiyon
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
         const titleElement = document.getElementById('next-prayer-title');
         const timeBoxes = document.querySelectorAll('.times-grid .time-box');
 
-        // Sabit vakit listemiz (İhtiyaca göre dinamikleştirilebilir)
         const prayers = [
             { name: "İmsak", time: "03:40" },
             { name: "Güneş", time: "05:18" },
@@ -641,7 +640,6 @@
             let targetPrayer = null;
             let targetDate = null;
 
-            // Bugünün vakitlerini kontrol et
             for (let i = 0; i < prayers.length; i++) {
                 const [h, m] = prayers[i].time.split(':').map(Number);
                 let pDate = new Date();
@@ -654,7 +652,6 @@
                 }
             }
 
-            // Eğer bugünkü tüm vakitler geçtiyse, sonraki günün ilk vakti (İmsak) hedeftir
             if (!targetPrayer) {
                 targetPrayer = prayers[0];
                 let pDate = new Date();
@@ -664,7 +661,6 @@
                 targetDate = pDate;
             }
 
-            // Aktif vakit arayüzünü güncelle
             timeBoxes.forEach(box => {
                 const name = box.querySelector('.time-name').innerText;
                 if (name === targetPrayer.name) {
@@ -703,8 +699,8 @@
             document.body.classList.remove('light-mode');
         }
         updateThemeUI(isLight);
-        fetchUserLocation(); // Konumu otomatik çek
-        startCountdown(); // Sayaç motorunu çalıştır
+        fetchUserLocation();
+        startCountdown();
     });
 </script>
 </body>
