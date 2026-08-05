@@ -180,8 +180,11 @@
             border: none !important;
         }
 
+        body.light-mode .header h1 {
+            color: #059669 !important;
+        }
+
         body.light-mode .tool-title,
-        body.light-mode h1,
         body.light-mode h2 {
             color: #2d3748 !important;
         }
@@ -212,16 +215,16 @@
         }
 
         body.light-mode .theme-toggle-btn {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #2d3748;
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.15);
+            color: #2d3748 !important;
         }
     </style>
 </head>
 <body>
 
 <button class="theme-toggle-btn" onclick="toggleTheme()">
-    <span id="theme-icon">☀️</span> <span id="theme-text">Gündüz</span>
+    <span id="theme-icon">🌙</span> <span id="theme-text">Gece</span>
 </button>
 
 <div class="container">
@@ -285,11 +288,11 @@
         const text = document.getElementById('theme-text');
         
         if (isLight) {
-            if (icon) icon.innerText = '🌙';
-            if (text) text.innerText = 'Gece';
-        } else {
             if (icon) icon.innerText = '☀️';
             if (text) text.innerText = 'Gündüz';
+        } else {
+            if (icon) icon.innerText = '🌙';
+            if (text) text.innerText = 'Gece';
         }
     }
 
