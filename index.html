@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Tema Sıçramasını Önleyici Script -->
+    <!-- Service Worker Kaydı (Çevrimdışı Desteği İçin) -->
     <script>
-        if (localStorage.getItem('theme') === 'light') {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log('Service Worker aktif!'))
+                    .catch((err) => console.log('SW hatası:', err));
+            });
+        }
+    </script>
+
+    <!-- Tema Sıçramasını Önleyici ve Otomatik Sistem Teması Scripti -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
             document.documentElement.classList.add('light-mode');
         }
     </script>
@@ -297,7 +311,15 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const isLight = localStorage.getItem('theme') === 'light';
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let isLight = false;
+        if (savedTheme === 'light') {
+            isLight = true;
+        } else if (!savedTheme && !systemPrefersDark) {
+            isLight = true;
+        }
         
         if (isLight) {
             document.documentElement.classList.add('light-mode');
