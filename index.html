@@ -6,22 +6,19 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- Service Worker Kaydı (Çevrimdışı Desteği İçin) -->
+    <!-- Service Worker Kaydı -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(() => console.log('Service Worker aktif!'))
-                    .catch((err) => console.log('SW hatası:', err));
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
             });
         }
     </script>
 
-    <!-- Tema Sıçramasını Önleyici ve Otomatik Sistem Teması Scripti -->
+    <!-- Tema Sıçramasını Önleyici Script -->
     <script>
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
             document.documentElement.classList.add('light-mode');
         }
@@ -40,10 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti | Dijital İslami Yardımcı</title>
 
-    <!-- Doğrudan Kendi Repomuzdaki İkon -->
     <link rel="apple-touch-icon" href="icon.png?v=2">
-    
-    <!-- PWA / Mobil Uygulama Ayarları -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#10b981">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,13 +49,13 @@
             --bg-color: #0b1120;
             --card-bg: #1e293b;
             --accent-color: #10b981;
-            --accent-hover: #059669;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
             --drawer-bg: #1e293b;
             --hero-bg: linear-gradient(135deg, #065f46 0%, #047857 100%);
             --hero-text: #ffffff;
+            --banner-bg: #1e293b;
         }
 
         * {
@@ -79,15 +73,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 16px;
+            padding: 16px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Üst Bar (Navbar) */
-        .navbar {
+        .container {
             width: 100%;
             max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Üst Bar */
+        .navbar {
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -95,40 +95,38 @@
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .menu-btn {
+        .menu-btn, .action-icon-btn {
             background: none;
             border: none;
             color: var(--text-color);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px;
         }
 
         .app-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--accent-color);
-            letter-spacing: 0.5px;
             text-decoration: none;
+            font-family: 'Georgia', serif;
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .icon-btn {
@@ -146,407 +144,540 @@
             transition: all 0.2s ease;
         }
 
-        .icon-btn:hover {
-            border-color: var(--accent-color);
-            transform: scale(1.05);
+        /* Konum ve Tarih Bilgi Barı */
+        .location-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
-        /* Sol Kayar Menü (Drawer / Sidebar) */
-        .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 9998;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .drawer-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .drawer {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100%;
-            background-color: var(--drawer-bg);
-            border-right: 1px solid var(--border-color);
-            z-index: 9999;
+        .location-info {
             display: flex;
             flex-direction: column;
-            transition: left 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+            gap: 2px;
         }
 
-        .drawer.active {
-            left: 0;
+        .location-city {
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .drawer-header {
-            padding: 20px;
+        /* Üst Hikaye / Medya Çemberleri (Stories) */
+        .stories-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 2px;
+            scrollbar-width: none;
+        }
+        .stories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+
+        .story-ring {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-thumb {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--card-bg);
+        }
+
+        .story-title {
+            font-size: 0.75rem;
+            color: var(--text-color);
+            max-width: 72px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Sesli / Görsel Kısse Banner'ı */
+        .audio-banner {
+            background: var(--hero-bg);
+            border-radius: 16px;
+            padding: 16px;
+            color: var(--hero-text);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            text-decoration: none;
         }
 
-        .drawer-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent-color);
-        }
-
-        .drawer-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.4rem;
-            cursor: pointer;
-        }
-
-        .drawer-links {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 0;
-        }
-
-        .drawer-item {
+        .audio-banner-left {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 14px 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            border-left: 3px solid transparent;
         }
 
-        .drawer-item:hover {
-            background-color: rgba(16, 185, 129, 0.08);
-            color: var(--accent-color);
-            border-left-color: var(--accent-color);
-        }
-
-        .drawer-item span.icon {
+        .play-icon-box {
+            width: 48px;
+            height: 48px;
+            background: #facc15;
+            color: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        .container {
-            width: 100%;
-            max-width: 600px;
+        .audio-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .audio-info p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Namaz Sayaç Kartı (Vakitler) */
+        .countdown-card {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .countdown-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .countdown-timer {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
+        .time-box {
             display: flex;
             flex-direction: column;
+            gap: 4px;
             align-items: center;
         }
 
-        /* "Ayet Online" Tarzı Ana Ekran Karşılama Alanı (Hero Banner) */
-        .hero-banner {
-            width: 100%;
-            background: var(--hero-bg);
-            border-radius: 20px;
-            padding: 24px 20px;
-            color: var(--hero-text);
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+        .time-name {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .time-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .time-box.active .time-name, .time-box.active .time-val {
+            color: var(--accent-color);
+        }
+
+        /* Özelleştir / Reklamsız Butonları */
+        .action-banner-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 16px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .hero-banner::after {
-            content: "✨";
-            position: absolute;
-            right: -10px;
-            bottom: -15px;
-            font-size: 6rem;
-            opacity: 0.12;
-            pointer-events: none;
-        }
-
-        .hero-subtitle {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+            color: var(--text-color);
             font-weight: 600;
-            opacity: 0.9;
-        }
-
-        .hero-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            line-height: 1.3;
-        }
-
-        .hero-desc {
             font-size: 0.92rem;
-            opacity: 0.9;
-            line-height: 1.4;
-            margin-top: 4px;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
 
-        /* Ana Ekran Menü Listesi ("Ayet Online" Stili Dikey Liste) */
-        .menu-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .action-banner-btn:hover {
+            border-color: var(--accent-color);
         }
 
-        .menu-card {
+        /* Ana Menü Grid Kartları (3'lü veya 2'li yapı) */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .menu-grid-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 16px 20px;
+            padding: 18px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
             text-decoration: none;
             color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            touch-action: manipulation;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        .menu-card:hover {
-            transform: translateX(4px);
+        .menu-grid-card:hover {
+            transform: translateY(-2px);
             border-color: var(--accent-color);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.12);
         }
 
-        .menu-card-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .menu-icon {
-            font-size: 1.5rem;
-            background-color: rgba(16, 185, 129, 0.1);
-            width: 48px;
-            height: 48px;
+        .grid-icon-box {
+            font-size: 1.8rem;
+            background: rgba(16, 185, 129, 0.1);
+            width: 52px;
+            height: 52px;
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
         }
 
-        .menu-info {
+        .grid-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .badge-yeni {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #f59e0b;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        /* Bilgi / Ayet / Esma Kartları */
+        .content-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .menu-title {
-            font-size: 1.05rem;
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-section-title {
+            font-size: 0.95rem;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             color: var(--text-color);
         }
 
-        .menu-desc {
-            font-size: 0.82rem;
-            color: var(--text-muted);
+        /* Esmaül Hüsna Özel Görünüm */
+        .esma-banner {
+            position: relative;
+            border-radius: 14px;
+            padding: 20px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80') center/cover;
+            color: #fff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .menu-arrow {
-            font-size: 1.1rem;
-            color: var(--text-muted);
+        .esma-arabic {
+            font-size: 2.2rem;
+            font-family: 'Georgia', serif;
             font-weight: bold;
-            transition: transform 0.2s ease;
         }
 
-        .menu-card:hover .menu-arrow {
-            color: var(--accent-color);
-            transform: translateX(3px);
+        .esma-name {
+            font-size: 1.1rem;
+            font-weight: 700;
         }
+
+        .esma-desc {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .esma-link {
+            font-size: 0.8rem;
+            color: #10b981;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* Sol Menü (Drawer) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+            opacity: 0; visibility: hidden;
+            transition: 0.3s;
+        }
+        .drawer-overlay.active { opacity: 1; visibility: visible; }
+
+        .drawer {
+            position: fixed;
+            top: 0; left: -300px; width: 280px; height: 100%;
+            background-color: var(--drawer-bg);
+            border-right: 1px solid var(--border-color);
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            transition: left 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
+            box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+        }
+        .drawer.active { left: 0; }
+
+        .drawer-header {
+            padding: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .drawer-title { font-size: 1.2rem; font-weight: 700; color: var(--accent-color); }
+        .drawer-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+
+        .drawer-links { flex: 1; overflow-y: auto; padding: 16px 0; }
+        .drawer-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 20px; color: var(--text-color); text-decoration: none;
+            font-size: 1rem; font-weight: 500; border-left: 3px solid transparent;
+        }
+        .drawer-item:hover { background: rgba(16,185,129,0.08); color: var(--accent-color); border-left-color: var(--accent-color); }
 
         .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            margin: 20px 0; text-align: center; font-size: 0.85rem; color: var(--text-muted);
         }
+        .footer span { color: var(--accent-color); font-weight: 600; }
 
-        .footer span {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        /* Açık Tema (Light Mode) Stilleri - Kesin Görünürlük Ayarları */
+        /* Açık Tema (Light Mode) Ayarları */
         body.light-mode {
-            --bg-color: #f1f5f9;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-color: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --drawer-bg: #ffffff;
             --hero-bg: linear-gradient(135deg, #059669 0%, #047857 100%);
-            --hero-text: #ffffff;
         }
-
-        body.light-mode .menu-btn {
-            color: #0f172a !important;
-        }
-
-        body.light-mode .app-title {
-            color: #059669 !important;
-        }
-
-        body.light-mode .icon-btn {
-            background: rgba(5, 150, 105, 0.08);
-            border-color: #cbd5e1;
-            color: #0f172a;
-        }
-
-        body.light-mode .menu-card {
-            background: #ffffff !important;
-            border-color: #e2e8f0 !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
-        }
-
-        body.light-mode .menu-title {
-            color: #1e293b !important;
-        }
-
-        body.light-mode .menu-desc {
-            color: #64748b !important;
-        }
-
-        body.light-mode .drawer-item {
-            color: #1e293b !important;
-        }
-
-        body.light-mode .drawer-item:hover {
-            background-color: rgba(5, 150, 105, 0.08);
-            color: #059669 !important;
+        body.light-mode .countdown-card {
+            background: #ffffff;
         }
     </style>
 </head>
 <body>
 
-<!-- Sol Kayar Menü (Drawer) Arka Plan Karartması -->
 <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-<!-- Sol Kayar Menü İçeriği -->
+<!-- Sol Menü -->
 <div class="drawer" id="appDrawer">
     <div class="drawer-header">
         <div class="drawer-title">Ayetin Vakti</div>
         <button class="drawer-close" onclick="toggleDrawer()">✕</button>
     </div>
     <div class="drawer-links">
-        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item">
-            <span class="icon">🕌</span> Namaz Vakitleri
-        </a>
-        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item">
-            <span class="icon">🧭</span> Kıble Pusulası
-        </a>
-        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item">
-            <span class="icon">📿</span> Zikirmatik
-        </a>
-        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item">
-            <span class="icon">✨</span> Günün Ayeti & Duası
-        </a>
-        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="drawer-item">
-            <span class="icon">▶️</span> YouTube Kanalımız
-        </a>
+        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item"><span style="width:24px">🕌</span> Namaz Vakitleri</a>
+        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><span style="width:24px">🧭</span> Kıble Pusulası</a>
+        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><span style="width:24px">📿</span> Zikirmatik</a>
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><span style="width:24px">✨</span> Günün Ayeti & Duası</a>
+        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="drawer-item"><span style="width:24px">▶️</span> YouTube Kanalı</a>
     </div>
 </div>
 
 <div class="container">
-    <!-- Üst Bar (Navbar) -->
+    <!-- Üst Bar -->
     <header class="navbar">
         <div class="nav-left">
-            <button class="menu-btn" onclick="toggleDrawer()" aria-label="Menü">☰</button>
+            <button class="menu-btn" onclick="toggleDrawer()">☰</button>
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
         <div class="nav-right">
-            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
+            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">
                 <span id="theme-icon">🌙</span>
             </button>
         </div>
     </header>
 
-    <!-- "Ayet Online" Tarzı Karşılama Banner Alanı -->
-    <section class="hero-banner">
-        <div class="hero-subtitle">Huzur ve İbadet Rehberi</div>
-        <div class="hero-title">Günlük İslami Asistanınız</div>
-        <div class="hero-desc">Namaz vakitleri, zikirler, kıble pusulası ve günlük ayetler parmaklarınızın ucunda.</div>
-    </section>
+    <!-- Konum ve Tarih -->
+    <div class="location-bar">
+        <div class="location-info">
+            <div class="location-city">📍 Erzurum, Türkiye</div>
+            <div id="current-date-text">6 Ağustos 2026 • Perşembe</div>
+        </div>
+        <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
+    </div>
 
-    <!-- Ana Ekran Dikey Menü Listesi -->
-    <div class="menu-list">
-        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="menu-card">
-            <div class="menu-card-left">
-                <div class="menu-icon">🕌</div>
-                <div class="menu-info">
-                    <div class="menu-title">Namaz Vakitleri</div>
-                    <div class="menu-desc">Konum bazlı canlı vakitler ve geri sayım</div>
-                </div>
-            </div>
-            <div class="menu-arrow">›</div>
+    <!-- Üst Hikaye Çemberleri (Stories) -->
+    <div class="stories-container">
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="story-item">
+            <div class="story-ring"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=150&q=80" class="story-thumb" alt="Günün Ayeti"></div>
+            <span class="story-title">Günün Ayeti</span>
         </a>
+        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="story-item">
+            <div class="story-ring"><img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=150&q=80" class="story-thumb" alt="Zikirmatik"></div>
+            <span class="story-title">Zikirmatik</span>
+        </a>
+        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="story-item">
+            <div class="story-ring"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=150&q=80" class="story-thumb" alt="Kıble"></div>
+            <span class="story-title">Kıble Pusulası</span>
+        </a>
+        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="story-item">
+            <div class="story-ring"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=150&q=80" class="story-thumb" alt="Vakitler"></div>
+            <span class="story-title">Vakitler</span>
+        </a>
+        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="story-item">
+            <div class="story-ring"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80" class="story-thumb" alt="Videolar"></div>
+            <span class="story-title">Videolar</span>
+        </a>
+    </div>
 
-        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="menu-card">
-            <div class="menu-card-left">
-                <div class="menu-icon">🧭</div>
-                <div class="menu-info">
-                    <div class="menu-title">Kıble Pusulası</div>
-                    <div class="menu-desc">Titreşim ve ses uyarıcı hassas yön bulucu</div>
-                </div>
+    <!-- Sesli/Görsel Banner -->
+    <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="audio-banner">
+        <div class="audio-banner-left">
+            <div class="play-icon-box">▶</div>
+            <div class="audio-info">
+                <h4>Kuran'dan İbretlik Kıssalar</h4>
+                <p>Peygamberler, halifeler ve sahabeler...</p>
             </div>
-            <div class="menu-arrow">›</div>
-        </a>
+        </div>
+        <div style="font-size: 1.25rem;">🔊</div>
+    </a>
 
-        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="menu-card">
-            <div class="menu-card-left">
-                <div class="menu-icon">📿</div>
-                <div class="menu-info">
-                    <div class="menu-title">Zikirmatik</div>
-                    <div class="menu-desc">Dijital tesbih ve hedef sayacı</div>
-                </div>
+    <!-- Namaz Vakitleri Sayaç Kartı -->
+    <div class="countdown-card">
+        <div class="countdown-title">İmsak vaktine kalan süre</div>
+        <div class="countdown-timer">03:21:51</div>
+        <div class="times-grid">
+            <div class="time-box">
+                <span class="time-name">İmsak</span>
+                <span class="time-val">03:40</span>
             </div>
-            <div class="menu-arrow">›</div>
-        </a>
+            <div class="time-box">
+                <span class="time-name">Güneş</span>
+                <span class="time-val">05:18</span>
+            </div>
+            <div class="time-box active">
+                <span class="time-name">Öğle</span>
+                <span class="time-val">12:33</span>
+            </div>
+            <div class="time-box">
+                <span class="time-name">İkindi</span>
+                <span class="time-val">16:24</span>
+            </div>
+            <div class="time-box">
+                <span class="time-name">Akşam</span>
+                <span class="time-val">19:38</span>
+            </div>
+            <div class="time-box">
+                <span class="time-name">Yatsı</span>
+                <span class="time-val">21:09</span>
+            </div>
+        </div>
+    </div>
 
-        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="menu-card">
-            <div class="menu-card-left">
-                <div class="menu-icon">✨</div>
-                <div class="menu-info">
-                    <div class="menu-title">Günün Ayeti & Duası</div>
-                    <div class="menu-desc">Her güne özel ilham veren paylaşımlar</div>
-                </div>
-            </div>
-            <div class="menu-arrow">›</div>
-        </a>
+    <!-- Aksiyon Butonları -->
+    <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="action-banner-btn">
+        <span>⭐</span> Reklamsız Deneyimi Keşfet <span>✨</span>
+    </a>
 
-        <!-- YouTube Kartı -->
-        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="menu-card">
-            <div class="menu-card-left">
-                <div class="menu-icon" style="background-color: rgba(255, 0, 0, 0.1);">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="width: 22px; height: 22px; display: block;">
-                </div>
-                <div class="menu-info">
-                    <div class="menu-title">YouTube Kanalımız</div>
-                    <div class="menu-desc">Özel sohbetler ve videolar için abone olun</div>
-                </div>
-            </div>
-            <div class="menu-arrow">›</div>
+    <!-- Ana Menü Grid Alanı (3'lü Kartlar) -->
+    <div class="menu-grid">
+        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="menu-grid-card">
+            <div class="grid-icon-box">🧭</div>
+            <div class="grid-title">Kıble Bul</div>
         </a>
+        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="menu-grid-card">
+            <div class="grid-icon-box">🕌</div>
+            <div class="grid-title">Namaz Vakti</div>
+        </a>
+        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="menu-grid-card">
+            <span class="badge-yeni">Yeni</span>
+            <div class="grid-icon-box">📿</div>
+            <div class="grid-title">Zikirmatik</div>
+        </a>
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="menu-grid-card">
+            <div class="grid-icon-box">✨</div>
+            <div class="grid-title">Günün Ayeti</div>
+        </a>
+        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="menu-grid-card">
+            <div class="grid-icon-box" style="color: #ef4444;">▶</div>
+            <div class="grid-title">YouTube</div>
+        </a>
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="menu-grid-card">
+            <div class="grid-icon-box">📖</div>
+            <div class="grid-title">Dua & Sure</div>
+        </a>
+    </div>
+
+    <!-- Esmaül Hüsna Kartı -->
+    <div class="content-card">
+        <div class="card-header-flex">
+            <div class="card-section-title">🌙 Esmaül Hüsna</div>
+        </div>
+        <div class="esma-banner">
+            <div class="esma-arabic">ٱلْغَفُورُ</div>
+            <div class="esma-name">El-Gafûr</div>
+            <div class="esma-desc">Günahları tamamen örten ve bağışlayandır.</div>
+            <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="esma-link">Allah'ın 99 İsmini Gör ›</a>
+        </div>
     </div>
 </div>
 
@@ -555,48 +686,27 @@
 </div>
 
 <script>
-    // Sol Menü Açma / Kapama Fonksiyonu
     function toggleDrawer() {
-        const drawer = document.getElementById('appDrawer');
-        const overlay = document.getElementById('drawerOverlay');
-        drawer.classList.toggle('active');
-        overlay.classList.toggle('active');
+        document.getElementById('appDrawer').classList.toggle('active');
+        document.getElementById('drawerOverlay').classList.toggle('active');
     }
 
     function toggleTheme() {
         const isLight = document.documentElement.classList.toggle('light-mode');
-        document.body.classList.toggle('light-mode', isLight);
-        
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
         updateThemeUI(isLight);
     }
 
     function updateThemeUI(isLight) {
         const icon = document.getElementById('theme-icon');
-        if (icon) {
-            icon.innerText = isLight ? '☀️' : '🌙';
-        }
+        if (icon) icon.innerText = isLight ? '☀️' : '🌙';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        let isLight = false;
-        if (savedTheme === 'light') {
-            isLight = true;
-        } else if (!savedTheme && !systemPrefersDark) {
-            isLight = true;
-        }
-        
-        if (isLight) {
-            document.documentElement.classList.add('light-mode');
-            document.body.classList.add('light-mode');
-        } else {
-            document.documentElement.classList.remove('light-mode');
-            document.body.classList.remove('light-mode');
-        }
-        
+        let isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
+        if (isLight) document.documentElement.classList.add('light-mode');
         updateThemeUI(isLight);
     });
 </script>
