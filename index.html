@@ -159,12 +159,18 @@ body.light-mode {
 }
 
 body.light-mode .card, 
-body.light-mode .tool-card,
-body.light-mode .header {
+body.light-mode .tool-card {
     background: #ffffff !important;
     color: #1a202c !important;
     border-color: #e2e8f0 !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Header alanını şeffaf yapıp zeminle bütünleştiriyoruz */
+body.light-mode .header {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 body.light-mode .tool-title,
@@ -173,8 +179,10 @@ body.light-mode h2 {
     color: #2d3748 !important;
 }
 
-body.light-mode .tool-desc {
+body.light-mode .tool-desc,
+body.light-mode .header p {
     color: #718096 !important;
+}
 }
 
 /* Tema Değiştirme Butonu */
