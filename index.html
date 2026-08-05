@@ -476,7 +476,7 @@
 
     <div class="location-bar">
         <div class="location-info">
-            <div class="location-city" id="location-city-text" onclick="requestUserLocation()" title="Konumu Güncelle">📍 Erzurum, Türkiye</div>
+            <div class="location-city" id="location-city-text" onclick="fetchUserLocation()" title="Konumu Güncelle">📍 Erzurum, Türkiye</div>
             <div id="current-date-text">6 Ağustos 2026 • Perşembe</div>
         </div>
         <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
@@ -506,30 +506,30 @@
     </div>
 
     <div class="countdown-card">
-        <div class="countdown-title" id="next-prayer-title">Öğle vaktine kalan süre</div>
+        <div class="countdown-title" id="next-prayer-title">İmsak vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
-        <div class="times-grid">
-            <div class="time-box">
+        <div class="times-grid" id="times-grid">
+            <div class="time-box" data-time="03:40">
                 <span class="time-name">İmsak</span>
                 <span class="time-val">03:40</span>
             </div>
-            <div class="time-box">
+            <div class="time-box" data-time="05:18">
                 <span class="time-name">Güneş</span>
                 <span class="time-val">05:18</span>
             </div>
-            <div class="time-box active">
+            <div class="time-box" data-time="12:33">
                 <span class="time-name">Öğle</span>
                 <span class="time-val">12:33</span>
             </div>
-            <div class="time-box">
+            <div class="time-box" data-time="16:24">
                 <span class="time-name">İkindi</span>
                 <span class="time-val">16:24</span>
             </div>
-            <div class="time-box">
+            <div class="time-box" data-time="19:38">
                 <span class="time-name">Akşam</span>
                 <span class="time-val">19:38</span>
             </div>
-            <div class="time-box">
+            <div class="time-box" data-time="21:09">
                 <span class="time-name">Yatsı</span>
                 <span class="time-val">21:09</span>
             </div>
@@ -601,44 +601,84 @@
         }
     }
 
-    function requestUserLocation() {
+    // IP Tabanlı Akıllı Konum Bulma (Tarayıcı GPS izin vermezse veya hata alırsa ipapi kullanır)
+    function fetchUserLocation() {
         const locationText = document.getElementById('location-city-text');
-        if ('geolocation' in navigator) {
-            locationText.innerText = '📍 Konum aranıyor...';
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
+        locationText.innerText = '📍 Konum algılanıyor...';
+
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.city && data.country_name) {
+                    locationText.innerText = `📍 ${data.city}, ${data.country_name}`;
+                } else {
                     locationText.innerText = '📍 Erzurum, Türkiye';
-                },
-                (error) => {
-                    locationText.innerText = '📍 Erzurum, Türkiye';
-                },
-                { timeout: 10000 }
-            );
-        } else {
-            locationText.innerText = '📍 Erzurum, Türkiye';
-        }
+                }
+            })
+            .catch(() => {
+                locationText.innerText = '📍 Erzurum, Türkiye';
+            });
     }
 
-    // Gerçek Zamanlı Dinamik Sayaç Mantığı (Öğle Vakti 12:33 Hedefli)
+    // Vakitleri ve Kalan Süreyi Otomatik Hesaplayan Fonksiyon
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
-        
+        const titleElement = document.getElementById('next-prayer-title');
+        const timeBoxes = document.querySelectorAll('.times-grid .time-box');
+
+        // Sabit vakit listemiz (İhtiyaca göre dinamikleştirilebilir)
+        const prayers = [
+            { name: "İmsak", time: "03:40" },
+            { name: "Güneş", time: "05:18" },
+            { name: "Öğle", time: "12:33" },
+            { name: "İkindi", time: "16:24" },
+            { name: "Akşam", time: "19:38" },
+            { name: "Yatsı", time: "21:09" }
+        ];
+
         setInterval(() => {
             const now = new Date();
-            // Hedef vakit: Bugün saat 12:33:00 (Öğle)
-            let target = new Date();
-            target.setHours(12, 33, 0, 0);
+            let targetPrayer = null;
+            let targetDate = null;
 
-            // Eğer öğle vakti geçtiyse bir sonraki günün imsak veya öğle vaktine ayarlanabilir
-            let diff = target - now;
-            if (diff < 0) {
-                // Eğer saat 12:33'ü geçtiyse yarına veya bir sonraki vakte atar
-                target.setDate(target.getDate() + 1);
-                target.setHours(3, 40, 0, 0); // Örn: İmsak
-                document.getElementById('next-prayer-title').innerText = "İmsak vaktine kalan süre";
-                diff = target - now;
+            // Bugünün vakitlerini kontrol et
+            for (let i = 0; i < prayers.length; i++) {
+                const [h, m] = prayers[i].time.split(':').map(Number);
+                let pDate = new Date();
+                pDate.setHours(h, m, 0, 0);
+
+                if (pDate > now) {
+                    targetPrayer = prayers[i];
+                    targetDate = pDate;
+                    break;
+                }
             }
 
+            // Eğer bugünkü tüm vakitler geçtiyse, sonraki günün ilk vakti (İmsak) hedeftir
+            if (!targetPrayer) {
+                targetPrayer = prayers[0];
+                let pDate = new Date();
+                pDate.setDate(pDate.getDate() + 1);
+                const [h, m] = targetPrayer.time.split(':').map(Number);
+                pDate.setHours(h, m, 0, 0);
+                targetDate = pDate;
+            }
+
+            // Aktif vakit arayüzünü güncelle
+            timeBoxes.forEach(box => {
+                const name = box.querySelector('.time-name').innerText;
+                if (name === targetPrayer.name) {
+                    box.classList.add('active');
+                } else {
+                    box.classList.remove('active');
+                }
+            });
+
+            if (titleElement) {
+                titleElement.innerText = `${targetPrayer.name} vaktine kalan süre`;
+            }
+
+            let diff = targetDate - now;
             let totalSeconds = Math.floor(diff / 1000);
             let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
             let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
@@ -663,7 +703,8 @@
             document.body.classList.remove('light-mode');
         }
         updateThemeUI(isLight);
-        startCountdown();
+        fetchUserLocation(); // Konumu otomatik çek
+        startCountdown(); // Sayaç motorunu çalıştır
     });
 </script>
 </body>
