@@ -148,13 +148,99 @@
             color: var(--text-color);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             cursor: pointer;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            width: fit-content;
         }
 
         .location-city:hover {
+            border-color: var(--accent-color);
             color: var(--accent-color);
         }
+
+        /* Konum Seçim Modal Tasarımı */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+            opacity: 0; visibility: hidden;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .city-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .city-select:focus {
+            border-color: var(--accent-color);
+        }
+
+        .modal-save-btn {
+            background-color: var(--accent-color);
+            color: #0f172a;
+            font-weight: 700;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .modal-save-btn:hover { opacity: 0.9; }
 
         .stories-container {
             display: flex;
@@ -441,11 +527,43 @@
         body.light-mode .countdown-card {
             background: #ffffff;
         }
+        body.light-mode .modal-card {
+            background: #ffffff;
+        }
+        body.light-mode .city-select {
+            background-color: #f1f5f9;
+        }
     </style>
 </head>
 <body>
 
 <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+<!-- Konum Seçim Modal Penceresi -->
+<div class="modal-overlay" id="locationModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title">Konum Seçin</div>
+            <button class="modal-close" onclick="toggleLocationModal()">✕</button>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Namaz vakitlerini görmek istediğiniz şehri seçin:
+        </div>
+        <select id="citySelectBox" class="city-select">
+            <option value="Erzurum">Erzurum</option>
+            <option value="İstanbul">İstanbul</option>
+            <option value="Ankara">Ankara</option>
+            <option value="İzmir">İzmir</option>
+            <option value="Bursa">Bursa</option>
+            <option value="Antalya">Antalya</option>
+            <option value="Konya">Konya</option>
+            <option value="Trabzon">Trabzon</option>
+            <option value="Diyarbakır">Diyarbakır</option>
+            <option value="Van">Van</option>
+        </select>
+        <button class="modal-save-btn" onclick="saveSelectedCity()">Konumu Uygula</button>
+    </div>
+</div>
 
 <div class="drawer" id="appDrawer">
     <div class="drawer-header">
@@ -476,7 +594,9 @@
 
     <div class="location-bar">
         <div class="location-info">
-            <div class="location-city" id="location-city-text" onclick="fetchUserLocation()" title="Konumu Güncelle">📍 Erzurum, Türkiye</div>
+            <div class="location-city" id="location-city-text" onclick="toggleLocationModal()" title="Konumu Değiştir">
+                📍 <span id="selected-city-name">Erzurum</span>, Türkiye ▾
+            </div>
             <div id="current-date-text">6 Ağustos 2026 • Perşembe</div>
         </div>
         <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
@@ -509,29 +629,29 @@
         <div class="countdown-title" id="next-prayer-title">İmsak vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         <div class="times-grid" id="times-grid">
-            <div class="time-box" data-time="03:40">
+            <div class="time-box" data-name="İmsak">
                 <span class="time-name">İmsak</span>
-                <span class="time-val">03:40</span>
+                <span class="time-val" id="val-imsak">03:40</span>
             </div>
-            <div class="time-box" data-time="05:18">
+            <div class="time-box" data-name="Güneş">
                 <span class="time-name">Güneş</span>
-                <span class="time-val">05:18</span>
+                <span class="time-val" id="val-gunes">05:18</span>
             </div>
-            <div class="time-box" data-time="12:33">
+            <div class="time-box" data-name="Öğle">
                 <span class="time-name">Öğle</span>
-                <span class="time-val">12:33</span>
+                <span class="time-val" id="val-ogle">12:33</span>
             </div>
-            <div class="time-box" data-time="16:24">
+            <div class="time-box" data-name="İkindi">
                 <span class="time-name">İkindi</span>
-                <span class="time-val">16:24</span>
+                <span class="time-val" id="val-ikindi">16:24</span>
             </div>
-            <div class="time-box" data-time="19:38">
+            <div class="time-box" data-name="Akşam">
                 <span class="time-name">Akşam</span>
-                <span class="time-val">19:38</span>
+                <span class="time-val" id="val-aksam">19:38</span>
             </div>
-            <div class="time-box" data-time="21:09">
+            <div class="time-box" data-name="Yatsı">
                 <span class="time-name">Yatsı</span>
-                <span class="time-val">21:09</span>
+                <span class="time-val" id="val-yatsi">21:09</span>
             </div>
         </div>
     </div>
@@ -582,9 +702,27 @@
 </div>
 
 <script>
+    // Şehirlere göre örnek namaz vakitleri veritabanı (İhtiyaca göre çoğaltılabilir)
+    const cityPrayerTimes = {
+        "Erzurum": { imsak: "03:40", gunes: "05:18", ogle: "12:33", ikindi: "16:24", aksam: "19:38", yatsi: "21:09" },
+        "İstanbul": { imsak: "04:18", gunes: "06:01", ogle: "13:16", ikindi: "17:09", aksam: "20:20", yatsi: "21:56" },
+        "Ankara": { imsak: "04:08", gunes: "05:49", ogle: "13:03", ikindi: "16:55", aksam: "20:06", yatsi: "21:39" },
+        "İzmir": { imsak: "04:30", gunes: "06:10", ogle: "13:24", ikindi: "17:13", aksam: "20:25", yatsi: "21:58" },
+        "Bursa": { imsak: "04:22", gunes: "06:04", ogle: "13:19", ikindi: "17:11", aksam: "20:23", yatsi: "21:58" },
+        "Antalya": { imsak: "04:32", gunes: "06:05", ogle: "13:13", ikindi: "16:59", aksam: "20:09", yatsi: "21:35" },
+        "Konya": { imsak: "04:19", gunes: "05:56", ogle: "13:08", ikindi: "16:57", aksam: "20:08", yatsi: "21:38" },
+        "Trabzon": { imsak: "03:46", gunes: "05:28", ogle: "12:43", ikindi: "16:35", aksam: "19:48", yatsi: "21:22" },
+        "Diyarbakır": { imsak: "03:52", gunes: "05:27", ogle: "12:39", ikindi: "16:23", aksam: "19:39", yatsi: "21:07" },
+        "Van": { imsak: "03:39", gunes: "05:14", ogle: "12:26", ikindi: "16:10", aksam: "19:27", yatsi: "20:54" }
+    };
+
     function toggleDrawer() {
         document.getElementById('appDrawer').classList.toggle('active');
         document.getElementById('drawerOverlay').classList.toggle('active');
+    }
+
+    function toggleLocationModal() {
+        document.getElementById('locationModal').classList.toggle('active');
     }
 
     function toggleTheme() {
@@ -601,24 +739,36 @@
         }
     }
 
-    // Doğrudan Türkçe şehir bilgisi sağlayan alternatif güvenli servis
-    function fetchUserLocation() {
-        const locationText = document.getElementById('location-city-text');
-        locationText.innerText = '📍 Konum algılanıyor...';
+    // Seçilen şehri kaydet ve arayüzü güncelle
+    function saveSelectedCity() {
+        const selectBox = document.getElementById('citySelectBox');
+        const chosenCity = selectBox.value;
 
-        fetch('https://ipwho.is/')
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.success && data.city && data.country) {
-                    // Şehir adını basıyoruz
-                    locationText.innerText = `📍 ${data.city}, ${data.country}`;
-                } else {
-                    locationText.innerText = '📍 Erzurum, Türkiye';
-                }
-            })
-            .catch(() => {
-                locationText.innerText = '📍 Erzurum, Türkiye';
-            });
+        localStorage.setItem('user_city', chosenCity);
+        document.getElementById('selected-city-name').innerText = chosenCity;
+        
+        toggleLocationModal();
+        loadCityTimes(chosenCity);
+    }
+
+    // Şehrin vakitlerini ekrana ve sayaca yansıt
+    function loadCityTimes(city) {
+        const times = cityPrayerTimes[city] || cityPrayerTimes["Erzurum"];
+
+        document.getElementById('val-imsak').innerText = times.imsak;
+        document.getElementById('val-gunes').innerText = times.gunes;
+        document.getElementById('val-ogle').innerText = times.ogle;
+        document.getElementById('val-ikindi').innerText = times.ikindi;
+        document.getElementById('val-aksam').innerText = times.aksam;
+        document.getElementById('val-yatsi').innerText = times.yatsi;
+
+        // Vakit kutularındaki data-time değerlerini de güncelliyoruz ki sayaç doğru çalışsın
+        document.querySelector('[data-name="İmsak"] .time-val').innerText = times.imsak;
+        document.querySelector('[data-name="Güneş"] .time-val').innerText = times.gunes;
+        document.querySelector('[data-name="Öğle"] .time-val').innerText = times.ogle;
+        document.querySelector('[data-name="İkindi"] .time-val').innerText = times.ikindi;
+        document.querySelector('[data-name="Akşam"] .time-val').innerText = times.aksam;
+        document.querySelector('[data-name="Yatsı"] .time-val').innerText = times.yatsi;
     }
 
     function startCountdown() {
@@ -626,17 +776,19 @@
         const titleElement = document.getElementById('next-prayer-title');
         const timeBoxes = document.querySelectorAll('.times-grid .time-box');
 
-        const prayers = [
-            { name: "İmsak", time: "03:40" },
-            { name: "Güneş", time: "05:18" },
-            { name: "Öğle", time: "12:33" },
-            { name: "İkindi", time: "16:24" },
-            { name: "Akşam", time: "19:38" },
-            { name: "Yatsı", time: "21:09" }
-        ];
-
         setInterval(() => {
             const now = new Date();
+            
+            // Güncel ekrandaki vakitleri dinamik al
+            const prayers = [
+                { name: "İmsak", time: document.getElementById('val-imsak').innerText },
+                { name: "Güneş", time: document.getElementById('val-gunes').innerText },
+                { name: "Öğle", time: document.getElementById('val-ogle').innerText },
+                { name: "İkindi", time: document.getElementById('val-ikindi').innerText },
+                { name: "Akşam", time: document.getElementById('val-aksam').innerText },
+                { name: "Yatsı", time: document.getElementById('val-yatsi').innerText }
+            ];
+
             let targetPrayer = null;
             let targetDate = null;
 
@@ -699,7 +851,13 @@
             document.body.classList.remove('light-mode');
         }
         updateThemeUI(isLight);
-        fetchUserLocation();
+
+        // Kayıtlı şehir varsa yükle, yoksa Erzurum ile başla
+        const savedCity = localStorage.getItem('user_city') || 'Erzurum';
+        document.getElementById('selected-city-name').innerText = savedCity;
+        document.getElementById('citySelectBox').value = savedCity;
+        loadCityTimes(savedCity);
+
         startCountdown();
     });
 </script>
