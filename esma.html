@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esmaül Hüsna | Ayetin Vakti</title>
+    
+    <!-- Tema Sıçramasını Önleyici Script -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
+            document.documentElement.classList.add('light-mode');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --card-bg: #1e293b;
+            --accent-color: #10b981;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --drawer-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Üst Bar */
+        .navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-family: 'Georgia', serif;
+        }
+
+        /* Başlık Alanı */
+        .page-header {
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            font-family: 'Georgia', serif;
+        }
+
+        .page-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Esma Listesi Grid */
+        .esma-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .esma-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .esma-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .esma-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .esma-number {
+            width: 32px;
+            height: 32px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .esma-info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+
+        .esma-info p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .esma-arabic-text {
+            font-size: 1.6rem;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: right;
+        }
+
+        .footer {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer span {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Açık Tema (Light Mode) Ayarları */
+        body.light-mode {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Üst Bar -->
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="back-btn">‹</a>
+            <a href="index.html" class="app-title">Ayetin Vakti</a>
+        </div>
+        <div style="font-size: 1.2rem;">✨</div>
+    </header>
+
+    <!-- Sayfa Başlığı -->
+    <div class="page-header">
+        <h1>Esmaül Hüsna</h1>
+        <p>Allah'ın en güzel 99 ismi ve anlamları</p>
+    </div>
+
+    <!-- Esma Listesi -->
+    <div class="esma-grid">
+        <div class="esma-card">
+            <div class="esma-left">
+                <div class="esma-number">1</div>
+                <div class="esma-info">
+                    <h3>Er-Rahmân</h3>
+                    <p>Dünyada bütün mahlukata merhamet eden.</p>
+                </div>
+            </div>
+            <div class="esma-arabic-text">ٱلرَّحْمَٰنُ</div>
+        </div>
+
+        <div class="esma-card">
+            <div class="esma-left">
+                <div class="esma-number">2</div>
+                <div class="esma-info">
+                    <h3>Er-Rahîm</h3>
+                    <p>Ahirette sadece müminlere ikram eden.</p>
+                </div>
+            </div>
+            <div class="esma-arabic-text">ٱلرَّحِيمُ</div>
+        </div>
+
+        <div class="esma-card">
+            <div class="esma-left">
+                <div class="esma-number">3</div>
+                <div class="esma-info">
+                    <h3>El-Melik</h3>
+                    <p>Mülkün, kainatın sahibi ve mutlak hükümdarı.</p>
+                </div>
+            </div>
+            <div class="esma-arabic-text">ٱلْمَلِكُ</div>
+        </div>
+
+        <div class="esma-card">
+            <div class="esma-left">
+                <div class="esma-number">4</div>
+                <div class="esma-info">
+                    <h3>El-Kuddûs</h3>
+                    <p>Her türlü eksiklikten uzak, tertemiz.</p>
+                </div>
+            </div>
+            <div class="esma-arabic-text">ٱلْقُدُّوسُ</div>
+        </div>
+
+        <div class="esma-card">
+            <div class="esma-left">
+                <div class="esma-number">5</div>
+                <div class="esma-info">
+                    <h3>Es-Selâm</h3>
+                    <p>Her türlü tehlikeden kurtaran, esenlik veren.</p>
+                </div>
+            </div>
+            <div class="esma-arabic-text">ٱلسَّلَامُ</div>
+        </div>
+
+        <!-- Not: İhtiyacına göre diğer esmaları da bu şablona ekleyebilirsin ustam! -->
+    </div>
+</div>
+
+<div class="footer">
+    © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
+</div>
+
+</body>
+</html>
