@@ -371,6 +371,7 @@
             position: relative;
             min-height: 104px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
         }
 
         .menu-grid-card:hover {
@@ -496,8 +497,33 @@
             display: flex; align-items: center; gap: 14px;
             padding: 14px 20px; color: var(--text-color); text-decoration: none;
             font-size: 1rem; font-weight: 500; border-left: 3px solid transparent;
+            cursor: pointer;
         }
         .drawer-item:hover { background: rgba(16,185,129,0.08); color: var(--accent-color); border-left-color: var(--accent-color); }
+
+        /* Bildirim Toast Tasarımı */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
 
         .footer {
             margin: 20px 0; text-align: center; font-size: 0.85rem; color: var(--text-muted);
@@ -526,6 +552,9 @@
 <body>
 
 <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+<!-- Bildirim Toast Alanı -->
+<div class="toast-notification" id="toastMessage">📖 Kur-an’ı Kerim yakında hizmetinizde</div>
 
 <!-- Konum Seçim Modalı -->
 <div class="modal-overlay" id="locationModal">
@@ -563,7 +592,7 @@
         <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item"><span style="width:24px">🕌</span> Namaz Vakitleri</a>
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><span style="width:24px">🧭</span> Kıble Pusulası</a>
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><span style="width:24px">📿</span> Zikirmatik</a>
-        <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><span style="width:24px">📖</span> Kur'an-ı Kerim Oku</a>
+        <a onclick="yakindaHizmetindeGoster()" class="drawer-item"><span style="width:24px">📖</span> Kur'an-ı Kerim Oku</a>
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><span style="width:24px">✨</span> Günün Ayeti</a>
         <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="drawer-item"><span style="width:24px">▶️</span> YouTube Kanalı</a>
     </div>
@@ -680,10 +709,11 @@
             </div>
             <div class="grid-title">YouTube</div>
         </a>
-        <a href="https://ayetinvakti.github.io/kuran-oku/" class="menu-grid-card">
+        <!-- Kur'an-ı Kerim Kartı (Tıklayınca uyarı verir) -->
+        <div onclick="yakindaHizmetindeGoster()" class="menu-grid-card">
             <div class="grid-icon-box">📖</div>
             <div class="grid-title">Kur'an-ı Kerim Oku</div>
-        </a>
+        </div>
     </div>
 
     <div class="content-card">
@@ -767,6 +797,14 @@
         document.getElementById('val-ikindi').innerText = times.ikindi;
         document.getElementById('val-aksam').innerText = times.aksam;
         document.getElementById('val-yatsi').innerText = times.yatsi;
+    }
+
+    function yakindaHizmetindeGoster() {
+        const toast = document.getElementById('toastMessage');
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
     }
 
     function startCountdown() {
@@ -861,4 +899,3 @@
 </script>
 </body>
 </html>
-
