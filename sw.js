@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ayetim-vakti-v2';
+const CACHE_NAME = 'ayetim-vakti-v3';
 const assetsToCache = [
     '/',
     '/index.html',
@@ -34,14 +34,20 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Çevrimdışı istekleri yakalama
+// Güncel veriyi önce internetten çekme (Network First)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            // Önbellekte varsa onu döndür, yoksa internetten çek
-            return response || fetch(event.request);
-        }).catch(() => {
-            // İkisi de olmazsa (internetsiz ve önbelleksiz durum) istenirse yedek sayfa gösterilebilir
-        })
+        fetch(event.request)
+            .then((networkResponse) => {
+                // İnternetten taze veri geldiyse bunu önbelleğe de güncelle
+                return caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                });
+            })
+            .catch(() => {
+                // İnternet yoksa veya hata alırsak önbellekteki eski/güvenli sürümü göster
+                return caches.match(event.request);
+            })
     );
 });
