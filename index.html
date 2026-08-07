@@ -97,7 +97,7 @@
         .modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: var(--card-bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.active .modal-card { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .city-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); margin: 12px 0; font-size: 0.9rem; }
+        .city-select, .lang-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); margin: 12px 0; font-size: 0.9rem; }
         .modal-save-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
@@ -112,10 +112,10 @@
 <div class="modal-overlay" id="locationModal">
     <div class="modal-card">
         <div class="modal-header">
-            <div class="modal-title">Konum Seçin</div>
+            <div class="modal-title" data-i18n="modal_loc_title">Konum Seçin</div>
             <button class="modal-close" onclick="toggleLocationModal()">✕</button>
         </div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">
+        <div style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="modal_loc_desc">
             Namaz vakitlerini görmek istediğiniz şehri seçin:
         </div>
         <select id="citySelectBox" class="city-select">
@@ -201,7 +201,25 @@
             <option value="Osmaniye">Osmaniye</option>
             <option value="Düzce">Düzce</option>
         </select>
-        <button class="modal-save-btn" onclick="saveSelectedCity()">Konumu Uygula</button>
+        <button class="modal-save-btn" onclick="saveSelectedCity()" data-i18n="modal_loc_btn">Konumu Uygula</button>
+    </div>
+</div>
+
+<!-- Dil Seçim Modalı -->
+<div class="modal-overlay" id="langModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title" data-i18n="modal_lang_title">Dil Seçin / Select Language</div>
+            <button class="modal-close" onclick="toggleLangModal()">✕</button>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="modal_lang_desc">
+            Uygulama dilini seçin:
+        </div>
+        <select id="langSelectBox" class="lang-select">
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+        </select>
+        <button class="modal-save-btn" onclick="saveSelectedLang()" data-i18n="modal_lang_btn">Kaydet</button>
     </div>
 </div>
 
@@ -211,21 +229,25 @@
         <button class="drawer-close" onclick="toggleDrawer()">✕</button>
     </div>
     <div class="drawer-links">
-        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item"><div class="drawer-icon-box">🕌</div><span>Namaz Vakitleri</span></a>
-        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><div class="drawer-icon-box">🧭</div><span>Kıble Pusulası</span></a>
-        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><div class="drawer-icon-box">📿</div><span>Zikirmatik</span></a>
-        <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><div class="drawer-icon-box">📖</div><span>Kur'an-ı Kerim Oku</span></a>
-        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><div class="drawer-icon-box">✨</div><span>Günün Ayeti</span></a>
-        <a href="esma.html" class="drawer-item"><div class="drawer-icon-box">🌙</div><span>Esmaül Hüsna</span></a>
-        <a href="https://ayetinvakti.github.io/dini-gunler/" class="drawer-item"><div class="drawer-icon-box">📅</div><span>Dini Günler</span></a>
+        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item"><div class="drawer-icon-box">🕌</div><span data-i18n="menu_prayer">Namaz Vakitleri</span></a>
+        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><div class="drawer-icon-box">🧭</div><span data-i18n="menu_qibla">Kıble Pusulası</span></a>
+        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><div class="drawer-icon-box">📿</div><span data-i18n="menu_dhikr">Zikirmatik</span></a>
+        <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><div class="drawer-icon-box">📖</div><span data-i18n="menu_quran">Kur'an-ı Kerim Oku</span></a>
+        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><div class="drawer-icon-box">✨</div><span data-i18n="menu_verse">Günün Ayeti</span></a>
+        <a href="esma.html" class="drawer-item"><div class="drawer-icon-box">🌙</div><span data-i18n="menu_esma">Esmaül Hüsna</span></a>
+        <a href="https://ayetinvakti.github.io/dini-gunler/" class="drawer-item"><div class="drawer-icon-box">📅</div><span data-i18n="menu_days">Dini Günler</span></a>
         <div class="drawer-divider"></div>
         <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="drawer-item">
             <div class="drawer-icon-box" style="background: rgba(255, 0, 0, 0.1);">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
-            <span>YouTube Kanalı</span>
+            <span data-i18n="menu_youtube">YouTube Kanalı</span>
         </a>
-        <a href="https://ayetinvakti.github.io/ayarlar/" class="drawer-item"><div class="drawer-icon-box" style="background: rgba(148, 163, 184, 0.1);">⚙️</div><span>Ayarlar</span></a>
+        <a href="#" onclick="toggleLangModal(); toggleDrawer(); return false;" class="drawer-item">
+            <div class="drawer-icon-box" style="background: rgba(59, 130, 246, 0.1);">🌐</div>
+            <span data-i18n="menu_lang">Dil / Language</span>
+        </a>
+        <a href="https://ayetinvakti.github.io/ayarlar/" class="drawer-item"><div class="drawer-icon-box" style="background: rgba(148, 163, 184, 0.1);">⚙️</div><span data-i18n="menu_settings">Ayarlar</span></a>
     </div>
 </div>
 
@@ -250,7 +272,7 @@
             <div id="current-date-text">Yükleniyor...</div>
         </div>
         <div style="text-align: right;">
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Hicri Takvim</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);" data-i18n="hijri_calendar_title">Hicri Takvim</div>
             <div id="hicri-date-text">Yükleniyor...</div>
         </div>
     </div>
@@ -258,14 +280,14 @@
     <!-- İslam Dini ve Kültürü Bilgi Testi Kartı -->
     <div class="quiz-card">
         <div class="card-header-flex">
-            <div class="card-section-title">📝 İslam Dini ve Kültürü Bilgi Testi</div>
+            <div class="card-section-title" data-i18n="quiz_title">📝 İslam Dini ve Kültürü Bilgi Testi</div>
             <div id="quiz-progress" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">1 / 5</div>
         </div>
         <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
         <div class="quiz-options" id="quiz-options-container"></div>
         <div class="quiz-footer">
             <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
-            <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;">Sonraki</button>
+            <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
         </div>
     </div>
 
@@ -274,27 +296,27 @@
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         <div class="times-grid" id="times-grid">
             <div class="time-box" data-name="İmsak">
-                <span class="time-name">İmsak</span>
+                <span class="time-name" data-i18n="time_imsak">İmsak</span>
                 <span class="time-val" id="val-imsak">--:--</span>
             </div>
             <div class="time-box" data-name="Güneş">
-                <span class="time-name">Güneş</span>
+                <span class="time-name" data-i18n="time_sunrise">Güneş</span>
                 <span class="time-val" id="val-gunes">--:--</span>
             </div>
             <div class="time-box" data-name="Öğle">
-                <span class="time-name">Öğle</span>
+                <span class="time-name" data-i18n="time_dhuhr">Öğle</span>
                 <span class="time-val" id="val-ogle">--:--</span>
             </div>
             <div class="time-box" data-name="İkindi">
-                <span class="time-name">İkindi</span>
+                <span class="time-name" data-i18n="time_asr">İkindi</span>
                 <span class="time-val" id="val-ikindi">--:--</span>
             </div>
             <div class="time-box" data-name="Akşam">
-                <span class="time-name">Akşam</span>
+                <span class="time-name" data-i18n="time_maghrib">Akşam</span>
                 <span class="time-val" id="val-aksam">--:--</span>
             </div>
             <div class="time-box" data-name="Yatsı">
-                <span class="time-name">Yatsı</span>
+                <span class="time-name" data-i18n="time_isha">Yatsı</span>
                 <span class="time-val" id="val-yatsi">--:--</span>
             </div>
         </div>
@@ -303,20 +325,20 @@
     <div class="menu-grid">
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="menu-grid-card">
             <div class="grid-icon-box">🧭</div>
-            <div class="grid-title">Kıble Bul</div>
+            <div class="grid-title" data-i18n="grid_qibla">Kıble Bul</div>
         </a>
         <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="menu-grid-card">
             <div class="grid-icon-box">🕌</div>
-            <div class="grid-title">Namaz Vakti</div>
+            <div class="grid-title" data-i18n="grid_prayer">Namaz Vakti</div>
         </a>
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="menu-grid-card">
-            <span class="badge-yeni">Yeni</span>
+            <span class="badge-yeni" data-i18n="badge_new">Yeni</span>
             <div class="grid-icon-box">📿</div>
-            <div class="grid-title">Zikirmatik</div>
+            <div class="grid-title" data-i18n="grid_dhikr">Zikirmatik</div>
         </a>
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="menu-grid-card">
             <div class="grid-icon-box">✨</div>
-            <div class="grid-title">Günün Ayeti</div>
+            <div class="grid-title" data-i18n="grid_verse">Günün Ayeti</div>
         </a>
         <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="menu-grid-card">
             <div class="grid-icon-box" style="background: rgba(255, 0, 0, 0.1);">
@@ -326,61 +348,161 @@
         </a>
         <a href="https://ayetinvakti.github.io/kuran-oku/" class="menu-grid-card">
             <div class="grid-icon-box">📖</div>
-            <div class="grid-title">Kur'an-ı Kerim Oku</div>
+            <div class="grid-title" data-i18n="grid_quran">Kur'an-ı Kerim Oku</div>
         </a>
     </div>
 
     <div class="content-card">
         <div class="card-header-flex">
-            <div class="card-section-title">🌙 Esmaül Hüsna</div>
+            <div class="card-section-title" data-i18n="esma_card_title">🌙 Esmaül Hüsna</div>
         </div>
         <a href="esma.html" class="esma-banner" id="esma-banner-link">
             <div class="esma-arabic">ٱلْغَفُورُ</div>
             <div class="esma-name">El-Gafûr</div>
-            <div class="esma-desc">Günahları tamamen örten ve bağışlayandır.</div>
-            <span class="esma-link">Allah'ın 99 İsmini Gör ›</span>
+            <div class="esma-desc" data-i18n="esma_card_desc">Günahları tamamen örten ve bağışlayandır.</div>
+            <span class="esma-link" data-i18n="esma_card_link">Allah'ın 99 İsmini Gör ›</span>
         </a>
     </div>
 </div>
 
 <div class="footer">
-    © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
+    © Ayetin Vakti • <span data-i18n="footer_slogan">Huzur ve İbadet Rehberliğiniz</span>
 </div>
 
 <script>
-    const quizData = [
-        {
-            question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?",
-            options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"],
-            answer: 2
+    // Çeviri Sözlüğü
+    const translations = {
+        tr: {
+            menu_prayer: "Namaz Vakitleri",
+            menu_qibla: "Kıble Pusulası",
+            menu_dhikr: "Zikirmatik",
+            menu_quran: "Kur'an-ı Kerim Oku",
+            menu_verse: "Günün Ayeti",
+            menu_esma: "Esmaül Hüsna",
+            menu_days: "Dini Günler",
+            menu_youtube: "YouTube Kanalı",
+            menu_lang: "Dil / Language",
+            menu_settings: "Ayarlar",
+            hijri_calendar_title: "Hicri Takvim",
+            quiz_title: "📝 İslam Dini ve Kültürü Bilgi Testi",
+            quiz_next: "Sonraki",
+            time_imsak: "İmsak",
+            time_sunrise: "Güneş",
+            time_dhuhr: "Öğle",
+            time_asr: "İkindi",
+            time_maghrib: "Akşam",
+            time_isha: "Yatsı",
+            grid_qibla: "Kıble Bul",
+            grid_prayer: "Namaz Vakti",
+            grid_dhikr: "Zikirmatik",
+            grid_verse: "Günün Ayeti",
+            grid_quran: "Kur'an-ı Kerim Oku",
+            badge_new: "Yeni",
+            esma_card_title: "🌙 Esmaül Hüsna",
+            esma_card_desc: "Günahları tamamen örten ve bağışlayandır.",
+            esma_card_link: "Allah'ın 99 İsmini Gör ›",
+            footer_slogan: "Huzur ve İbadet Rehberliğiniz",
+            modal_loc_title: "Konum Seçin",
+            modal_loc_desc: "Namaz vakitlerini görmek istediğiniz şehri seçin:",
+            modal_loc_btn: "Konumu Uygula",
+            modal_lang_title: "Dil Seçin / Select Language",
+            modal_lang_desc: "Uygulama dilini seçin:",
+            modal_lang_btn: "Kaydet",
+            correct_answer: "✨ Doğru Cevap!",
+            wrong_answer: "❌ Yanlış Cevap!"
         },
-        {
-            question: "2. Kur'an-ı Kerim'in en uzun suresi aşağıdakilerden hangisidir?",
-            options: ["Yâsîn Suresi", "Bakara Suresi", "Al-i İmrân Suresi", "İhlâs Suresi"],
-            answer: 1
-        },
-        {
-            question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?",
-            options: ["Medine", "Kudüs", "Taif", "Mekke"],
-            answer: 3
-        },
-        {
-            question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?",
-            options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"],
-            answer: 0
-        },
-        {
-            question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?",
-            options: ["Sure", "Ayet", "Cüz", "Meâl"],
-            answer: 2
+        en: {
+            menu_prayer: "Prayer Times",
+            menu_qibla: "Qibla Compass",
+            menu_dhikr: "Dhikrmatic",
+            menu_quran: "Read Holy Quran",
+            menu_verse: "Verse of the Day",
+            menu_esma: "Asmaul Husna",
+            menu_days: "Religious Days",
+            menu_youtube: "YouTube Channel",
+            menu_lang: "Language / Dil",
+            menu_settings: "Settings",
+            hijri_calendar_title: "Hijri Calendar",
+            quiz_title: "📝 Islamic Religion & Culture Quiz",
+            quiz_next: "Next",
+            time_imsak: "Fajr",
+            time_sunrise: "Sunrise",
+            time_dhuhr: "Dhuhr",
+            time_asr: "Asr",
+            time_maghrib: "Maghrib",
+            time_isha: "Isha",
+            grid_qibla: "Find Qibla",
+            grid_prayer: "Prayer Time",
+            grid_dhikr: "Dhikrmatic",
+            grid_verse: "Verse of Day",
+            grid_quran: "Read Quran",
+            badge_new: "New",
+            esma_card_title: "🌙 Asmaul Husna",
+            esma_card_desc: "The All-Forgiving, the Repeatedly Forgiving.",
+            esma_card_link: "View 99 Names of Allah ›",
+            footer_slogan: "Your Guide to Peace and Worship",
+            modal_loc_title: "Select Location",
+            modal_loc_desc: "Select the city where you want to view prayer times:",
+            modal_loc_btn: "Apply Location",
+            modal_lang_title: "Select Language / Dil Seçin",
+            modal_lang_desc: "Select app language:",
+            modal_lang_btn: "Save",
+            correct_answer: "✨ Correct Answer!",
+            wrong_answer: "❌ Wrong Answer!"
         }
-    ];
+    };
+
+    const quizData = {
+        tr: [
+            { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
+            { question: "2. Kur'an-ı Kerim'in en uzun suresi aşağıdakilerden hangisidir?", options: ["Yâsîn Suresi", "Bakara Suresi", "Al-i İmrân Suresi", "İhlâs Suresi"], answer: 1 },
+            { question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?", options: ["Medine", "Kudüs", "Taif", "Mekke"], answer: 3 },
+            { question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?", options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"], answer: 0 },
+            { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 }
+        ],
+        en: [
+            { question: "1. Which of the following does not break ablution (wudu)?", options: ["Vomiting a mouthful", "Fainting", "Crying", "Laughing aloud during prayer"], answer: 2 },
+            { question: "2. Which is the longest Surah in the Holy Quran?", options: ["Surah Yaseen", "Surah Al-Baqarah", "Surah Ali 'Imran", "Surah Al-Ikhlas"], answer: 1 },
+            { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
+            { question: "4. In which Islamic month is the pilgrimage (Hajj) performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharram", "Shawwal"], answer: 0 },
+            { question: "5. What is each 20-page section of the Holy Quran called?", options: ["Surah", "Ayah", "Juz", "Translation"], answer: 2 }
+        ]
+    };
 
     let currentQuestionIndex = 0;
+    let currentLang = localStorage.getItem('user_lang') || 'tr';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('user_lang', lang);
+        
+        // data-i18n özniteliğine sahip tüm elementlerin metnini değiştir
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                el.innerText = translations[lang][key];
+            }
+        });
+
+        loadQuizQuestion();
+    }
+
+    function toggleLangModal() {
+        document.getElementById('langModal').classList.toggle('active');
+    }
+
+    function saveSelectedLang() {
+        const selectBox = document.getElementById('langSelectBox');
+        setLanguage(selectBox.value);
+        toggleLangModal();
+    }
 
     function loadQuizQuestion() {
-        const currentData = quizData[currentQuestionIndex];
-        document.getElementById('quiz-progress').innerText = `${currentQuestionIndex + 1} / ${quizData.length}`;
+        const qList = quizData[currentLang];
+        if (currentQuestionIndex >= qList.length) currentQuestionIndex = 0;
+        
+        const currentData = qList[currentQuestionIndex];
+        document.getElementById('quiz-progress').innerText = `${currentQuestionIndex + 1} / ${qList.length}`;
         document.getElementById('quiz-question-text').innerText = currentData.question;
         
         const container = document.getElementById('quiz-options-container');
@@ -399,7 +521,8 @@
     }
 
     function checkQuizAnswer(selectedIndex, clickedBtn) {
-        const correctIdx = quizData[currentQuestionIndex].answer;
+        const qList = quizData[currentLang];
+        const correctIdx = qList[currentQuestionIndex].answer;
         const allButtons = document.querySelectorAll('.quiz-option-btn');
         
         allButtons.forEach((btn, idx) => {
@@ -411,11 +534,11 @@
 
         const feedbackText = document.getElementById('quiz-feedback-text');
         if (selectedIndex === correctIdx) {
-            feedbackText.innerText = "✨ Doğru Cevap!";
+            feedbackText.innerText = translations[currentLang].correct_answer;
             feedbackText.style.color = "#10b981";
         } else {
             clickedBtn.classList.add('wrong');
-            feedbackText.innerText = "❌ Yanlış Cevap!";
+            feedbackText.innerText = translations[currentLang].wrong_answer;
             feedbackText.style.color = "#ef4444";
         }
 
@@ -424,15 +547,15 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex >= quizData.length) {
+        const qList = quizData[currentLang];
+        if (currentQuestionIndex >= qList.length) {
             currentQuestionIndex = 0;
         }
         loadQuizQuestion();
     }
 
-    // Aladhan API ile namaz vakitleri ve hicri tarihi çekme fonksiyonu (Hata korumalı)
     async function fetchPrayerTimes(city) {
-        const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Turkey&method=13`;
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13`;
         
         try {
             const response = await fetch(url);
@@ -447,11 +570,9 @@
             document.getElementById('val-aksam').innerText = times.Maghrib;
             document.getElementById('val-yatsi').innerText = times.Isha;
 
-            // Miladi Tarih
             const greg = data.data.date.gregorian;
             document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
             
-            // Hicri Tarih
             const hijri = data.data.date.hijri;
             document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
             
@@ -534,7 +655,7 @@
             }
 
             timeBoxes.forEach(box => {
-                const name = box.querySelector('.time-name').innerText;
+                const name = box.getAttribute('data-name');
                 if (name === targetPrayer.name) {
                     box.classList.add('active');
                 } else {
@@ -543,7 +664,9 @@
             });
 
             if (titleElement) {
-                titleElement.innerText = `${targetPrayer.name} vaktine kalan süre`;
+                const pNameKey = `time_${targetPrayer.name === 'İmsak' ? 'imsak' : targetPrayer.name === 'Güneş' ? 'sunrise' : targetPrayer.name === 'Öğle' ? 'dhuhr' : targetPrayer.name === 'İkindi' ? 'asr' : targetPrayer.name === 'Akşam' ? 'maghrib' : 'isha'}`;
+                const localizedName = translations[currentLang][pNameKey] || targetPrayer.name;
+                titleElement.innerText = currentLang === 'en' ? `${localizedName} time remaining` : `${localizedName} vaktine kalan süre`;
             }
 
             let diff = targetDate - now;
@@ -559,7 +682,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        loadQuizQuestion();
+        // Kaydedilen dili ve temayı uygula
+        const savedLang = localStorage.getItem('user_lang') || 'tr';
+        document.getElementById('langSelectBox').value = savedLang;
+        setLanguage(savedLang);
 
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
