@@ -235,7 +235,7 @@
             <button class="menu-btn" onclick="toggleDrawer()">☰</button>
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
-        <div class="nav-right">
+        <div class="nav-right" style="display: flex; gap: 8px; align-items: center;">
             <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
                 <span id="theme-icon">🌙</span>
             </button>
@@ -430,12 +430,13 @@
         loadQuizQuestion();
     }
 
-    // Aladhan API ile namaz vakitleri ve hicri tarihi çekme fonksiyonu
+    // Aladhan API ile namaz vakitleri ve hicri tarihi çekme fonksiyonu (Hata korumalı)
     async function fetchPrayerTimes(city) {
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Turkey&method=13`;
         
         try {
             const response = await fetch(url);
+            if (!response.ok) throw new Error("Ağ bağlantısı veya API hatası");
             const data = await response.json();
             const times = data.data.timings;
 
@@ -456,6 +457,7 @@
             
         } catch (error) {
             console.error("Vakitler alınamadı:", error);
+            document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
         }
     }
 
