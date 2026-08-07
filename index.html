@@ -39,6 +39,7 @@
         .location-bar { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 0.9rem; }
         .location-city { font-weight: 600; cursor: pointer; color: var(--accent-color); margin-bottom: 2px; }
         #current-date-text { color: var(--text-muted); font-size: 0.8rem; }
+        #hicri-date-text { font-weight: 600; color: var(--accent-color); font-size: 0.85rem; }
 
         /* Kartlar ortak */
         .countdown-card, .quiz-card, .content-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
@@ -248,7 +249,10 @@
             </div>
             <div id="current-date-text">Yükleniyor...</div>
         </div>
-        <div style="font-weight:600; color:var(--accent-color);">Hicri Takvim</div>
+        <div style="text-align: right;">
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Hicri Takvim</div>
+            <div id="hicri-date-text">Yükleniyor...</div>
+        </div>
     </div>
 
     <!-- İslam Dini ve Kültürü Bilgi Testi Kartı -->
@@ -426,7 +430,7 @@
         loadQuizQuestion();
     }
 
-    // Aladhan API ile namaz vakitlerini çekme fonksiyonu
+    // Aladhan API ile namaz vakitleri ve hicri tarihi çekme fonksiyonu
     async function fetchPrayerTimes(city) {
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Turkey&method=13`;
         
@@ -442,9 +446,13 @@
             document.getElementById('val-aksam').innerText = times.Maghrib;
             document.getElementById('val-yatsi').innerText = times.Isha;
 
-            // Tarih bilgisini güncelle
+            // Miladi Tarih
             const greg = data.data.date.gregorian;
             document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
+            
+            // Hicri Tarih
+            const hijri = data.data.date.hijri;
+            document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
             
         } catch (error) {
             console.error("Vakitler alınamadı:", error);
