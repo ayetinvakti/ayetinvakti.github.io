@@ -41,8 +41,6 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --drawer-bg: #1e293b;
-            --quiz-btn-bg: #1e293b;
-            --quiz-btn-hover: #334155;
         }
 
         * {
@@ -237,7 +235,7 @@
             cursor: pointer;
         }
 
-        /* Yeni Bilgi Testi Kartı Tasarımı */
+        /* Bilgi Testi Kartı */
         .quiz-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -315,10 +313,6 @@
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
-        }
-
-        .quiz-next-btn:hover {
-            opacity: 0.9;
         }
 
         .countdown-card {
@@ -584,7 +578,7 @@
             <button class="modal-close" onclick="toggleLocationModal()">✕</button>
         </div>
         <div style="font-size: 0.85rem; color: var(--text-muted);">
-            Nanam vakitlerini görmek istediğiniz şehri seçin:
+            Namaz vakitlerini görmek istediğiniz şehri seçin:
         </div>
         <select id="citySelectBox" class="city-select">
             <option value="Erzincan">Erzincan</option>
@@ -612,7 +606,7 @@
         <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="drawer-item"><span style="width:24px">🕌</span> Namaz Vakitleri</a>
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><span style="width:24px">🧭</span> Kıble Pusulası</a>
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><span style="width:24px">📿</span> Zikirmatik</a>
-        <a onclick="yakindaHizmetindeGoster('Kur-an’ı Kerim yakında hizmetinizde')" class="drawer-item"><span style="width:24px">📖</span> Kur'an-ı Kerim Oku</a>
+        <a href="kuran.html" class="drawer-item"><span style="width:24px">📖</span> Kur'an-ı Kerim Oku</a>
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><span style="width:24px">✨</span> Günün Ayeti</a>
         <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="drawer-item"><span style="width:24px">▶️</span> YouTube Kanalı</a>
     </div>
@@ -641,7 +635,7 @@
         <div style="font-weight:600; color:var(--accent-color);">22 Safer 1448</div>
     </div>
 
-    <!-- YENİ EKLEME: İslam Dini ve Kültürü Bilgi Testi Kartı -->
+    <!-- İslam Dini ve Kültürü Bilgi Testi Kartı -->
     <div class="quiz-card">
         <div class="card-header-flex">
             <div class="card-section-title">📝 İslam Dini ve Kültürü Bilgi Testi</div>
@@ -714,10 +708,10 @@
             </div>
             <div class="grid-title">YouTube</div>
         </a>
-        <div onclick="yakindaHizmetindeGoster('Kur-an’ı Kerim yakında hizmetinizde')" class="menu-grid-card">
+        <a href="kuran.html" class="menu-grid-card">
             <div class="grid-icon-box">📖</div>
             <div class="grid-title">Kur'an-ı Kerim Oku</div>
-        </div>
+        </a>
     </div>
 
     <div class="content-card">
@@ -743,27 +737,27 @@
         {
             question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?",
             options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"],
-            answer: 2 // Ağlamak
+            answer: 2
         },
         {
             question: "2. Kur'an-ı Kerim'in en uzun suresi aşağıdakilerden hangisidir?",
             options: ["Yâsîn Suresi", "Bakara Suresi", "Al-i İmrân Suresi", "İhlâs Suresi"],
-            answer: 1 // Bakara Suresi
+            answer: 1
         },
         {
             question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?",
             options: ["Medine", "Kudüs", "Taif", "Mekke"],
-            answer: 3 // Mekke
+            answer: 3
         },
         {
             question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?",
             options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"],
-            answer: 0 // Zilhicce
+            answer: 0
         },
         {
             question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?",
             options: ["Sure", "Ayet", "Cüz", "Meâl"],
-            answer: 2 // Cüz
+            answer: 2
         }
     ];
 
@@ -816,7 +810,7 @@
     function nextQuestion() {
         currentQuestionIndex++;
         if (currentQuestionIndex >= quizData.length) {
-            currentQuestionIndex = 0; // Test bitince başa dönsün
+            currentQuestionIndex = 0;
         }
         loadQuizQuestion();
     }
@@ -879,13 +873,6 @@
         document.getElementById('val-ikindi').innerText = times.ikindi;
         document.getElementById('val-aksam').innerText = times.aksam;
         document.getElementById('val-yatsi').innerText = times.yatsi;
-    }
-
-    function yakindaHizmetindeGoster(msg) {
-        const toast = document.getElementById('toastMessage');
-        toast.innerText = msg;
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 3000);
     }
 
     function startCountdown() {
@@ -955,7 +942,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         loadDynamicDate();
-        loadQuizQuestion(); // Testi başlat
+        loadQuizQuestion();
 
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
