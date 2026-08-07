@@ -97,7 +97,7 @@
         .modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: var(--card-bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.active .modal-card { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .city-select, .lang-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); margin: 12px 0; font-size: 0.9rem; }
+        .city-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); margin: 12px 0; font-size: 0.9rem; }
         .modal-save-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
@@ -205,24 +205,6 @@
     </div>
 </div>
 
-<!-- Dil Seçim Modalı -->
-<div class="modal-overlay" id="langModal">
-    <div class="modal-card">
-        <div class="modal-header">
-            <div class="modal-title" data-i18n="modal_lang_title">Dil Seçin / Select Language</div>
-            <button class="modal-close" onclick="toggleLangModal()">✕</button>
-        </div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="modal_lang_desc">
-            Uygulama dilini seçin:
-        </div>
-        <select id="langSelectBox" class="lang-select">
-            <option value="tr">Türkçe</option>
-            <option value="en">English</option>
-        </select>
-        <button class="modal-save-btn" onclick="saveSelectedLang()" data-i18n="modal_lang_btn">Kaydet</button>
-    </div>
-</div>
-
 <div class="drawer" id="appDrawer">
     <div class="drawer-header">
         <div class="drawer-title">Ayetin Vakti</div>
@@ -242,10 +224,6 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </div>
             <span data-i18n="menu_youtube">YouTube Kanalı</span>
-        </a>
-        <a href="#" onclick="toggleLangModal(); toggleDrawer(); return false;" class="drawer-item">
-            <div class="drawer-icon-box" style="background: rgba(59, 130, 246, 0.1);">🌐</div>
-            <span data-i18n="menu_lang">Dil / Language</span>
         </a>
         <a href="https://ayetinvakti.github.io/ayarlar/" class="drawer-item"><div class="drawer-icon-box" style="background: rgba(148, 163, 184, 0.1);">⚙️</div><span data-i18n="menu_settings">Ayarlar</span></a>
     </div>
@@ -381,7 +359,6 @@
             menu_esma: "Esmaül Hüsna",
             menu_days: "Dini Günler",
             menu_youtube: "YouTube Kanalı",
-            menu_lang: "Dil / Language",
             menu_settings: "Ayarlar",
             hijri_calendar_title: "Hicri Takvim",
             quiz_title: "📝 İslam Dini ve Kültürü Bilgi Testi",
@@ -405,9 +382,6 @@
             modal_loc_title: "Konum Seçin",
             modal_loc_desc: "Namaz vakitlerini görmek istediğiniz şehri seçin:",
             modal_loc_btn: "Konumu Uygula",
-            modal_lang_title: "Dil Seçin / Select Language",
-            modal_lang_desc: "Uygulama dilini seçin:",
-            modal_lang_btn: "Kaydet",
             correct_answer: "✨ Doğru Cevap!",
             wrong_answer: "❌ Yanlış Cevap!"
         },
@@ -420,7 +394,6 @@
             menu_esma: "Asmaul Husna",
             menu_days: "Religious Days",
             menu_youtube: "YouTube Channel",
-            menu_lang: "Language / Dil",
             menu_settings: "Settings",
             hijri_calendar_title: "Hijri Calendar",
             quiz_title: "📝 Islamic Religion & Culture Quiz",
@@ -444,9 +417,6 @@
             modal_loc_title: "Select Location",
             modal_loc_desc: "Select the city where you want to view prayer times:",
             modal_loc_btn: "Apply Location",
-            modal_lang_title: "Select Language / Dil Seçin",
-            modal_lang_desc: "Select app language:",
-            modal_lang_btn: "Save",
             correct_answer: "✨ Correct Answer!",
             wrong_answer: "❌ Wrong Answer!"
         }
@@ -476,10 +446,9 @@
         currentLang = lang;
         localStorage.setItem('user_lang', lang);
         
-        // data-i18n özniteliğine sahip tüm elementlerin metnini değiştir
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (translations[lang][key]) {
+            if (translations[lang] && translations[lang][key]) {
                 el.innerText = translations[lang][key];
             }
         });
@@ -487,18 +456,8 @@
         loadQuizQuestion();
     }
 
-    function toggleLangModal() {
-        document.getElementById('langModal').classList.toggle('active');
-    }
-
-    function saveSelectedLang() {
-        const selectBox = document.getElementById('langSelectBox');
-        setLanguage(selectBox.value);
-        toggleLangModal();
-    }
-
     function loadQuizQuestion() {
-        const qList = quizData[currentLang];
+        const qList = quizData[currentLang] || quizData['tr'];
         if (currentQuestionIndex >= qList.length) currentQuestionIndex = 0;
         
         const currentData = qList[currentQuestionIndex];
@@ -521,7 +480,7 @@
     }
 
     function checkQuizAnswer(selectedIndex, clickedBtn) {
-        const qList = quizData[currentLang];
+        const qList = quizData[currentLang] || quizData['tr'];
         const correctIdx = qList[currentQuestionIndex].answer;
         const allButtons = document.querySelectorAll('.quiz-option-btn');
         
@@ -547,7 +506,7 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
-        const qList = quizData[currentLang];
+        const qList = quizData[currentLang] || quizData['tr'];
         if (currentQuestionIndex >= qList.length) {
             currentQuestionIndex = 0;
         }
@@ -682,9 +641,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Kaydedilen dili ve temayı uygula
+        // Kaydedilen dili uygula
         const savedLang = localStorage.getItem('user_lang') || 'tr';
-        document.getElementById('langSelectBox').value = savedLang;
         setLanguage(savedLang);
 
         const savedTheme = localStorage.getItem('theme');
