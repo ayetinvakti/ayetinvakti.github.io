@@ -623,17 +623,87 @@
             Namaz vakitlerini görmek istediğiniz şehri seçin:
         </div>
         <select id="citySelectBox" class="city-select">
+            <option value="Adana">Adana</option>
+            <option value="Adıyaman">Adıyaman</option>
+            <option value="Afyonkarahisar">Afyonkarahisar</option>
+            <option value="Ağrı">Ağrı</option>
+            <option value="Amasya">Amasya</option>
+            <option value="Ankara">Ankara</option>
+            <option value="Antalya">Antalya</option>
+            <option value="Artvin">Artvin</option>
+            <option value="Aydın">Aydın</option>
+            <option value="Balıkesir">Balıkesir</option>
+            <option value="Bilecik">Bilecik</option>
+            <option value="Bingöl">Bingöl</option>
+            <option value="Bitlis">Bitlis</option>
+            <option value="Bolu">Bolu</option>
+            <option value="Burdur">Burdur</option>
+            <option value="Bursa">Bursa</option>
+            <option value="Çanakkale">Çanakkale</option>
+            <option value="Çankırı">Çankırı</option>
+            <option value="Çorum">Çorum</option>
+            <option value="Denizli">Denizli</option>
+            <option value="Diyarbakır">Diyarbakır</option>
+            <option value="Edirne">Edirne</option>
+            <option value="Elazığ">Elazığ</option>
             <option value="Erzincan">Erzincan</option>
             <option value="Erzurum">Erzurum</option>
+            <option value="Eskişehir">Eskişehir</option>
+            <option value="Gaziantep">Gaziantep</option>
+            <option value="Giresun">Giresun</option>
+            <option value="Gümüşhane">Gümüşhane</option>
+            <option value="Hakkari">Hakkari</option>
+            <option value="Hatay">Hatay</option>
+            <option value="Isparta">Isparta</option>
+            <option value="Mersin">Mersin</option>
             <option value="İstanbul">İstanbul</option>
-            <option value="Ankara">Ankara</option>
             <option value="İzmir">İzmir</option>
-            <option value="Bursa">Bursa</option>
-            <option value="Antalya">Antalya</option>
+            <option value="Kars">Kars</option>
+            <option value="Kastamonu">Kastamonu</option>
+            <option value="Kayseri">Kayseri</option>
+            <option value="Kırklareli">Kırklareli</option>
+            <option value="Kırşehir">Kırşehir</option>
+            <option value="Kocaeli">Kocaeli</option>
             <option value="Konya">Konya</option>
+            <option value="Kütahya">Kütahya</option>
+            <option value="Malatya">Malatya</option>
+            <option value="Manisa">Manisa</option>
+            <option value="Kahramanmaraş">Kahramanmaraş</option>
+            <option value="Mardin">Mardin</option>
+            <option value="Muğla">Muğla</option>
+            <option value="Muş">Muş</option>
+            <option value="Nevşehir">Nevşehir</option>
+            <option value="Niğde">Niğde</option>
+            <option value="Ordu">Ordu</option>
+            <option value="Rize">Rize</option>
+            <option value="Sakarya">Sakarya</option>
+            <option value="Samsun">Samsun</option>
+            <option value="Siirt">Siirt</option>
+            <option value="Sinop">Sinop</option>
+            <option value="Sivas">Sivas</option>
+            <option value="Tekirdağ">Tekirdağ</option>
+            <option value="Tokat">Tokat</option>
             <option value="Trabzon">Trabzon</option>
-            <option value="Diyarbakır">Diyarbakır</option>
+            <option value="Tunceli">Tunceli</option>
+            <option value="Şanlıurfa">Şanlıurfa</option>
+            <option value="Uşak">Uşak</option>
             <option value="Van">Van</option>
+            <option value="Yozgat">Yozgat</option>
+            <option value="Zonguldak">Zonguldak</option>
+            <option value="Aksaray">Aksaray</option>
+            <option value="Bayburt">Bayburt</option>
+            <option value="Karaman">Karaman</option>
+            <option value="Kırıkkale">Kırıkkale</option>
+            <option value="Batman">Batman</option>
+            <option value="Şırnak">Şırnak</option>
+            <option value="Bartın">Bartın</option>
+            <option value="Ardahan">Ardahan</option>
+            <option value="Iğdır">Iğdır</option>
+            <option value="Yalova">Yalova</option>
+            <option value="Karabük">Karabük</option>
+            <option value="Kilis">Kilis</option>
+            <option value="Osmaniye">Osmaniye</option>
+            <option value="Düzce">Düzce</option>
         </select>
         <button class="modal-save-btn" onclick="saveSelectedCity()">Konumu Uygula</button>
     </div>
@@ -894,17 +964,87 @@
     }
 
     const cityPrayerTimes = {
+        "Adana": { imsak: "04:15", gunes: "05:48", ogle: "12:56", ikindi: "16:44", aksam: "19:54", yatsi: "21:23" },
+        "Adıyaman": { imsak: "04:03", gunes: "05:37", ogle: "12:45", ikindi: "16:32", aksam: "19:43", yatsi: "21:13" },
+        "Afyonkarahisar": { imsak: "04:30", gunes: "06:11", ogle: "13:20", ikindi: "17:10", aksam: "20:20", yatsi: "21:54" },
+        "Ağrı": { imsak: "03:39", gunes: "05:14", ogle: "12:23", ikindi: "16:10", aksam: "19:24", yatsi: "20:53" },
+        "Amasya": { imsak: "04:04", gunes: "05:43", ogle: "12:57", ikindi: "16:47", aksam: "20:02", yatsi: "21:35" },
+        "Ankara": { imsak: "04:08", gunes: "05:49", ogle: "13:03", ikindi: "16:55", aksam: "20:06", yatsi: "21:39" },
+        "Antalya": { imsak: "04:32", gunes: "06:05", ogle: "13:13", ikindi: "16:59", aksam: "20:09", yatsi: "21:35" },
+        "Artvin": { imsak: "03:45", gunes: "05:25", ogle: "12:39", ikindi: "16:30", aksam: "19:45", yatsi: "21:19" },
+        "Aydın": { imsak: "04:41", gunes: "06:20", ogle: "13:33", ikindi: "17:21", aksam: "20:34", yatsi: "22:06" },
+        "Balıkesir": { imsak: "04:29", gunes: "06:11", ogle: "13:25", ikindi: "17:17", aksam: "20:28", yatsi: "22:04" },
+        "Bilecik": { imsak: "04:20", gunes: "06:01", ogle: "13:15", ikindi: "17:06", aksam: "20:19", yatsi: "21:53" },
+        "Bingöl": { imsak: "03:50", gunes: "05:25", ogle: "12:33", ikindi: "16:20", aksam: "19:33", yatsi: "21:02" },
+        "Bitlis": { imsak: "03:44", gunes: "05:18", ogle: "12:26", ikindi: "16:13", aksam: "19:26", yatsi: "20:55" },
+        "Bolu": { imsak: "04:15", gunes: "05:57", ogle: "13:11", ikindi: "17:02", aksam: "20:15", yatsi: "21:50" },
+        "Burdur": { imsak: "04:34", gunes: "06:09", ogle: "13:17", ikindi: "17:04", aksam: "20:14", yatsi: "21:42" },
+        "Bursa": { imsak: "04:22", gunes: "06:04", ogle: "13:19", ikindi: "17:11", aksam: "20:23", yatsi: "21:58" },
+        "Çanakkale": { imsak: "04:38", gunes: "06:20", ogle: "13:33", ikindi: "17:25", aksam: "20:35", yatsi: "22:11" },
+        "Çankırı": { imsak: "04:04", gunes: "05:45", ogle: "12:59", ikindi: "16:51", aksam: "20:02", yatsi: "21:37" },
+        "Çorum": { imsak: "04:01", gunes: "05:40", ogle: "12:54", ikindi: "16:44", aksam: "19:58", yatsi: "21:31" },
+        "Denizli": { imsak: "04:37", gunes: "06:16", ogle: "13:28", ikindi: "17:16", aksam: "20:28", yatsi: "22:00" },
+        "Diyarbakır": { imsak: "03:52", gunes: "05:27", ogle: "12:39", ikindi: "16:23", aksam: "19:39", yatsi: "21:07" },
+        "Edirne": { imsak: "04:31", gunes: "06:16", ogle: "13:30", ikindi: "17:24", aksam: "20:34", yatsi: "22:13" },
+        "Elazığ": { imsak: "03:55", gunes: "05:31", ogle: "12:39", ikindi: "16:27", aksam: "19:38", yatsi: "21:08" },
         "Erzincan": { imsak: "03:43", gunes: "05:21", ogle: "12:36", ikindi: "16:27", aksam: "19:41", yatsi: "21:12" },
         "Erzurum": { imsak: "03:40", gunes: "05:18", ogle: "12:33", ikindi: "16:24", aksam: "19:38", yatsi: "21:09" },
+        "Eskişehir": { imsak: "04:23", gunes: "06:03", ogle: "13:17", ikindi: "17:07", aksam: "20:20", yatsi: "21:54" },
+        "Gaziantep": { imsak: "04:09", gunes: "05:42", ogle: "12:50", ikindi: "16:38", aksam: "19:48", yatsi: "21:19" },
+        "Giresun": { imsak: "03:48", gunes: "05:29", ogle: "12:44", ikindi: "16:36", aksam: "19:49", yatsi: "21:23" },
+        "Gümüşhane": { imsak: "03:48", gunes: "05:27", ogle: "12:41", ikindi: "16:32", aksam: "19:45", yatsi: "21:18" },
+        "Hakkari": { imsak: "03:37", gunes: "05:09", ogle: "12:18", ikindi: "16:04", aksam: "19:17", yatsi: "20:43" },
+        "Hatay": { imsak: "04:16", gunes: "05:48", ogle: "12:55", ikindi: "16:42", aksam: "19:52", yatsi: "21:20" },
+        "Isparta": { imsak: "04:34", gunes: "06:10", ogle: "13:18", ikindi: "17:05", aksam: "20:15", yatsi: "21:44" },
+        "Mersin": { imsak: "04:20", gunes: "05:52", ogle: "13:00", ikindi: "16:47", aksam: "19:58", yatsi: "21:27" },
         "İstanbul": { imsak: "04:18", gunes: "06:01", ogle: "13:16", ikindi: "17:09", aksam: "20:20", yatsi: "21:56" },
-        "Ankara": { imsak: "04:08", gunes: "05:49", ogle: "13:03", ikindi: "16:55", aksam: "20:06", yatsi: "21:39" },
         "İzmir": { imsak: "04:30", gunes: "06:10", ogle: "13:24", ikindi: "17:13", aksam: "20:25", yatsi: "21:58" },
-        "Bursa": { imsak: "04:22", gunes: "06:04", ogle: "13:19", ikindi: "17:11", aksam: "20:23", yatsi: "21:58" },
-        "Antalya": { imsak: "04:32", gunes: "06:05", ogle: "13:13", ikindi: "16:59", aksam: "20:09", yatsi: "21:35" },
+        "Kars": { imsak: "03:34", gunes: "05:10", ogle: "12:24", ikindi: "16:13", aksam: "19:28", yatsi: "20:58" },
+        "Kastamonu": { imsak: "04:06", gunes: "05:47", ogle: "13:02", ikindi: "16:53", aksam: "20:06", yatsi: "21:41" },
+        "Kayseri": { imsak: "04:09", gunes: "05:48", ogle: "12:58", ikindi: "16:47", aksam: "19:57", yatsi: "21:29" },
+        "Kırklareli": { imsak: "04:26", gunes: "06:12", ogle: "13:26", ikindi: "17:20", aksam: "20:30", yatsi: "22:09" },
+        "Kırşehir": { imsak: "04:09", gunes: "05:50", ogle: "13:02", ikindi: "16:52", aksam: "20:03", yatsi: "21:37" },
+        "Kocaeli": { imsak: "04:21", gunes: "06:03", ogle: "13:18", ikindi: "17:11", aksam: "20:22", yatsi: "21:57" },
         "Konya": { imsak: "04:19", gunes: "05:56", ogle: "13:08", ikindi: "16:57", aksam: "20:08", yatsi: "21:38" },
+        "Kütahya": { imsak: "04:26", gunes: "06:07", ogle: "13:20", ikindi: "17:10", aksam: "20:22", yatsi: "21:56" },
+        "Malatya": { imsak: "03:59", gunes: "05:35", ogle: "12:43", ikindi: "16:31", aksam: "19:42", yatsi: "21:13" },
+        "Manisa": { imsak: "04:33", gunes: "06:13", ogle: "13:27", ikindi: "17:16", aksam: "20:29", yatsi: "22:01" },
+        "Kahramanmaraş": { imsak: "04:09", gunes: "05:43", ogle: "12:51", ikindi: "16:38", aksam: "19:49", yatsi: "21:19" },
+        "Mardin": { imsak: "03:53", gunes: "05:27", ogle: "12:37", ikindi: "16:22", aksam: "19:36", yatsi: "21:04" },
+        "Muğla": { imsak: "04:41", gunes: "06:19", ogle: "13:30", ikindi: "17:17", aksam: "20:29", yatsi: "21:59" },
+        "Muş": { imsak: "03:46", gunes: "05:21", ogle: "12:29", ikindi: "16:16", aksam: "19:28", yatsi: "20:58" },
+        "Nevşehir": { imsak: "04:11", gunes: "05:51", ogle: "13:01", ikindi: "16:50", aksam: "20:00", yatsi: "21:32" },
+        "Niğde": { imsak: "04:13", gunes: "05:52", ogle: "13:01", ikindi: "16:50", aksam: "19:59", yatsi: "21:31" },
+        "Ordu": { imsak: "03:50", gunes: "05:31", ogle: "12:46", ikindi: "16:38", aksam: "19:52", yatsi: "21:26" },
+        "Rize": { imsak: "03:42", gunes: "05:22", ogle: "12:36", ikindi: "16:27", aksam: "19:42", yatsi: "21:17" },
+        "Sakarya": { imsak: "04:19", gunes: "06:00", ogle: "13:15", ikindi: "17:08", aksam: "20:19", yatsi: "21:54" },
+        "Samsun": { imsak: "03:57", gunes: "05:37", ogle: "12:52", ikindi: "16:43", aksam: "19:58", yatsi: "21:32" },
+        "Siirt": { imsak: "03:48", gunes: "05:21", ogle: "12:30", ikindi: "16:15", aksam: "19:28", yatsi: "20:57" },
+        "Sinop": { imsak: "04:02", gunes: "05:44", ogle: "12:59", ikindi: "16:51", aksam: "20:05", yatsi: "21:41" },
+        "Sivas": { imsak: "03:57", gunes: "05:37", ogle: "12:51", ikindi: "16:40", aksam: "19:53", yatsi: "21:25" },
+        "Tekirdağ": { imsak: "04:24", gunes: "06:08", ogle: "13:22", ikindi: "17:15", aksam: "20:26", yatsi: "22:03" },
+        "Tokat": { imsak: "03:59", gunes: "05:39", ogle: "12:53", ikindi: "16:42", aksam: "19:57", yatsi: "21:30" },
         "Trabzon": { imsak: "03:46", gunes: "05:28", ogle: "12:43", ikindi: "16:35", aksam: "19:48", yatsi: "21:22" },
-        "Diyarbakır": { imsak: "03:52", gunes: "05:27", ogle: "12:39", ikindi: "16:23", aksam: "19:39", yatsi: "21:07" },
-        "Van": { imsak: "03:39", gunes: "05:14", ogle: "12:26", ikindi: "16:10", aksam: "19:27", yatsi: "20:54" }
+        "Tunceli": { imsak: "03:52", gunes: "05:29", ogle: "12:37", ikindi: "16:25", aksam: "19:37", yatsi: "21:08" },
+        "Şanlıurfa": { imsak: "04:02", gunes: "05:35", ogle: "12:43", ikindi: "16:30", aksam: "19:41", yatsi: "21:11" },
+        "Uşak": { imsak: "04:32", gunes: "06:12", ogle: "13:24", ikindi: "17:14", aksam: "20:25", yatsi: "21:58" },
+        "Van": { imsak: "03:39", gunes: "05:14", ogle: "12:26", ikindi: "16:10", aksam: "19:27", yatsi: "20:54" },
+        "Yozgat": { imsak: "04:05", gunes: "05:45", ogle: "12:58", ikindi: "16:48", aksam: "19:59", yatsi: "21:33" },
+        "Zonguldak": { imsak: "04:12", gunes: "05:54", ogle: "13:08", ikindi: "17:00", aksam: "20:13", yatsi: "21:48" },
+        "Aksaray": { imsak: "04:14", gunes: "05:54", ogle: "13:03", ikindi: "16:52", aksam: "20:02", yatsi: "21:33" },
+        "Bayburt": { imsak: "03:44", gunes: "05:23", ogle: "12:37", ikindi: "16:28", aksam: "19:42", yatsi: "21:14" },
+        "Karaman": { imsak: "04:21", gunes: "05:58", ogle: "13:08", ikindi: "16:56", aksam: "20:07", yatsi: "21:36" },
+        "Kırıkkale": { imsak: "04:06", gunes: "05:46", ogle: "13:00", ikindi: "16:52", aksam: "20:03", yatsi: "21:36" },
+        "Batman": { imsak: "03:49", gunes: "05:24", ogle: "12:34", ikindi: "16:19", aksam: "19:35", yatsi: "21:04" },
+        "Şırnak": { imsak: "03:45", gunes: "05:18", ogle: "12:28", ikindi: "16:12", aksam: "19:28", yatsi: "20:56" },
+        "Bartın": { imsak: "04:08", gunes: "05:50", ogle: "13:05", ikindi: "16:56", aksam: "20:10", yatsi: "21:46" },
+        "Ardahan": { imsak: "03:36", gunes: "05:13", ogle: "12:26", ikindi: "16:16", aksam: "19:30", yatsi: "21:01" },
+        "Iğdır": { imsak: "03:35", gunes: "05:10", ogle: "12:20", ikindi: "16:07", aksam: "19:21", yatsi: "20:50" },
+        "Yalova": { imsak: "04:21", gunes: "06:02", ogle: "13:17", ikindi: "17:09", aksam: "20:21", yatsi: "21:56" },
+        "Karabük": { imsak: "04:09", gunes: "05:50", ogle: "13:05", ikindi: "16:56", aksam: "20:09", yatsi: "21:44" },
+        "Kilis": { imsak: "04:11", gunes: "05:43", ogle: "12:51", ikindi: "16:38", aksam: "19:49", yatsi: "21:20" },
+        "Osmaniye": { imsak: "04:13", gunes: "05:46", ogle: "12:53", ikindi: "16:41", aksam: "19:51", yatsi: "21:22" },
+        "Düzce": { imsak: "04:15", gunes: "05:57", ogle: "13:11", ikindi: "17:03", aksam: "20:15", yatsi: "21:51" }
     };
 
     function loadDynamicDate() {
