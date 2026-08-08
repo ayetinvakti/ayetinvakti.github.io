@@ -434,13 +434,14 @@
             { question: "1. Which of the following does not break ablution (wudu)?", options: ["Vomiting a mouthful", "Fainting", "Crying", "Laughing aloud during prayer"], answer: 2 },
             { question: "2. Which is the longest Surah in the Holy Quran?", options: ["Surah Yaseen", "Surah Al-Baqarah", "Surah Ali 'Imran", "Surah Al-Ikhlas"], answer: 1 },
             { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
-            { question: "4. In which Islamic month is the pilgrimage (Hajj) performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharram", "Shawwal"], answer: 0 },
+            { question: "4. In which Islamic month is the pilgrimage (Hajj) performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharrem", "Shawwal"], answer: 0 },
             { question: "5. What is each 20-page section of the Holy Quran called?", options: ["Surah", "Ayah", "Juz", "Translation"], answer: 2 }
         ]
     };
 
     let currentQuestionIndex = 0;
     let currentLang = localStorage.getItem('user_lang') || 'tr';
+    let lastNotifiedPrayer = null; // Aynı vakit için tekrar tekrar bildirim atmasını önlemek adına
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -571,6 +572,13 @@
         fetchPrayerTimes(chosenCity);
     }
 
+    // Bildirim İzni İsteme
+    function requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }
+
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
         const titleElement = document.getElementById('next-prayer-title');
@@ -630,6 +638,21 @@
 
             let diff = targetDate - now;
             let totalSeconds = Math.floor(diff / 1000);
+
+            // --- BİLDİRİM KONTROL MEKANİZMASI ---
+            const reminderMinutes = parseInt(localStorage.getItem('prayer_reminder_time') || '10', 10);
+            const reminderSeconds = reminderMinutes * 60;
+
+            // Kalan süre seçilen dakikaya eşit olduysa ve bu vakit için henüz bildirim atılmadıysa
+            if (totalSeconds <= reminderSeconds && totalSeconds > (reminderSeconds - 2)) {
+                const notificationKey = `${targetPrayer.name}-${targetDate.toDateString()}`;
+                if (lastNotifiedPrayer !== notificationKey) {
+                    lastNotifiedPrayer = notificationKey;
+                    triggerPrayerNotification(targetPrayer.name, reminderMinutes);
+                }
+            }
+            // ------------------------------------
+
             let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
             let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
             let s = (totalSeconds % 60).toString().padStart(2, '0');
@@ -638,6 +661,21 @@
                 timerElement.innerText = `${h}:${m}:${s}`;
             }
         }, 1000);
+    }
+
+    function triggerPrayerNotification(prayerName, minutes) {
+        let msg = minutes === 0 
+            ? `${prayerName} vakti girdi!` 
+            : `${prayerName} vaktine ${minutes} dakika kaldı!`;
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("Ayetin Vakti Hatırlatıcı", {
+                body: msg,
+                icon: "https://ayetinvakti.github.io/favicon.ico"
+            });
+        } else {
+            console.log("Bildirim: " + msg);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -660,6 +698,7 @@
         document.getElementById('citySelectBox').value = savedCity;
         
         fetchPrayerTimes(savedCity);
+        requestNotificationPermission();
         startCountdown();
     });
 </script>
