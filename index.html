@@ -479,7 +479,7 @@
         }
     };
 
-    // SORU HAVUZU (1. ve 6. sorular düzeltildi ve teyit edildi)
+    // SORU HAVUZU
     const bigQuizPool = {
         tr: [
             { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
@@ -576,7 +576,7 @@
         loadSoloQuestion();
     }
 
-    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ (DÜZELTİLDİ) ---
+    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ (GÜNCELLENDİ) ---
     function createDuelRoom() {
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
@@ -587,18 +587,22 @@
             p2Score: 0,
             currentQ: 0,
             status: 'waiting'
+        }).then(() => {
+            document.getElementById('duel-setup-view').style.display = 'none';
+            document.getElementById('duel-game-view').style.display = 'block';
+            document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode} (Rakip Bekleniyor...)`;
+            document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
+
+            listenRoomUpdates(activeRoomCode);
+        }).catch(err => {
+            alert("Oda oluşturulamadı: " + err.message);
         });
-
-        document.getElementById('duel-setup-view').style.display = 'none';
-        document.getElementById('duel-game-view').style.display = 'block';
-        document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode} (Rakip Bekleniyor...)`;
-        document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
-
-        listenRoomUpdates(activeRoomCode);
     }
 
     function joinDuelRoom() {
-        const code = document.getElementById('roomCodeInput').value.trim();
+        const codeInput = document.getElementById('roomCodeInput');
+        const code = codeInput ? codeInput.value.trim() : '';
+        
         if (!code) {
             alert("Lütfen geçerli bir oda kodu girin!");
             return;
@@ -608,18 +612,23 @@
         playerRole = 'p2';
 
         const roomRef = rdb.ref('rooms/' + activeRoomCode);
+        
+        // Hata ayıklamayı kolaylaştırmak ve tepkisiz kalmasını önlemek için once() kullanımı
         roomRef.once('value', snapshot => {
             if (snapshot.exists()) {
-                roomRef.update({ status: 'started' });
-                document.getElementById('duel-setup-view').style.display = 'none';
-                document.getElementById('duel-game-view').style.display = 'block';
-                document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
-                
-                listenRoomUpdates(activeRoomCode);
-                loadDuelQuestion(0);
+                roomRef.update({ status: 'started' }).then(() => {
+                    document.getElementById('duel-setup-view').style.display = 'none';
+                    document.getElementById('duel-game-view').style.display = 'block';
+                    document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
+                    
+                    listenRoomUpdates(activeRoomCode);
+                    loadDuelQuestion(0);
+                });
             } else {
-                alert("Böyle bir oda bulunamadı veya süre aşımına uğradı!");
+                alert("❌ Hata: Bu koda ait aktif bir oda bulunamadı! Oda kodunu kontrol edin.");
             }
+        }, error => {
+            alert("Bağlantı hatası: " + error.message);
         });
     }
 
@@ -629,14 +638,14 @@
             const data = snapshot.val();
             if (!data) return;
 
-            document.getElementById('score-p1').innerText = `P1: ${data.p1Score || 0}`;
-            document.getElementById('score-p2').innerText = `P2: ${data.p2Score || 0}`;
+            document.getElementById('score-p1').innerText = `Sen: ${data.p1Score || 0}`;
+            document.getElementById('score-p2').innerText = `Rakip: ${data.p2Score || 0}`;
 
             // P1 odada beklerken rakip (P2) katıldığında otomatik tetiklenme ve oyun başlatma
             if (playerRole === 'p1' && data.status === 'started') {
                 const badge = document.getElementById('duel-room-badge');
                 if (badge.innerText.includes("Bekleniyor")) {
-                    badge.innerText = `Oda: ${code} (Rakip Katıldı! Başlıyor...)`;
+                    badge.innerText = `Oda: ${code} (Rakip Katıldı!)`;
                     loadDuelQuestion(data.currentQ || 0);
                 }
             }
