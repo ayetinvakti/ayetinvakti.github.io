@@ -79,6 +79,11 @@
         .duel-action-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
         .duel-scoreboard { display: flex; justify-content: space-around; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; }
 
+        /* Sonuç Ekranı Özel Tasarım */
+        .duel-result-box { text-align: center; padding: 20px 10px; }
+        .duel-result-title { font-size: 1.3rem; font-weight: 700; color: var(--accent-color); margin-bottom: 12px; }
+        .duel-result-scores { font-size: 1rem; margin-bottom: 16px; background: rgba(0,0,0,0.03); padding: 12px; border-radius: 12px; }
+
         /* Menü Grid */
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
         .menu-grid-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 8px; text-align: center; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; transition: 0.2s; }
@@ -311,11 +316,20 @@
                     <span id="duel-room-badge" style="color: var(--accent-color);">Oda: --</span>
                     <span id="score-p2">Rakip: 0</span>
                 </div>
-                <div class="quiz-question" id="duel-question-text">Oda bekleniyor...</div>
-                <div class="quiz-options" id="duel-options-container"></div>
-                <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
-                <div style="text-align: center; margin-top: 10px;">
-                    <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
+                <div id="duel-active-content">
+                    <div class="quiz-question" id="duel-question-text">Oda bekleniyor...</div>
+                    <div class="quiz-options" id="duel-options-container"></div>
+                    <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
+                    </div>
+                </div>
+                <!-- Sonuç Ekranı Alanı -->
+                <div id="duel-result-view" style="display: none;" class="duel-result-box">
+                    <div class="duel-result-title">🏆 Düello Bitti / Sonuç Ekranı</div>
+                    <div class="duel-result-scores" id="duel-final-scores-text">Skorlar hesaplanıyor...</div>
+                    <div id="duel-winner-announcement" style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;"></div>
+                    <button class="duel-action-btn" onclick="resetDuelLobby()">Yeni Düello Kur / Katıl</button>
                 </div>
             </div>
         </div>
@@ -511,6 +525,7 @@
     let activeRoomCode = null;
     let playerRole = null; 
     let activeRoomRef = null;
+    let connectionRef = null;
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -588,7 +603,7 @@
         loadSoloQuestion();
     }
 
-    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
+    // --- CANLI DÜELLO (MULTIPLAYER) & KOPMA TESPİTİ & SONUÇ EKRANI SİSTEMİ ---
     function createDuelRoom() {
         if (!window.firebase || !firebase.database) {
             alert("Firebase kütüphanesi yüklenemedi! İnternet bağlantınızı kontrol edin.");
@@ -596,6 +611,7 @@
         }
 
         if (activeRoomRef) activeRoomRef.off();
+        if (connectionRef) connectionRef.off();
 
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
@@ -608,10 +624,15 @@
             currentQ: 0,
             p1Ready: false,
             p2Ready: false,
-            status: 'waiting'
+            status: 'waiting',
+            p1Online: true,
+            p2Online: false
         }).then(() => {
+            setupDisconnectionHandler();
             document.getElementById('duel-setup-view').style.display = 'none';
             document.getElementById('duel-game-view').style.display = 'block';
+            document.getElementById('duel-active-content').style.display = 'block';
+            document.getElementById('duel-result-view').style.display = 'none';
             document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Rakip Bekleniyor...)`;
             document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
 
@@ -631,6 +652,7 @@
         }
 
         if (activeRoomRef) activeRoomRef.off();
+        if (connectionRef) connectionRef.off();
 
         activeRoomCode = code;
         playerRole = 'p2';
@@ -639,9 +661,15 @@
         
         activeRoomRef.once('value', snapshot => {
             if (snapshot.exists()) {
-                activeRoomRef.update({ status: 'started' }).then(() => {
+                activeRoomRef.update({ 
+                    status: 'started',
+                    p2Online: true 
+                }).then(() => {
+                    setupDisconnectionHandler();
                     document.getElementById('duel-setup-view').style.display = 'none';
                     document.getElementById('duel-game-view').style.display = 'block';
+                    document.getElementById('duel-active-content').style.display = 'block';
+                    document.getElementById('duel-result-view').style.display = 'none';
                     document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
                     
                     listenRoomUpdates();
@@ -654,12 +682,31 @@
         });
     }
 
+    function setupDisconnectionHandler() {
+        if (!activeRoomRef) return;
+        const onlineKey = (playerRole === 'p1') ? 'p1Online' : 'p2Online';
+        
+        // Firebase onDisconnect ile bağlantı koptuğunda sunucudaki online durumunu false yapıyoruz
+        connectionRef = activeRoomRef.child(onlineKey);
+        connectionRef.onDisconnect().set(false);
+    }
+
     function listenRoomUpdates() {
         if (!activeRoomRef) return;
         
         activeRoomRef.on('value', snapshot => {
             const data = snapshot.val();
             if (!data) return;
+
+            // Kopma Tespiti Kontrolü
+            const rivalOnline = (playerRole === 'p1') ? data.p2Online : data.p1Online;
+            const myOnline = (playerRole === 'p1') ? data.p1Online : data.p2Online;
+
+            // Eğer oyun başladıktan sonra rakip kopmuşsa veya çevrimdışı olduysa
+            if (data.status === 'started' && rivalOnline === false) {
+                showDuelResultScreen(data, true);
+                return;
+            }
 
             let myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
             let rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
@@ -674,14 +721,20 @@
                 }
             }
 
+            const qList = bigQuizPool['tr'];
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
+
+            // Soru havuzu bittiyse (örneğin 10 soru tamamlandıysa) Sonuç Ekranına geç
+            if (targetQ >= qList.length) {
+                showDuelResultScreen(data, false);
+                return;
+            }
+
             const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
             
-            // Soru değiştiyse ekranı güncelle
             if (targetQ !== currentDisplayedQ) {
                 loadDuelQuestion(targetQ);
             } else {
-                // Soru aynı kalmışsa buton durumunu kontrol et
                 const myReady = (playerRole === 'p1') ? data.p1Ready : data.p2Ready;
                 const nextBtn = document.getElementById('duel-next-button');
                 
@@ -694,14 +747,43 @@
         });
     }
 
+    function showDuelResultScreen(data, isDisconnected) {
+        document.getElementById('duel-active-content').style.display = 'none';
+        document.getElementById('duel-result-view').style.display = 'block';
+
+        const myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
+        const rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
+
+        const scoresText = document.getElementById('duel-final-scores-text');
+        const winnerText = document.getElementById('duel-winner-announcement');
+
+        scoresText.innerHTML = `Senin Skorun: <b>${myScore}</b><br>Rakibin Skoru: <b>${rivalScore}</b>`;
+
+        if (isDisconnected) {
+            winnerText.innerText = "⚠️ Rakibin bağlantısı koptu / odadan ayrıldı! Hükmen kazandın! 🏆";
+            winnerText.style.color = "#10b981";
+        } else {
+            if (myScore > rivalScore) {
+                winnerText.innerText = "Tebrikler, Düelloyu Kazandın! 🥇";
+                winnerText.style.color = "#10b981";
+            } else if (myScore < rivalScore) {
+                winnerText.innerText = "Maalesef Rakibin Kazandı. Bir Sonrakine Artık! 🥈";
+                winnerText.style.color = "#ef4444";
+            } else {
+                winnerText.innerText = "Düello Berabere Bitti! 🤝";
+                winnerText.style.color = "#f59e0b";
+            }
+        }
+    }
+
     function loadDuelQuestion(qIndex) {
         window.activeDuelQIndex = qIndex;
         const qList = bigQuizPool['tr'];
-        let safeIndex = qIndex;
-        if (safeIndex >= qList.length) safeIndex = 0;
-        const qData = qList[safeIndex];
+        if (qIndex >= qList.length) return;
 
-        document.getElementById('duel-question-text').innerText = `[Düello Soru ${safeIndex + 1} / ${qList.length}] ${qData.question}`;
+        const qData = qList[qIndex];
+
+        document.getElementById('duel-question-text').innerText = `[Düello Soru ${qIndex + 1} / ${qList.length}] ${qData.question}`;
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
@@ -766,7 +848,6 @@
                     if (playerRole === 'p1') currentData.p1Ready = true;
                     else currentData.p2Ready = true;
 
-                    // Eğer iki oyuncu da hazır bayrağını işaretlediyse soru numarasını artır ve bayrakları temizle
                     if (currentData.p1Ready && currentData.p2Ready) {
                         currentData.currentQ = (currentData.currentQ || 0) + 1;
                         currentData.p1Ready = false;
@@ -776,6 +857,17 @@
                 return currentData;
             });
         }
+    }
+
+    function resetDuelLobby() {
+        if (activeRoomRef) activeRoomRef.off();
+        activeRoomCode = null;
+        playerRole = null;
+        window.activeDuelQIndex = undefined;
+
+        document.getElementById('duel-setup-view').style.display = 'block';
+        document.getElementById('duel-game-view').style.display = 'none';
+        document.getElementById('roomCodeInput').value = '';
     }
 
     // --- NAMAZ VAKİTLERİ VE GENEL FONKSİYONLAR ---
