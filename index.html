@@ -399,8 +399,15 @@
 <script>
     // Firebase Konfigürasyonu
     const firebaseConfig = {
-        databaseURL: "https://ayetinvakti-default-rtdb.firebaseio.com/"
+        apiKey: "AIzaSyCIsUcRHMcSxKPsWm9pSB5ErTeJM4D6R6Y",
+        authDomain: "ayetinvakti-3eb7f.firebaseapp.com",
+        databaseURL: "https://ayetinvakti-3eb7f-default-rtdb.firebaseio.com",
+        projectId: "ayetinvakti-3eb7f",
+        storageBucket: "ayetinvakti-3eb7f.firebasestorage.app",
+        messagingSenderId: "82274501389",
+        appId: "1:82274501389:web:d1fe62be335b523afee644"
     };
+    
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -586,7 +593,7 @@
             return;
         }
 
-        if (activeRoomRef) activeRoomRef.off(); // Önceki dinleyiciyi temizle
+        if (activeRoomRef) activeRoomRef.off();
 
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
@@ -623,7 +630,7 @@
             return;
         }
 
-        if (activeRoomRef) activeRoomRef.off(); // Önceki dinleyiciyi temizle
+        if (activeRoomRef) activeRoomRef.off();
 
         activeRoomCode = code;
         playerRole = 'p2';
@@ -715,7 +722,6 @@
                     if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
                     else currentData.p2Score = (currentData.p2Score || 0) + 10;
                 }
-                // Soru sırasını ilerlet
                 if (currentData.currentQ === qIndex) {
                     currentData.currentQ = qIndex + 1;
                 }
