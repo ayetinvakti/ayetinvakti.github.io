@@ -910,8 +910,11 @@
     }
 
     // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA DÜZELTMESİ ---
-    async function fetchPrayerTimes(city) {
-        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13`;
+        async function fetchPrayerTimes(city) {
+        // tune parametresi ile imsak vaktini +10 dakika ileri kaydırarak diğer repoyla eşitliyoruz [0,0,0,0,0,0 -> İmsak,Güneş,Öğle,İkindi,Akşam,Yatsı]
+        const tuneParam = "10,0,0,0,0,0"; 
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
+        
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error("API hatası");
@@ -934,6 +937,7 @@
             document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
         }
     }
+
 
     function toggleDrawer() {
         document.getElementById('appDrawer').classList.toggle('active');
