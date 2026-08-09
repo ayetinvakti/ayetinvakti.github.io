@@ -295,7 +295,7 @@
         <!-- Online / Canlı Düello Alanı -->
         <div id="duel-quiz-area" style="display: none;">
             <div id="duel-setup-view">
-                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla farklı telefonlardan kapışmak için oda kur ya da kodu gir:</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla ortak tur halinde kapışmak için oda kur ya da kodu gir:</div>
                 <div class="dueling-lobby">
                     <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🎮</button>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
@@ -315,7 +315,7 @@
                 <div class="quiz-options" id="duel-options-container"></div>
                 <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
                 <div style="text-align: center; margin-top: 10px;">
-                    <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Diğer Soruya Geç</button>
+                    <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
                 </div>
             </div>
         </div>
@@ -659,7 +659,6 @@
             const data = snapshot.val();
             if (!data) return;
 
-            // Skorları dinamik olarak yer değiştiriyoruz ("Sen" vs "Rakip")
             let myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
             let rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
 
@@ -673,12 +672,12 @@
                 }
             }
 
-            // Sadece veritabanındaki soru endeksi değiştiğinde ve bizim yerel soru numaramızdan farklıysa yükle
-            if (data.currentQ !== undefined) {
-                const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
-                if (data.currentQ !== currentDisplayedQ) {
-                    loadDuelQuestion(data.currentQ);
-                }
+            // Ortak soru senkronizasyonu: Veritabanındaki currentQ her iki tarafta da aynı anda güncellenir
+            const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
+            const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
+            
+            if (targetQ !== currentDisplayedQ) {
+                loadDuelQuestion(targetQ);
             }
         });
     }
@@ -690,24 +689,24 @@
         if (safeIndex >= qList.length) safeIndex = 0;
         const qData = qList[safeIndex];
 
-        document.getElementById('duel-question-text').innerText = `[Düello Soru ${safeIndex + 1}] ${qData.question}`;
+        document.getElementById('duel-question-text').innerText = `[Düello Soru ${safeIndex + 1} / ${qList.length}] ${qData.question}`;
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
+        // Her soru değiştiğinde "Ortak Soruya Geç" butonu sıfırlanır ve gizlenir
         document.getElementById('duel-next-button').style.display = 'none';
 
-        qData.options.optionsArr = qData.options; // referans
         qData.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'quiz-option-btn';
             btn.innerText = opt;
-            btn.onclick = () => checkDuelAnswer(idx, qData.answer, safeIndex, btn);
+            btn.onclick = () => checkDuelAnswer(idx, qData.answer, btn);
             container.appendChild(btn);
         });
     }
 
-    function checkDuelAnswer(selectedIdx, correctIdx, qIndex, clickedBtn) {
-        // Sadece bu kullanıcının butonlarını kilitle (Rakibin ekranını etkilemez)
+    function checkDuelAnswer(selectedIdx, correctIdx, clickedBtn) {
+        // Tıkladıktan sonra bu oyuncunun şıkları kilitlenir
         const allBtns = document.querySelectorAll('#duel-options-container .quiz-option-btn');
         allBtns.forEach(b => b.disabled = true);
 
@@ -725,7 +724,7 @@
             });
         }
 
-        // Puanı güncellemek için transaction yapalım, soru geçişini oyuncunun kendi butonuyla tetiklemesini sağlayalım
+        // Puanı güvenli şekilde transaction ile artır
         if (activeRoomRef) {
             activeRoomRef.transaction(currentData => {
                 if (currentData) {
@@ -738,7 +737,7 @@
             });
         }
 
-        // Cevap verince bu oyuncuya özel "Sonraki Soruya Geç" butonu belirtsin
+        // Cevap verdikten sonra ortak geçiş butonunu görünür yapıyoruz
         document.getElementById('duel-next-button').style.display = 'block';
     }
 
