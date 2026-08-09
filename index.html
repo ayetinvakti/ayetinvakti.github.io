@@ -565,7 +565,6 @@
     function loadSoloQuestion() {
         const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
         
-        // Eğer sorular bittiyse sonuç ekranını göster
         if (currentQuestionIndex >= qList.length) {
             showSoloResultScreen();
             return;
@@ -648,7 +647,7 @@
         loadSoloQuestion();
     }
 
-    // --- CANLI DÜELLO (MULTIPLAYER) & KOPMA TESPİTİ & SONUÇ EKRANI SİSTEMİ ---
+    // --- CANLI DÜELLO (MULTIPLAYER) ---
     function createDuelRoom() {
         if (!window.firebase || !firebase.database) {
             alert("Firebase kütüphanesi yüklenemedi! İnternet bağlantınızı kontrol edin.");
@@ -730,7 +729,6 @@
     function setupDisconnectionHandler() {
         if (!activeRoomRef) return;
         const onlineKey = (playerRole === 'p1') ? 'p1Online' : 'p2Online';
-        
         connectionRef = activeRoomRef.child(onlineKey);
         connectionRef.onDisconnect().set(false);
     }
@@ -911,7 +909,7 @@
         document.getElementById('roomCodeInput').value = '';
     }
 
-    // --- NAMAZ VAKİTLERİ VE GENEL FONKSİYONLAR ---
+    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA DÜZELTMESİ ---
     async function fetchPrayerTimes(city) {
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13`;
         try {
@@ -973,6 +971,7 @@
         }
     }
 
+    // NOKTA ATIŞI DÜZELTİLMİŞ GERİ SAYIM MOTORU
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
         const titleElement = document.getElementById('next-prayer-title');
@@ -1005,6 +1004,7 @@
                 }
             }
 
+            // Eğer bugünkü tüm vakitler geçdiyse (örneğin yatsıdan sonra), bir sonraki günün İmsak vaktini al
             if (!targetPrayer) {
                 targetPrayer = prayers[0];
                 let pDate = new Date();
