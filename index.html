@@ -289,11 +289,20 @@
 
         <!-- Solo / Sınırsız Soru Alanı -->
         <div id="solo-quiz-area">
-            <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
-            <div class="quiz-options" id="quiz-options-container"></div>
-            <div class="quiz-footer">
-                <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
-                <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
+            <div id="solo-question-view">
+                <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
+                <div class="quiz-options" id="quiz-options-container"></div>
+                <div class="quiz-footer">
+                    <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
+                    <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
+                </div>
+            </div>
+            <!-- Tekli Mod Bitiş Ekranı -->
+            <div id="solo-result-view" style="display: none;" class="duel-result-box">
+                <div class="duel-result-title">🎉 Test Tamamlandı!</div>
+                <div class="duel-result-scores" id="solo-final-scores-text">Skorlar hesaplanıyor...</div>
+                <div id="solo-announcement" style="font-size: 1.05rem; font-weight: 600; margin-bottom: 16px;">Tebrikler, tüm soruları başarıyla bitirdin.</div>
+                <button class="duel-action-btn" onclick="restartSoloQuiz()">Tekrar Çöz (Yeniden Başla)</button>
             </div>
         </div>
 
@@ -521,6 +530,8 @@
     };
 
     let currentQuestionIndex = 0;
+    let soloCorrectCount = 0;
+    let soloWrongCount = 0;
     let currentLang = localStorage.getItem('user_lang') || 'tr';
     let activeRoomCode = null;
     let playerRole = null; 
@@ -550,12 +561,18 @@
         if (mode === 'solo') loadSoloQuestion();
     }
 
-    // --- TEKLİ MOD ---
+    // --- TEKLİ MOD (SONSUZ/KLASİK) & BİTİŞ EKRANI ---
     function loadSoloQuestion() {
         const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+        
+        // Eğer sorular bittiyse sonuç ekranını göster
         if (currentQuestionIndex >= qList.length) {
-            currentQuestionIndex = 0; 
+            showSoloResultScreen();
+            return;
         }
+
+        document.getElementById('solo-question-view').style.display = 'block';
+        document.getElementById('solo-result-view').style.display = 'none';
         
         const currentData = qList[currentQuestionIndex];
         document.getElementById('quiz-progress').innerText = `Soru ${currentQuestionIndex + 1} / ${qList.length}`;
@@ -588,9 +605,11 @@
 
         const feedbackText = document.getElementById('quiz-feedback-text');
         if (selectedIndex === correctIdx) {
+            soloCorrectCount++;
             feedbackText.innerText = translations[currentLang].correct_answer;
             feedbackText.style.color = "#10b981";
         } else {
+            soloWrongCount++;
             clickedBtn.classList.add('wrong');
             feedbackText.innerText = translations[currentLang].wrong_answer;
             feedbackText.style.color = "#ef4444";
@@ -600,6 +619,32 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
+        loadSoloQuestion();
+    }
+
+    function showSoloResultScreen() {
+        document.getElementById('solo-question-view').style.display = 'none';
+        document.getElementById('solo-result-view').style.display = 'block';
+        document.getElementById('quiz-progress').innerText = "Test Bitti";
+
+        const scoresText = document.getElementById('solo-final-scores-text');
+        const announcement = document.getElementById('solo-announcement');
+
+        scoresText.innerHTML = `Doğru Sayısı: <b style="color: #10b981;">${soloCorrectCount}</b><br>Yanlış Sayısı: <b style="color: #ef4444;">${soloWrongCount}</b>`;
+
+        if (soloCorrectCount >= 8) {
+            announcement.innerText = "🏆 Harika performans! İslam kültürü bilgin oldukça iyi.";
+        } else if (soloCorrectCount >= 5) {
+            announcement.innerText = "👍 Fena değil, biraz daha pratikle mükemmel olabilirsin.";
+        } else {
+            announcement.innerText = "📖 Kendini geliştirmek için Ayetin Vakti içeriklerine göz atabilirsin.";
+        }
+    }
+
+    function restartSoloQuiz() {
+        currentQuestionIndex = 0;
+        soloCorrectCount = 0;
+        soloWrongCount = 0;
         loadSoloQuestion();
     }
 
@@ -686,7 +731,6 @@
         if (!activeRoomRef) return;
         const onlineKey = (playerRole === 'p1') ? 'p1Online' : 'p2Online';
         
-        // Firebase onDisconnect ile bağlantı koptuğunda sunucudaki online durumunu false yapıyoruz
         connectionRef = activeRoomRef.child(onlineKey);
         connectionRef.onDisconnect().set(false);
     }
@@ -698,11 +742,9 @@
             const data = snapshot.val();
             if (!data) return;
 
-            // Kopma Tespiti Kontrolü
             const rivalOnline = (playerRole === 'p1') ? data.p2Online : data.p1Online;
             const myOnline = (playerRole === 'p1') ? data.p1Online : data.p2Online;
 
-            // Eğer oyun başladıktan sonra rakip kopmuşsa veya çevrimdışı olduysa
             if (data.status === 'started' && rivalOnline === false) {
                 showDuelResultScreen(data, true);
                 return;
@@ -724,7 +766,6 @@
             const qList = bigQuizPool['tr'];
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
 
-            // Soru havuzu bittiyse (örneğin 10 soru tamamlandıysa) Sonuç Ekranına geç
             if (targetQ >= qList.length) {
                 showDuelResultScreen(data, false);
                 return;
