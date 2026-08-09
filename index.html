@@ -677,15 +677,15 @@
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
             const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
             
+            // Soru değiştiyse ekranı güncelle
             if (targetQ !== currentDisplayedQ) {
                 loadDuelQuestion(targetQ);
             } else {
-                // Soru aynıysa ama butonlara basılmışsa rakip beklendiğini gösterelim
+                // Soru aynı kalmışsa buton durumunu kontrol et
                 const myReady = (playerRole === 'p1') ? data.p1Ready : data.p2Ready;
-                const rivalReady = (playerRole === 'p1') ? data.p2Ready : data.p1Ready;
                 const nextBtn = document.getElementById('duel-next-button');
                 
-                if (myReady && !rivalReady) {
+                if (myReady) {
                     nextBtn.innerText = "Rakibin geçmesi bekleniyor...";
                     nextBtn.disabled = true;
                     nextBtn.style.opacity = "0.7";
@@ -766,7 +766,7 @@
                     if (playerRole === 'p1') currentData.p1Ready = true;
                     else currentData.p2Ready = true;
 
-                    // İki oyuncu da hazırsa soru numarasını artır ve hazır bayraklarını sıfırla
+                    // Eğer iki oyuncu da hazır bayrağını işaretlediyse soru numarasını artır ve bayrakları temizle
                     if (currentData.p1Ready && currentData.p2Ready) {
                         currentData.currentQ = (currentData.currentQ || 0) + 1;
                         currentData.p1Ready = false;
@@ -876,7 +876,6 @@
                 targetPrayer = prayers[0];
                 let pDate = new Date();
                 pDate.setDate(pDate.getDate() + 1);
-                const [h, m] = targetPrayer.time.split(':'.charCodeAt(0)).map(Number); // fixed split
                 const [hh, mm] = targetPrayer.time.split(':').map(Number);
                 pDate.setHours(hh, mm, 0, 0);
                 targetDate = pDate;
