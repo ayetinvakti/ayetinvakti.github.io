@@ -606,6 +606,8 @@
             p1Score: 0,
             p2Score: 0,
             currentQ: 0,
+            p1Ready: false,
+            p2Ready: false,
             status: 'waiting'
         }).then(() => {
             document.getElementById('duel-setup-view').style.display = 'none';
@@ -672,12 +674,22 @@
                 }
             }
 
-            // Ortak soru senkronizasyonu: Veritabanındaki currentQ her iki tarafta da aynı anda güncellenir
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
             const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
             
             if (targetQ !== currentDisplayedQ) {
                 loadDuelQuestion(targetQ);
+            } else {
+                // Soru aynıysa ama butonlara basılmışsa rakip beklendiğini gösterelim
+                const myReady = (playerRole === 'p1') ? data.p1Ready : data.p2Ready;
+                const rivalReady = (playerRole === 'p1') ? data.p2Ready : data.p1Ready;
+                const nextBtn = document.getElementById('duel-next-button');
+                
+                if (myReady && !rivalReady) {
+                    nextBtn.innerText = "Rakibin geçmesi bekleniyor...";
+                    nextBtn.disabled = true;
+                    nextBtn.style.opacity = "0.7";
+                }
             }
         });
     }
@@ -693,8 +705,12 @@
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
-        // Her soru değiştiğinde "Ortak Soruya Geç" butonu sıfırlanır ve gizlenir
-        document.getElementById('duel-next-button').style.display = 'none';
+        
+        const nextBtn = document.getElementById('duel-next-button');
+        nextBtn.innerText = "Ortak Soruya Geç";
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+        nextBtn.style.display = 'none';
 
         qData.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
@@ -706,7 +722,6 @@
     }
 
     function checkDuelAnswer(selectedIdx, correctIdx, clickedBtn) {
-        // Tıkladıktan sonra bu oyuncunun şıkları kilitlenir
         const allBtns = document.querySelectorAll('#duel-options-container .quiz-option-btn');
         allBtns.forEach(b => b.disabled = true);
 
@@ -724,7 +739,6 @@
             });
         }
 
-        // Puanı güvenli şekilde transaction ile artır
         if (activeRoomRef) {
             activeRoomRef.transaction(currentData => {
                 if (currentData) {
@@ -737,16 +751,27 @@
             });
         }
 
-        // Cevap verdikten sonra ortak geçiş butonunu görünür yapıyoruz
         document.getElementById('duel-next-button').style.display = 'block';
     }
 
     function proceedNextDuelQuestion() {
-        document.getElementById('duel-next-button').style.display = 'none';
+        const nextBtn = document.getElementById('duel-next-button');
+        nextBtn.innerText = "Rakibin geçmesi bekleniyor...";
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = "0.7";
+
         if (activeRoomRef) {
             activeRoomRef.transaction(currentData => {
                 if (currentData) {
-                    currentData.currentQ = (currentData.currentQ || 0) + 1;
+                    if (playerRole === 'p1') currentData.p1Ready = true;
+                    else currentData.p2Ready = true;
+
+                    // İki oyuncu da hazırsa soru numarasını artır ve hazır bayraklarını sıfırla
+                    if (currentData.p1Ready && currentData.p2Ready) {
+                        currentData.currentQ = (currentData.currentQ || 0) + 1;
+                        currentData.p1Ready = false;
+                        currentData.p2Ready = false;
+                    }
                 }
                 return currentData;
             });
@@ -851,8 +876,9 @@
                 targetPrayer = prayers[0];
                 let pDate = new Date();
                 pDate.setDate(pDate.getDate() + 1);
-                const [h, m] = targetPrayer.time.split(':').map(Number);
-                pDate.setHours(h, m, 0, 0);
+                const [h, m] = targetPrayer.time.split(':'.charCodeAt(0)).map(Number); // fixed split
+                const [hh, mm] = targetPrayer.time.split(':').map(Number);
+                pDate.setHours(hh, mm, 0, 0);
                 targetDate = pDate;
             }
 
