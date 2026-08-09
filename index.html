@@ -283,11 +283,11 @@
         
         <!-- Mod Seçim Sekmeleri -->
         <div class="quiz-mode-selector">
-            <button class="mode-tab-btn active" id="tab-solo" onclick="switchQuizMode('solo')">Tekli Sınırsız</button>
-            <button class="mode-tab-btn" id="tab-duel" onclick="switchQuizMode('duel')">⚔️ Canlı Düello</button>
+            <button class="mode-tab-btn active" id="tab-solo" onclick="switchQuizMode('solo')">Tek Kişilik</button>
+            <button class="mode-tab-btn" id="tab-duel" onclick="switchQuizMode('duel')">👥 Canlı Düello</button>
         </div>
 
-        <!-- Solo / Sınırsız Soru Alanı -->
+        <!-- Solo / Tek Kişilik Soru Alanı -->
         <div id="solo-quiz-area">
             <div id="solo-question-view">
                 <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
@@ -311,7 +311,7 @@
             <div id="duel-setup-view">
                 <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla ortak tur halinde kapışmak için oda kur ya da kodu gir:</div>
                 <div class="dueling-lobby">
-                    <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🎮</button>
+                    <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🌙</button>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
                         <input type="text" id="roomCodeInput" class="duel-input" placeholder="Oda Kodu (Örn: 4821)" maxlength="6">
                         <button class="duel-action-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
@@ -910,8 +910,7 @@
     }
 
     // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA DÜZELTMESİ ---
-        async function fetchPrayerTimes(city) {
-        // tune parametresi ile imsak vaktini +10 dakika ileri kaydırarak diğer repoyla eşitliyoruz [0,0,0,0,0,0 -> İmsak,Güneş,Öğle,İkindi,Akşam,Yatsı]
+    async function fetchPrayerTimes(city) {
         const tuneParam = "10,0,0,0,0,0"; 
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
         
@@ -937,7 +936,6 @@
             document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
         }
     }
-
 
     function toggleDrawer() {
         document.getElementById('appDrawer').classList.toggle('active');
@@ -975,7 +973,6 @@
         }
     }
 
-    // NOKTA ATIŞI DÜZELTİLMİŞ GERİ SAYIM MOTORU
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
         const titleElement = document.getElementById('next-prayer-title');
@@ -1008,7 +1005,6 @@
                 }
             }
 
-            // Eğer bugünkü tüm vakitler geçdiyse (örneğin yatsıdan sonra), bir sonraki günün İmsak vaktini al
             if (!targetPrayer) {
                 targetPrayer = prayers[0];
                 let pDate = new Date();
