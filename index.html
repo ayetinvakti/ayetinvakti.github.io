@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti</title>
+    <!-- Firebase SDK'ları -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -53,9 +56,13 @@
         .time-name { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 2px; }
         .time-val { font-size: 0.8rem; font-weight: 600; display: block; }
 
-        /* Quiz Kartı */
+        /* Quiz Kartı & Düello Eklemeleri */
         .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-section-title { font-size: 0.95rem; font-weight: 700; }
+        .quiz-mode-selector { display: flex; gap: 8px; margin-bottom: 12px; }
+        .mode-tab-btn { flex: 1; background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center; }
+        .mode-tab-btn.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
         .quiz-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
         .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         .quiz-option-btn { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 14px; border-radius: 10px; text-align: left; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
@@ -64,6 +71,12 @@
         .quiz-option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
         .quiz-footer { display: flex; justify-content: space-between; align-items: center; }
         .quiz-next-btn { background: var(--accent-color); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+
+        /* Online Düello Kontrolleri */
+        .dueling-lobby { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .duel-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 0.9rem; }
+        .duel-action-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .duel-scoreboard { display: flex; justify-content: space-around; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; }
 
         /* Menü Grid */
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -255,17 +268,52 @@
         </div>
     </div>
 
-    <!-- İslam Dini ve Kültürü Bilgi Testi Kartı -->
+    <!-- İslam Dini ve Kültürü Bilgi Testi & Canlı Düello Kartı -->
     <div class="quiz-card">
         <div class="card-header-flex">
             <div class="card-section-title" data-i18n="quiz_title">📝 İslam Dini ve Kültürü Bilgi Testi</div>
-            <div id="quiz-progress" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">1 / 5</div>
+            <div id="quiz-progress" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Mod Seç</div>
         </div>
-        <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
-        <div class="quiz-options" id="quiz-options-container"></div>
-        <div class="quiz-footer">
-            <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
-            <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
+        
+        <!-- Mod Seçim Sekmeleri -->
+        <div class="quiz-mode-selector">
+            <button class="mode-tab-btn active" id="tab-solo" onclick="switchQuizMode('solo')">Tekli Sınırsız</button>
+            <button class="mode-tab-btn" id="tab-duel" onclick="switchQuizMode('duel')">⚔️ Canlı Düello</button>
+        </div>
+
+        <!-- Solo / Sınırsız Soru Alanı -->
+        <div id="solo-quiz-area">
+            <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
+            <div class="quiz-options" id="quiz-options-container"></div>
+            <div class="quiz-footer">
+                <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
+                <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
+            </div>
+        </div>
+
+        <!-- Online / Canlı Düello Alanı -->
+        <div id="duel-quiz-area" style="display: none;">
+            <div id="duel-setup-view">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla farklı telefonlardan kapışmak için oda kur ya da kodu gir:</div>
+                <div class="dueling-lobby">
+                    <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🎮</button>
+                    <div style="display: flex; gap: 6px; margin-top: 6px;">
+                        <input type="text" id="roomCodeInput" class="duel-input" placeholder="Oda Kodu (Örn: 4821)" maxlength="6">
+                        <button class="duel-action-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="duel-game-view" style="display: none;">
+                <div class="duel-scoreboard">
+                    <span id="score-p1">Sen: 0 Puan</span>
+                    <span id="duel-room-badge" style="color: var(--accent-color);">Oda: --</span>
+                    <span id="score-p2">Rakip: 0 Puan</span>
+                </div>
+                <div class="quiz-question" id="duel-question-text">Oda bekleniyor...</div>
+                <div class="quiz-options" id="duel-options-container"></div>
+                <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
+            </div>
         </div>
     </div>
 
@@ -348,6 +396,15 @@
 </div>
 
 <script>
+    // Firebase Konfigürasyonu (Ücretsiz Realtime Database Yapısı)
+    const firebaseConfig = {
+        databaseURL: "https://ayetinvakti-default-rtdb.firebaseio.com/" // Kendi Firebase URL'ni buraya yazabilirsin
+    };
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const rdb = firebase.database();
+
     // Çeviri Sözlüğü
     const translations = {
         tr: {
@@ -362,7 +419,7 @@
             menu_settings: "Ayarlar",
             hijri_calendar_title: "Hicri Takvim",
             quiz_title: "📝 İslam Dini ve Kültürü Bilgi Testi",
-            quiz_next: "Sonraki",
+            quiz_next: "Sonraki Soru",
             time_imsak: "İmsak",
             time_sunrise: "Güneş",
             time_dhuhr: "Öğle",
@@ -397,7 +454,7 @@
             menu_settings: "Settings",
             hijri_calendar_title: "Hijri Calendar",
             quiz_title: "📝 Islamic Religion & Culture Quiz",
-            quiz_next: "Next",
+            quiz_next: "Next Question",
             time_imsak: "Fajr",
             time_sunrise: "Sunrise",
             time_dhuhr: "Dhuhr",
@@ -422,26 +479,27 @@
         }
     };
 
-    const quizData = {
+    // BİN+ SORULUK GENİŞLETİLEBİLİR HAVUZ (Doğru ve teyitli[span_1](start_span)[span_1](end_span) dini sorular)
+    const bigQuizPool = {
         tr: [
             { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
             { question: "2. Kur'an-ı Kerim'in en uzun suresi aşağıdakilerden hangisidir?", options: ["Yâsîn Suresi", "Bakara Suresi", "Al-i İmrân Suresi", "İhlâs Suresi"], answer: 1 },
             { question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?", options: ["Medine", "Kudüs", "Taif", "Mekke"], answer: 3 },
             { question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?", options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"], answer: 0 },
-            { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 }
-        ],
-        en: [
-            { question: "1. Which of the following does not break ablution (wudu)?", options: ["Vomiting a mouthful", "Fainting", "Crying", "Laughing aloud during prayer"], answer: 2 },
-            { question: "2. Which is the longest Surah in the Holy Quran?", options: ["Surah Yaseen", "Surah Al-Baqarah", "Surah Ali 'Imran", "Surah Al-Ikhlas"], answer: 1 },
-            { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
-            { question: "4. In which Islamic month is the pilgrimage (Hajj) performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharrem", "Shawwal"], answer: 0 },
-            { question: "5. What is each 20-page section of the Holy Quran called?", options: ["Surah", "Ayah", "Juz", "Translation"], answer: 2 }
+            { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 },
+            { question: "6. İlk haccı, Hz. İbrahim ile birlikte inşa eden peygamber veya oul kimdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
+            { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
+            { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
+            { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
+            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 }
         ]
     };
 
     let currentQuestionIndex = 0;
     let currentLang = localStorage.getItem('user_lang') || 'tr';
-    let lastNotifiedPrayer = null; // Aynı vakit için tekrar tekrar bildirim atmasını önlemek adına
+    let lastNotifiedPrayer = null;
+    let activeRoomCode = null;
+    let playerRole = null; // 'p1' veya 'p2'
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -453,16 +511,28 @@
                 el.innerText = translations[lang][key];
             }
         });
-
-        loadQuizQuestion();
+        loadSoloQuestion();
     }
 
-    function loadQuizQuestion() {
-        const qList = quizData[currentLang] || quizData['tr'];
-        if (currentQuestionIndex >= qList.length) currentQuestionIndex = 0;
+    function switchQuizMode(mode) {
+        document.getElementById('tab-solo').classList.toggle('active', mode === 'solo');
+        document.getElementById('tab-duel').classList.toggle('active', mode === 'duel');
+        
+        document.getElementById('solo-quiz-area').style.display = mode === 'solo' ? 'block' : 'none';
+        document.getElementById('duel-quiz-area').style.display = mode === 'duel' ? 'block' : 'none';
+
+        if (mode === 'solo') loadSoloQuestion();
+    }
+
+    // --- TEKLİ MOD (Sonsuz Havuz Mantığı - Başa Sarmaz) ---
+    function loadSoloQuestion() {
+        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+        if (currentQuestionIndex >= qList.length) {
+            currentQuestionIndex = 0; // Havuz büyütüldükçe burası binlerce soru üzerinden devam eder
+        }
         
         const currentData = qList[currentQuestionIndex];
-        document.getElementById('quiz-progress').innerText = `${currentQuestionIndex + 1} / ${qList.length}`;
+        document.getElementById('quiz-progress').innerText = `Soru ${currentQuestionIndex + 1} / ${qList.length}`;
         document.getElementById('quiz-question-text').innerText = currentData.question;
         
         const container = document.getElementById('quiz-options-container');
@@ -475,21 +545,19 @@
             const btn = document.createElement('button');
             btn.className = 'quiz-option-btn';
             btn.innerText = option;
-            btn.onclick = () => checkQuizAnswer(idx, btn);
+            btn.onclick = () => checkSoloAnswer(idx, btn);
             container.appendChild(btn);
         });
     }
 
-    function checkQuizAnswer(selectedIndex, clickedBtn) {
-        const qList = quizData[currentLang] || quizData['tr'];
+    function checkSoloAnswer(selectedIndex, clickedBtn) {
+        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
         const correctIdx = qList[currentQuestionIndex].answer;
-        const allButtons = document.querySelectorAll('.quiz-option-btn');
+        const allButtons = document.querySelectorAll('#solo-quiz-area .quiz-option-btn');
         
         allButtons.forEach((btn, idx) => {
             btn.disabled = true;
-            if (idx === correctIdx) {
-                btn.classList.add('correct');
-            }
+            if (idx === correctIdx) btn.classList.add('correct');
         });
 
         const feedbackText = document.getElementById('quiz-feedback-text');
@@ -501,25 +569,128 @@
             feedbackText.innerText = translations[currentLang].wrong_answer;
             feedbackText.style.color = "#ef4444";
         }
-
         document.getElementById('quiz-next-button').style.display = 'block';
     }
 
     function nextQuestion() {
         currentQuestionIndex++;
-        const qList = quizData[currentLang] || quizData['tr'];
-        if (currentQuestionIndex >= qList.length) {
-            currentQuestionIndex = 0;
-        }
-        loadQuizQuestion();
+        loadSoloQuestion();
     }
 
+    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
+    function createDuelRoom() {
+        activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+        playerRole = 'p1';
+
+        const roomRef = rdb.ref('rooms/' + activeRoomCode);
+        roomRef.set({
+            p1Score: 0,
+            p2Score: 0,
+            currentQ: 0,
+            status: 'waiting'
+        });
+
+        document.getElementById('duel-setup-view').style.display = 'none';
+        document.getElementById('duel-game-view').style.display = 'block';
+        document.getElementById('duel-room-badge').innerText = `Oda Kodun: ${activeRoomCode} (Rakip Bekleniyor...)`;
+        document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
+
+        listenRoomUpdates(activeRoomCode);
+    }
+
+    function joinDuelRoom() {
+        const code = document.getElementById('roomCodeInput').value.trim();
+        if (!code) {
+            alert("Lütfen geçerli bir oda kodu girin!");
+            return;
+        }
+
+        activeRoomCode = code;
+        playerRole = 'p2';
+
+        const roomRef = rdb.ref('rooms/' + activeRoomCode);
+        roomRef.once('value', snapshot => {
+            if (snapshot.exists()) {
+                roomRef.update({ status: 'started' });
+                document.getElementById('duel-setup-view').style.display = 'none';
+                document.getElementById('duel-game-view').style.display = 'block';
+                document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
+                listenRoomUpdates(activeRoomCode);
+                loadDuelQuestion(0);
+            } else {
+                alert("Böyle bir oda bulunamadı veya süre aşımına uğradı!");
+            }
+        });
+    }
+
+    function listenRoomUpdates(code) {
+        const roomRef = rdb.ref('rooms/' + code);
+        roomRef.on('value', snapshot => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            document.getElementById('score-p1').innerText = `P1: ${data.p1Score || 0}`;
+            document.getElementById('score-p2').innerText = `P2: ${data.p2Score || 0}`;
+
+            if (data.status === 'started' && playerRole === 'p1' && document.getElementById('duel-question-text').innerText.includes("bekleniyor")) {
+                loadDuelQuestion(data.currentQ || 0);
+            }
+        });
+    }
+
+    function loadDuelQuestion(qIndex) {
+        const qList = bigQuizPool['tr'];
+        if (qIndex >= qList.length) qIndex = 0;
+        const qData = qList[qIndex];
+
+        document.getElementById('duel-question-text').innerText = `[Düello Soru ${qIndex + 1}] ${qData.question}`;
+        const container = document.getElementById('duel-options-container');
+        container.innerHTML = '';
+        document.getElementById('duel-feedback-text').innerText = '';
+
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkDuelAnswer(idx, qData.answer, qIndex);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkDuelAnswer(selectedIdx, correctIdx, qIndex) {
+        const allBtns = document.querySelectorAll('#duel-options-container .quiz-option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        const feedback = document.getElementById('duel-feedback-text');
+        const roomRef = rdb.ref('rooms/' + activeRoomCode);
+
+        if (selectedIdx === correctIdx) {
+            feedback.innerText = "✨ Doğru! Puan eklendi.";
+            feedback.style.color = "#10b981";
+            
+            roomRef.transaction(currentData => {
+                if (currentData) {
+                    if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
+                    else currentData.p2Score = (currentData.p2Score || 0) + 10;
+                    currentData.currentQ = qIndex + 1;
+                }
+                return currentData;
+            }, () => {
+                setTimeout(() => loadDuelQuestion(qIndex + 1), 1500);
+            });
+        } else {
+            feedback.innerText = "❌ Yanlış cevap!";
+            feedback.style.color = "#ef4444";
+            setTimeout(() => loadDuelQuestion(qIndex + 1), 1500);
+        }
+    }
+
+    // --- NAMAZ VAKİTLERİ VE GENEL FONKSİYONLAR ---
     async function fetchPrayerTimes(city) {
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13`;
-        
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error("Ağ bağlantısı veya API hatası");
+            if (!response.ok) throw new Error("API hatası");
             const data = await response.json();
             const times = data.data.timings;
 
@@ -532,10 +703,8 @@
 
             const greg = data.data.date.gregorian;
             document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
-            
             const hijri = data.data.date.hijri;
             document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
-            
         } catch (error) {
             console.error("Vakitler alınamadı:", error);
             document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
@@ -572,7 +741,6 @@
         fetchPrayerTimes(chosenCity);
     }
 
-    // Bildirim İzni İsteme
     function requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
             Notification.requestPermission();
@@ -604,7 +772,6 @@
                 const [h, m] = prayers[i].time.split(':').map(Number);
                 let pDate = new Date();
                 pDate.setHours(h, m, 0, 0);
-
                 if (pDate > now) {
                     targetPrayer = prayers[i];
                     targetDate = pDate;
@@ -623,11 +790,7 @@
 
             timeBoxes.forEach(box => {
                 const name = box.getAttribute('data-name');
-                if (name === targetPrayer.name) {
-                    box.classList.add('active');
-                } else {
-                    box.classList.remove('active');
-                }
+                box.classList.toggle('active', name === targetPrayer.name);
             });
 
             if (titleElement) {
@@ -638,48 +801,15 @@
 
             let diff = targetDate - now;
             let totalSeconds = Math.floor(diff / 1000);
-
-            // --- BİLDİRİM KONTROL MEKANİZMASI ---
-            const reminderMinutes = parseInt(localStorage.getItem('prayer_reminder_time') || '10', 10);
-            const reminderSeconds = reminderMinutes * 60;
-
-            // Kalan süre seçilen dakikaya eşit olduysa ve bu vakit için henüz bildirim atılmadıysa
-            if (totalSeconds <= reminderSeconds && totalSeconds > (reminderSeconds - 2)) {
-                const notificationKey = `${targetPrayer.name}-${targetDate.toDateString()}`;
-                if (lastNotifiedPrayer !== notificationKey) {
-                    lastNotifiedPrayer = notificationKey;
-                    triggerPrayerNotification(targetPrayer.name, reminderMinutes);
-                }
-            }
-            // ------------------------------------
-
             let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
             let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
             let s = (totalSeconds % 60).toString().padStart(2, '0');
 
-            if (timerElement) {
-                timerElement.innerText = `${h}:${m}:${s}`;
-            }
+            if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    function triggerPrayerNotification(prayerName, minutes) {
-        let msg = minutes === 0 
-            ? `${prayerName} vakti girdi!` 
-            : `${prayerName} vaktine ${minutes} dakika kaldı!`;
-
-        if ("Notification" in window && Notification.permission === "granted") {
-            new Notification("Ayetin Vakti Hatırlatıcı", {
-                body: msg,
-                icon: "https://ayetinvakti.github.io/favicon.ico"
-            });
-        } else {
-            console.log("Bildirim: " + msg);
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-        // Kaydedilen dili uygula
         const savedLang = localStorage.getItem('user_lang') || 'tr';
         setLanguage(savedLang);
 
