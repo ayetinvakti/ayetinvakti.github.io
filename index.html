@@ -307,9 +307,9 @@
 
             <div id="duel-game-view" style="display: none;">
                 <div class="duel-scoreboard">
-                    <span id="score-p1">Sen: 0 Puan</span>
+                    <span id="score-p1">Sen: 0</span>
                     <span id="duel-room-badge" style="color: var(--accent-color);">Oda: --</span>
-                    <span id="score-p2">Rakip: 0 Puan</span>
+                    <span id="score-p2">Rakip: 0</span>
                 </div>
                 <div class="quiz-question" id="duel-question-text">Oda bekleniyor...</div>
                 <div class="quiz-options" id="duel-options-container"></div>
@@ -587,7 +587,6 @@
 
     // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
     function createDuelRoom() {
-        console.log("Oda kur butonuna basıldı...");
         if (!window.firebase || !firebase.database) {
             alert("Firebase kütüphanesi yüklenemedi! İnternet bağlantınızı kontrol edin.");
             return;
@@ -599,8 +598,6 @@
         playerRole = 'p1';
 
         activeRoomRef = rdb.ref('rooms/' + activeRoomCode);
-        
-        console.log("Oda oluşturuluyor:", activeRoomCode);
 
         activeRoomRef.set({
             p1Score: 0,
@@ -608,7 +605,6 @@
             currentQ: 0,
             status: 'waiting'
         }).then(() => {
-            console.log("Oda başarıyla oluşturuldu, ekran değiştiriliyor.");
             document.getElementById('duel-setup-view').style.display = 'none';
             document.getElementById('duel-game-view').style.display = 'block';
             document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Rakip Bekleniyor...)`;
@@ -616,7 +612,6 @@
 
             listenRoomUpdates();
         }).catch(err => {
-            console.error("Oda oluşturma hatası:", err);
             alert("Oda kurulamadı! Hata: " + err.message);
         });
     }
@@ -661,13 +656,17 @@
             const data = snapshot.val();
             if (!data) return;
 
-            document.getElementById('score-p1').innerText = `Sen: ${data.p1Score || 0}`;
-            document.getElementById('score-p2').innerText = `Rakip: ${data.p2Score || 0}`;
+            // 1. ÇÖZÜM: Kim baktığına göre (P1 veya P2) skorları dinamik olarak yer değiştiriyoruz
+            let myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
+            let rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
+
+            document.getElementById('score-p1').innerText = `Sen: ${myScore}`;
+            document.getElementById('score-p2').innerText = `Rakip: ${rivalScore}`;
 
             if (playerRole === 'p1' && data.status === 'started') {
                 const badge = document.getElementById('duel-room-badge');
                 if (badge.innerText.includes("Bekleniyor")) {
-                    badge.innerText = `Oda: ${activeRoomCode} (Rakip Katıldı!)`;
+                    badge.innerText = `Oda: ${activeRoomCode}`;
                 }
             }
 
@@ -696,12 +695,12 @@
             const btn = document.createElement('button');
             btn.className = 'quiz-option-btn';
             btn.innerText = opt;
-            btn.onclick = () => checkDuelAnswer(idx, qData.answer, safeIndex);
+            btn.onclick = () => checkDuelAnswer(idx, qData.answer, safeIndex, btn);
             container.appendChild(btn);
         });
     }
 
-    function checkDuelAnswer(selectedIdx, correctIdx, qIndex) {
+    function checkDuelAnswer(selectedIdx, correctIdx, qIndex, clickedBtn) {
         const allBtns = document.querySelectorAll('#duel-options-container .quiz-option-btn');
         allBtns.forEach(b => b.disabled = true);
 
@@ -711,11 +710,17 @@
         if (selectedIdx === correctIdx) {
             feedback.innerText = "✨ Doğru! Puan eklendi.";
             feedback.style.color = "#10b981";
+            clickedBtn.classList.add('correct');
         } else {
             feedback.innerText = "❌ Yanlış cevap!";
             feedback.style.color = "#ef4444";
+            clickedBtn.classList.add('wrong');
+            allBtns.forEach((b, idx) => {
+                if (idx === correctIdx) b.classList.add('correct');
+            });
         }
 
+        // 2. ÇÖZÜM: Sadece doğru cevap verildiğinde ya da hamle yapıldığında senkronize ilerleme
         activeRoomRef.transaction(currentData => {
             if (currentData) {
                 if (selectedIdx === correctIdx) {
