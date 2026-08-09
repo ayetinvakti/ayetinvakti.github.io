@@ -35,7 +35,8 @@
         /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .nav-left { display: flex; align-items: center; gap: 12px; }
-        .menu-btn, .icon-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; }
+        .menu-btn, .icon-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: transform 0.1s; }
+        .menu-btn:active, .icon-btn:active, .quiz-option-btn:active, .duel-action-btn:active, .quiz-next-btn:active, .modal-save-btn:active { transform: scale(0.96); }
         .app-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); text-decoration: none; }
 
         /* Konum ve Tarih Barı */
@@ -579,26 +580,37 @@
 
     // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
     function createDuelRoom() {
+        console.log("Oda kur butonuna basıldı...");
+        if (!window.firebase || !firebase.database) {
+            alert("Firebase kütüphanesi yüklenemedi! İnternet bağlantınızı kontrol edin.");
+            return;
+        }
+
         if (activeRoomRef) activeRoomRef.off(); // Önceki dinleyiciyi temizle
 
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
 
         activeRoomRef = rdb.ref('rooms/' + activeRoomCode);
+        
+        console.log("Oda oluşturuluyor:", activeRoomCode);
+
         activeRoomRef.set({
             p1Score: 0,
             p2Score: 0,
             currentQ: 0,
             status: 'waiting'
         }).then(() => {
+            console.log("Oda başarıyla oluşturuldu, ekran değiştiriliyor.");
             document.getElementById('duel-setup-view').style.display = 'none';
             document.getElementById('duel-game-view').style.display = 'block';
-            document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode} (Rakip Bekleniyor...)`;
+            document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Rakip Bekleniyor...)`;
             document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
 
             listenRoomUpdates();
         }).catch(err => {
-            alert("Oda oluşturulamadı: " + err.message);
+            console.error("Oda oluşturma hatası:", err);
+            alert("Oda kurulamadı! Hata: " + err.message);
         });
     }
 
