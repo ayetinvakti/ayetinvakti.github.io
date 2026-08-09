@@ -499,6 +499,7 @@
     let currentLang = localStorage.getItem('user_lang') || 'tr';
     let activeRoomCode = null;
     let playerRole = null; 
+    let activeRoomRef = null;
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -576,13 +577,15 @@
         loadSoloQuestion();
     }
 
-    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ (GÜNCELLENDİ) ---
+    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
     function createDuelRoom() {
+        if (activeRoomRef) activeRoomRef.off(); // Önceki dinleyiciyi temizle
+
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
 
-        const roomRef = rdb.ref('rooms/' + activeRoomCode);
-        roomRef.set({
+        activeRoomRef = rdb.ref('rooms/' + activeRoomCode);
+        activeRoomRef.set({
             p1Score: 0,
             p2Score: 0,
             currentQ: 0,
@@ -593,7 +596,7 @@
             document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode} (Rakip Bekleniyor...)`;
             document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
 
-            listenRoomUpdates(activeRoomCode);
+            listenRoomUpdates();
         }).catch(err => {
             alert("Oda oluşturulamadı: " + err.message);
         });
@@ -608,21 +611,21 @@
             return;
         }
 
+        if (activeRoomRef) activeRoomRef.off(); // Önceki dinleyiciyi temizle
+
         activeRoomCode = code;
         playerRole = 'p2';
 
-        const roomRef = rdb.ref('rooms/' + activeRoomCode);
+        activeRoomRef = rdb.ref('rooms/' + activeRoomCode);
         
-        // Hata ayıklamayı kolaylaştırmak ve tepkisiz kalmasını önlemek için once() kullanımı
-        roomRef.once('value', snapshot => {
+        activeRoomRef.once('value', snapshot => {
             if (snapshot.exists()) {
-                roomRef.update({ status: 'started' }).then(() => {
+                activeRoomRef.update({ status: 'started' }).then(() => {
                     document.getElementById('duel-setup-view').style.display = 'none';
                     document.getElementById('duel-game-view').style.display = 'block';
                     document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
                     
-                    listenRoomUpdates(activeRoomCode);
-                    loadDuelQuestion(0);
+                    listenRoomUpdates();
                 });
             } else {
                 alert("❌ Hata: Bu koda ait aktif bir oda bulunamadı! Oda kodunu kontrol edin.");
@@ -632,28 +635,26 @@
         });
     }
 
-    function listenRoomUpdates(code) {
-        const roomRef = rdb.ref('rooms/' + code);
-        roomRef.on('value', snapshot => {
+    function listenRoomUpdates() {
+        if (!activeRoomRef) return;
+        
+        activeRoomRef.on('value', snapshot => {
             const data = snapshot.val();
             if (!data) return;
 
             document.getElementById('score-p1').innerText = `Sen: ${data.p1Score || 0}`;
             document.getElementById('score-p2').innerText = `Rakip: ${data.p2Score || 0}`;
 
-            // P1 odada beklerken rakip (P2) katıldığında otomatik tetiklenme ve oyun başlatma
             if (playerRole === 'p1' && data.status === 'started') {
                 const badge = document.getElementById('duel-room-badge');
                 if (badge.innerText.includes("Bekleniyor")) {
-                    badge.innerText = `Oda: ${code} (Rakip Katıldı!)`;
-                    loadDuelQuestion(data.currentQ || 0);
+                    badge.innerText = `Oda: ${activeRoomCode} (Rakip Katıldı!)`;
                 }
             }
 
-            // Ortak soru senkronizasyonu
             if (data.currentQ !== undefined) {
                 const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
-                if (data.currentQ !== currentDisplayedQ && playerRole === 'p1') {
+                if (data.currentQ !== currentDisplayedQ) {
                     loadDuelQuestion(data.currentQ);
                 }
             }
@@ -663,10 +664,11 @@
     function loadDuelQuestion(qIndex) {
         window.activeDuelQIndex = qIndex;
         const qList = bigQuizPool['tr'];
-        if (qIndex >= qList.length) qIndex = 0;
-        const qData = qList[qIndex];
+        let safeIndex = qIndex;
+        if (safeIndex >= qList.length) safeIndex = 0;
+        const qData = qList[safeIndex];
 
-        document.getElementById('duel-question-text').innerText = `[Düello Soru ${qIndex + 1}] ${qData.question}`;
+        document.getElementById('duel-question-text').innerText = `[Düello Soru ${safeIndex + 1}] ${qData.question}`;
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
@@ -675,7 +677,7 @@
             const btn = document.createElement('button');
             btn.className = 'quiz-option-btn';
             btn.innerText = opt;
-            btn.onclick = () => checkDuelAnswer(idx, qData.answer, qIndex);
+            btn.onclick = () => checkDuelAnswer(idx, qData.answer, safeIndex);
             container.appendChild(btn);
         });
     }
@@ -685,31 +687,29 @@
         allBtns.forEach(b => b.disabled = true);
 
         const feedback = document.getElementById('duel-feedback-text');
-        const roomRef = rdb.ref('rooms/' + activeRoomCode);
+        if (!activeRoomRef) return;
 
         if (selectedIdx === correctIdx) {
             feedback.innerText = "✨ Doğru! Puan eklendi.";
             feedback.style.color = "#10b981";
-            
-            roomRef.transaction(currentData => {
-                if (currentData) {
-                    if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
-                    else currentData.p2Score = (currentData.p2Score || 0) + 10;
-                    currentData.currentQ = qIndex + 1;
-                }
-                return currentData;
-            });
         } else {
             feedback.innerText = "❌ Yanlış cevap!";
             feedback.style.color = "#ef4444";
-            
-            roomRef.transaction(currentData => {
-                if (currentData) {
+        }
+
+        activeRoomRef.transaction(currentData => {
+            if (currentData) {
+                if (selectedIdx === correctIdx) {
+                    if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
+                    else currentData.p2Score = (currentData.p2Score || 0) + 10;
+                }
+                // Soru sırasını ilerlet
+                if (currentData.currentQ === qIndex) {
                     currentData.currentQ = qIndex + 1;
                 }
-                return currentData;
-            });
-        }
+            }
+            return currentData;
+        });
     }
 
     // --- NAMAZ VAKİTLERİ VE GENEL FONKSİYONLAR ---
