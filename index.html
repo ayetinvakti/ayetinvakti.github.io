@@ -314,6 +314,9 @@
                 <div class="quiz-question" id="duel-question-text">Oda bekleniyor...</div>
                 <div class="quiz-options" id="duel-options-container"></div>
                 <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Diğer Soruya Geç</button>
+                </div>
             </div>
         </div>
     </div>
@@ -656,7 +659,7 @@
             const data = snapshot.val();
             if (!data) return;
 
-            // 1. ÇÖZÜM: Kim baktığına göre (P1 veya P2) skorları dinamik olarak yer değiştiriyoruz
+            // Skorları dinamik olarak yer değiştiriyoruz ("Sen" vs "Rakip")
             let myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
             let rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
 
@@ -670,6 +673,7 @@
                 }
             }
 
+            // Sadece veritabanındaki soru endeksi değiştiğinde ve bizim yerel soru numaramızdan farklıysa yükle
             if (data.currentQ !== undefined) {
                 const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
                 if (data.currentQ !== currentDisplayedQ) {
@@ -690,7 +694,9 @@
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
+        document.getElementById('duel-next-button').style.display = 'none';
 
+        qData.options.optionsArr = qData.options; // referans
         qData.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'quiz-option-btn';
@@ -701,12 +707,11 @@
     }
 
     function checkDuelAnswer(selectedIdx, correctIdx, qIndex, clickedBtn) {
+        // Sadece bu kullanıcının butonlarını kilitle (Rakibin ekranını etkilemez)
         const allBtns = document.querySelectorAll('#duel-options-container .quiz-option-btn');
         allBtns.forEach(b => b.disabled = true);
 
         const feedback = document.getElementById('duel-feedback-text');
-        if (!activeRoomRef) return;
-
         if (selectedIdx === correctIdx) {
             feedback.innerText = "✨ Doğru! Puan eklendi.";
             feedback.style.color = "#10b981";
@@ -720,19 +725,33 @@
             });
         }
 
-        // 2. ÇÖZÜM: Sadece doğru cevap verildiğinde ya da hamle yapıldığında senkronize ilerleme
-        activeRoomRef.transaction(currentData => {
-            if (currentData) {
-                if (selectedIdx === correctIdx) {
-                    if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
-                    else currentData.p2Score = (currentData.p2Score || 0) + 10;
+        // Puanı güncellemek için transaction yapalım, soru geçişini oyuncunun kendi butonuyla tetiklemesini sağlayalım
+        if (activeRoomRef) {
+            activeRoomRef.transaction(currentData => {
+                if (currentData) {
+                    if (selectedIdx === correctIdx) {
+                        if (playerRole === 'p1') currentData.p1Score = (currentData.p1Score || 0) + 10;
+                        else currentData.p2Score = (currentData.p2Score || 0) + 10;
+                    }
                 }
-                if (currentData.currentQ === qIndex) {
-                    currentData.currentQ = qIndex + 1;
+                return currentData;
+            });
+        }
+
+        // Cevap verince bu oyuncuya özel "Sonraki Soruya Geç" butonu belirtsin
+        document.getElementById('duel-next-button').style.display = 'block';
+    }
+
+    function proceedNextDuelQuestion() {
+        document.getElementById('duel-next-button').style.display = 'none';
+        if (activeRoomRef) {
+            activeRoomRef.transaction(currentData => {
+                if (currentData) {
+                    currentData.currentQ = (currentData.currentQ || 0) + 1;
                 }
-            }
-            return currentData;
-        });
+                return currentData;
+            });
+        }
     }
 
     // --- NAMAZ VAKİTLERİ VE GENEL FONKSİYONLAR ---
