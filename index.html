@@ -314,7 +314,6 @@
                     <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🌙</button>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
                         <input type="text" id="roomCodeInput" class="duel-input" placeholder="Oda Kodu (Örn: 4821)" maxlength="6" inputmode="numeric">
-
                         <button class="duel-action-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
                     </div>
                 </div>
@@ -514,7 +513,7 @@
         }
     };
 
-    // SORU HAVUZU
+    // SORU HAVUZU (100 SORUYA ÇIKARTILDI)
     const bigQuizPool = {
         tr: [
             { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
@@ -526,7 +525,97 @@
             { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
             { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
             { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
-            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 }
+            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 },
+            { question: "11. Günde kaç vakit farz namaz kılınmaktadır?", options: ["3", "4", "5", "6"], answer: 2 },
+            { question: "12. Aşağıdakilerden hangisi amenerrasulü olarak bilinen ayetlerin yer aldığı suredir?", options: ["Bakara Suresi", "Fatiha Suresi", "Yasin Suresi", "Mulk Suresi"], answer: 0 },
+            { question: "13. Kur'an-ı Kerim'in kalbi olarak nitelendirilen sure hangisidir?", options: ["Mülk Suresi", "Yâsîn Suresi", "Fetih Suresi", "Nebe Suresi"], answer: 1 },
+            { question: "14. İslam'ın inanç esasları (imanın şartı) kaç tanedir?", options: ["4", "5", "6", "7"], answer: 2 },
+            { question: "15. İslam'ın şartları kaç tanedir?", options: ["4", "5", "6", "7"], answer: 1 },
+            { question: "16. İlk namaz ne zaman farz kılınmıştır?", options: ["Miraç Kandili'nde", "Kadir Gecesi'nde", "Hicret sırasında", "Bedir Savaşı'nda"], answer: 0 },
+            { question: "17. Peygamber Efendimizin (s.a.v.) annesinin adı nedir?", options: ["Âmine", "Hacer", "Hatice", "Fatıma"], answer: 0 },
+            { question: "18. Peygamber Efendimizin (s.a.v.) babasının adı nedir?", options: ["Ebu Talib", "Abdülmuttalip", "Abdullah", "Ebu Cehil"], answer: 2 },
+            { question: "19. Zemzem suyu hangi şehrimizdedir?", options: ["Kudüs", "Mekke", "Medine", "İstanbul"], answer: 1 },
+            { question: "20. Mescid-i Nebevi hangi şehirdedir?", options: ["Mekke", "Medine", "Kudüs", "Şam"], answer: 1 },
+            { question: "21. Kâbe hangi ilimizdedir (ülke olarak)?", options: ["Suudi Arabistan", "Mısır", "Ürdün", "Irak"], answer: 0 },
+            { question: "22. Safa ve Merve tepeleri arasındaki yürüyüşe ne ad verilir?", options: ["Tavaf", "Sa'y", "İhram", "Vakfe"], answer: 1 },
+            { question: "23. Hacda Arafat'ta durmaya ne ad verilir?", options: ["Tavaf", "Sa'y", "Vakfe", "Rəmî"], answer: 2 },
+            { question: "24. Ramazan ayından sonra gelen şevval ayında tutulan nafile oruç kaç gündür?", options: ["3 gün", "5 gün", "6 gün", "10 gün"], answer: 2 },
+            { question: "25. Kur'an-ı Kerim'de adı geçen tek kadın sahabe / sure ismi olan mübarek isim hangisidir?", options: ["Hz. Meryem", "Hz. Aişe", "Hz. Hatice", "Hz. Fatıma"], answer: 0 },
+            { question: "26. Yatsı namazından sonra kılınan vitir namazı nasıl bir namazdır?", options: ["Farz", "Vacip", "Sünnet", "Nafile"], answer: 1 },
+            { question: "27. Sabah namazının sünneti hakkında Peygamberimiz ne buyurmuştur?", options: ["Dünyadan ve içindeki her şeyden hayırlıdır", "Kılınmasa da olur", "Sadece seferde kılınır", "Farzın yerini tutar"], answer: 0 },
+            { question: "28. Cuma namazı kimlere farzdır?", options: ["Şartlarını taşıyan hür, mukim erkeklere", "Herkes", "Çocuklara", "Sadece hastalara"], answer: 0 },
+            { question: "29. Cenaze namazı hangi tür bir ibadettir?", options: ["Farz-ı ayn", "Farz-ı kifaye", "Sünnet-i müekkede", "Vacip"], answer: 1 },
+            { question: "30. Ramazan ayında verilen ve durumu iyi olan Müslümanların vermesi vacip olan sadaka hangisidir?", options: ["Fıtır sadakası (Fitre)", "Zekat", "Kurban", "Kefaret"], answer: 0 },
+            { question: "31. Zekat kimlere verilmez?", options: ["Fakirlere", "Yolculara", "Borçlulara", "Anne, baba, evlat ve eşe"], answer: 3 },
+            { question: "32. Nisap miktarı zenginlik ölçüsü altın cinsinden ne kadardır?", options: ["20 gram", "80.18 gram", "100 gram", "500 gram"], answer: 1 },
+            { question: "33. Hangisi ana ibadetlerden biri olan mal ile yapılan ibadettir?", options: ["Namaz", "Oruç", "Zekat", "Kelime-i Şehadet"], answer: 2 },
+            { question: "34. Hem beden hem de mal ile yapılan ibadet hangisidir?", options: ["Namaz", "Hac", "Oruç", "Zekat"], answer: 1 },
+            { question: "35. İslam'da ilk şehit olan kadın sahabe kimdir?", options: ["Hz. Sümeyye", "Hz. Yasir", "Hz. Sümeyye binti Hayyat", "Hz. Asiye"], answer: 0 },
+            { question: "36. Mescid-i Aksa nerededir?", options: ["Mekke", "Medine", "Kudüs", "Bağdat"], answer: 2 },
+            { question: "37. Üç ayların ilki hangisidir?", options: ["Ramazan", "Recep", "Şaban", "Muharrem"], answer: 1 },
+            { question: "38. Berat Kandili hangi ayın kaçıncı gecesidir?", options: ["Ramazan 27", "Şaban 15", "Recep 27", "Mevlid Kandili"], answer: 1 },
+            { question: "39. Miraç Kandili hangi ayın kaçıncı gecesidir?", options: ["Recep 27", "Şaban 15", "Ramazan 1", "Muharrem 10"], answer: 0 },
+            { question: "40. Kadir Gecesi hangi ayın içerisindedir?", options: ["Recep", "Şaban", "Ramazan", "Zilhicce"], answer: 2 },
+            { question: "41. Hicri yılbaşı hangi ay ile başlar?", options: ["Muharrem", "Sefer", "Recep", "Şevval"], answer: 0 },
+            { question: "42. Aşure Günü muharrem ayının kaçıncı günüdür?", options: ["1. gün", "10. gün", "15. gün", "30. gün"], answer: 1 },
+            { question: "43. Peygamberimizin doğduğu gece kutlanan kandil hangisidir?", options: ["Mevlid Kandili", "Regaip Kandili", "Miraç Kandili", "Berat Kandili"], answer: 0 },
+            { question: "44. Kur'an-ı Kerim'de kaç sure vardır?", options: ["112", "114", "120", "6666"], answer: 1 },
+            { question: "45. Kur'an-ı Kerim'de toplam kaç ayet vardır (genel kabul gören rakam)?", options: ["5000", "6236", "7000", "10000"], answer: 1 },
+            { question: "46. İlk vahiy hangi mağarada gelmiştir?", options: ["Sevr Mağarası", "Hira Mağarası", "Uhud Mağarası", "Nur Mağarası"], answer: 1 },
+            { question: "47. İlk vahiy hangi sure ile başlamıştır?", options: ["Fatiha", "Alak Suresi", "İhlas Suresi", "Nas Suresi"], answer: 1 },
+            { question: "48. "Oku" emriyle başlayan ilk ayetler hangi suredendir?", options: ["Alak Suresi", "Müddessir", "Müzzemmil", "Kalem"], answer: 0 },
+            { question: "49. Kur'an-ı Kerim'in inmeye başladığı geceye ne ad verilir?", options: ["Kadir Gecesi", "Berat Gecesi", "Miraç Gecesi", "Regaip Gecesi"], answer: 0 },
+            { question: "50. Peygamberimize ilk vahyi getiren melek kimdir?", options: ["Mikail", "Azrail", "Cebrail", "İsrafil"], answer: 2 },
+            { question: "51. Kıble Kudüs'ten Mescid-i Haram'a (Kâbe'ye) ne zaman çevrilmiştir?", options: ["Hicretten sonra (Medine dönemi)", "Mekke döneminde", "Hudeybiye'de", "Veda Hutbesi'nde"], answer: 0 },
+            { question: "52. Hendek Savaşı hangi hicri yılda veya dönemde yapılmıştır?", options: ["Medine dönemi", "Mekke dönemi", "Veda haccı sırasında", "Hicretten önce"], answer: 0 },
+            { question: "53. Bedir Savaşı'nda Müslümanların sayısı yaklaşık kadardı?", options: ["300-313", "1000", "5000", "100"], answer: 0 },
+            { question: "54. Uhud Savaşı'nda İslam ordusunun okçular tepesini terk etmesi sonucu ne olmuştur?", options: ["Savaş kazanılmıştır", "Savaşın seyrinde sıkıntı yaşanmış, şehitler verilmiştir", "Hiçbir şey olmamıştır", "Düşman kaçmıştır"], answer: 1 },
+            { question: "55. Mekke'nin fethi hangi hicri yılda gerçekleşmiştir?", options: ["Hicretin 8. yılı", "Hicretin 2. yılı", "Hicretin 10. yılı", "Hicretin 5. yılı"], answer: 0 },
+            { question: "56. Veda Hutbesi nerede irad edilmiştir?", options: ["Arafat", "Mina", "Müzdelife", "Mescid-i Haram"], answer: 0 },
+            { question: "57. Peygamber Efendimizin vefat ettiği yıl İslam tarihinde ne olarak anılır?", options: ["Hüzün Yılı", "Fil Yılı", "Fetih Yılı", "Hicret Yılı"], answer: 0 },
+            { question: "58. Dört halife devrinin ilk halifesi kimdir?", options: ["Hz. Ömer", "Hz. Osman", "Hz. Ebubekir", "Hz. Ali"], answer: 2 },
+            { question: "59. "Zünnureyn" (iki nur sahibi) lakabıyla bilinen halife kimdir?", options: ["Hz. Ebubekir", "Hz. Ömer", "Hz. Osman", "Hz. Ali"], answer: 2 },
+            { question: "60. "Faruk" (hak ile batılı ayıran) lakaplı halife kimdir?", options: ["Hz. Ebubekir", "Hz. Ömer", "Hz. Osman", "Hz. Ali"], answer: 1 },
+            { question: "61. "Sıddık" lakaplı halife kimdir?", options: ["Hz. Ebubekir", "Hz. Ömer", "Hz. Osman", "Hz. Ali"], answer: 0 },
+            { question: "62. "Allah'ın Aslanı" lakaplı sahabe ve halife kimdir?", options: ["Hz. Ali", "Hz. Hamza", "Halid bin Velid", "Ömer bin Hattab"], answer: 0 },
+            { question: "63. Kur'an-ı Kerim'i kitap haline getiren (cem eden) halife kimdir?", options: ["Hz. Ebubekir", "Hz. Osman", "Hz. Ömer", "Hz. Ali"], answer: 0 },
+            { question: "64. Kur'an-ı Kerim'i çoğaltarak çeşitli İslam merkezlerine gönderen halife kimdir?", options: ["Hz. Ebubekir", "Hz. Ömer", "Hz. Osman", "Hz. Ali"], answer: 1 },
+            { question: "65. Cennetteki Kevser havuzunun sahibi hangi peygamberdir?", options: ["Hz. İbrahim", "Hz. Muhammed (s.a.v.)", "Hz. Musa", "Hz. İsa"], answer: 1 },
+            { question: "66. Âdem (a.s.) ilk insan ve ilk...", options: ["Peygamberdir", "Hükümdardır", "Filozofdur", "Komutandır"], answer: 0 },
+            { question: "67. Gemi yapan ve tufan olayıyla bilinen peygamber kimdir?", options: ["Hz. Nuh", "Hz. İbrahim", "Hz. Hud", "Hz. Salih"], answer: 0 },
+            { question: "68. Ateşe atılan ve ateşin serin ve selamet olduğu peygamber kimdir?", options: ["Hz. İbrahim", "Hz. Musa", "Hz. Yusuf", "Hz. Yunus"], answer: 0 },
+            { question: "69. Kuyuya atılan, sarayda büyüyen ve rüya tabiriyle bilinen peygamber kimdir?", options: ["Hz. Yusuf", "Hz. Yakup", "Hz. Yahya", "Hz. İsa"], answer: 0 },
+            { question: "70. Balığın karnında yaşayan peygamber kimdir?", options: ["Hz. Yunus", "Hz. Eyyub", "Hz. İlyas", "Hz. Zülküf"], answer: 0 },
+            { question: "71. Büyük sabır sınavından geçen, hastalıklara duçar olan peygamber kimdir?", options: ["Hz. Eyyub", "Hz. Zekeriyya", "Hz. Yahya", "Hz. İdris"], answer: 0 },
+            { question: "72. Asası ejderhaya dönüşen ve denizi yaran peygamber kimdir?", options: ["Hz. Musa", "Hz. İsa", "Hz. Davud", "Hz. Süleyman"], answer: 0 },
+            { question: "73. Beşikte iken konuşan mucizevi peygamber kimdir?", options: ["Hz. İsa", "Hz. Yahya", "Hz. İshak", "Hz. İsmail"], answer: 0 },
+            { question: "74. Kuşların dilini bilen ve rüzgara hükmeden peygamber kimdir?", options: ["Hz. Süleyman", "Hz. Davud", "Hz. İbrahim", "Hz. Adem"], answer: 0 },
+            { question: "75. Zebur adlı ilahi kitap hangi peygambere indirilmiştir?", options: ["Hz. Davud", "Hz. Musa", "Hz. İsa", "Hz. İbrahim"], answer: 0 },
+            { question: "76. Tevrat hangi peygambere indirilmiştir?", options: ["Hz. Musa", "Hz. İsa", "Hz. Davud", "Hz. Muhammed"], answer: 0 },
+            { question: "77. İncil hangi peygambere indirilmiştir?", options: ["Hz. İsa", "Hz. Musa", "Hz. Davud", "Hz. Yahya"], answer: 0 },
+            { question: "78. Kur'an-ı Kerim hangi peygambere indirilmiştir?", options: ["Hz. Muhammed (s.a.v.)", "Hz. İbrahim", "Hz. Musa", "Hz. Nuh"], answer: 0 },
+            { question: "79. İmanın şartlarından biri olan "Kaza ve Kader"e iman ne anlama gelir?", options: ["Her şeyin Allah'ın takdiri ve ilmiyle gerçekleştiğine inanmak", "İnsanın iradesinin hiç olmadığını düşünmek", "Sadece kötü olayların yazıldığını kabul etmek", "Geleceği falcılıkla bilmek"], answer: 0 },
+            { question: "80. Kabir suallerini sormakla görevli melekler hangileridir?", options: ["Münker ve Nekir", "Kiramen Katibin", "Hafaza melekleri", "Mukarrebun"], answer: 0 },
+            { question: "81. İnsanın sağında ve solunda yazmakla görevli meleklerin genel adı nedir?", options: ["Kiramen Katibin", "Münker ve Nekir", "Azrail ve İsrafil", "Rıdvan ve Malik"], answer: 0 },
+            { question: "82. Cennetin bekçisi olan melek kimdir?", options: ["Rıdvan", "Malik", "Cebrail", "Mikail"], answer: 0 },
+            { question: "83. Cehennemin bekçisi (görevlisi) olan melek kimdir?", options: ["Malik", "Rıdvan", "İsrafil", "Azrail"], answer: 0 },
+            { question: "84. Sûr'a üflemekle görevli melek kimdir?", options: ["İsrafil", "Azrail", "Cebrail", "Mikail"], answer: 0 },
+            { question: "85. Can almakla görevli melek (Azrail) Kur'an'da hangi isimle anılır?", options: ["Melekü'l-Mevt (Ölüm Meleği)", "Ruh Alıcısı", "Cabbar", "Kahhar"], answer: 0 },
+            { question: "86. Tabiat olaylarını düzenlemekle görevli melek kimdir?", options: ["Mikail", "İsrafil", "Cebrail", "Azrail"], answer: 0 },
+            { question: "87. İslam'da abdest alırken eller kaç defa yıkanır?", options: ["1", "2", "3", "4"], answer: 2 },
+            { question: "88. Gusül abdesti (boy abdesti) almak ne zaman farz olur?", options: ["Cünüplük durumunda ve hayız/nifas bitiminde", "Her namazdan önce", "Yemekten önce", "Uykudan önce"], answer: 0 },
+            { question: "89. Su bulunmadığı durumlarda toprakla yapılan abdest hangisidir?", options: ["Teyemmüm", "Mesh", "Gusül", "Cünüp"], answer: 0 },
+            { question: "90. Mesh nedir?", options: ["Islak elle başı veya mestleri sıvazlamak", "Ayakları yıkamak", "Gözleri silmek", "Yüzü ovmak"], answer: 0 },
+            { question: "91. Namazın içindeki rükünlerinden (farzlarından) biri olmayan hangisidir?", options: ["İftitah tekbiri", "Kıyam", "Kıraat", "Ezan okumak"], answer: 3 },
+            { question: "92. Namazın dışındaki farzlarından (şartlarından) biri hangisidir?", options: ["Hadesten taharet", "Rükü", "Secde", "Kade-i ahire"], answer: 0 },
+            { question: "93. Kıbleye yönelmek namazın hangi şartlarındandır?", options: ["Dışındaki farzlarından", "İçindeki farzlarından", "Sünnetlerindendir", "Mekruhlarındandır"], answer: 0 },
+            { question: "94. Setr-i avret ne anlama gelir?", options: ["Namazda örtülmesi gereken yerleri örtmek", "Abdest almak", "Kıbleyi bulmak", "Vakti bilmek"], answer: 0 },
+            { question: "95. Vakit, namazın şartlarından hangisidir?", options: ["Dışındaki farzlarındandır", "İçindekilerindendir", "Sünnetlerindendir", "Hiçbiri"], answer: 0 },
+            { question: "96. Niyet etmek namazın neresindedir?", options: ["Dışındaki farzlarından biridir (şartıdır)", "İçindeki farzıdır", "Sünnetidir", "Şart değildir"], answer: 0 },
+            { question: "97. İftitah tekbiri namazın hangi kısmıdır?", options: ["İçindeki farzlarındandır (başlama tekbiri)", "Dışındaki farzıdır", "Sonradan yapılır", "Sünnettir"], answer: 0 },
+            { question: "98. Namazda oturuşta Ettehiyyatü duasını okumak ne hükmündedir?", options: ["Vaciptir", "Farzdır", "Sünnettir", "Mekruhtur"], answer: 0 },
+            { question: "99. Sehiv secdesi ne zaman yapılır?", options: ["Namazda yanılma veya unutma olduğunda eksikliği telafi için", "Her namazın sonunda kesinlikle", "Güneş doğarken", "Sadece bayram namazında"], answer: 0 },
+            { question: "100. İhlas Suresi Kur'an-ı Kerim'in kaçta kaçına eş değer olarak nitelendirilmiştir?", options: ["Üçte birine (1/3)", "Yarısına (1/2)", "Dörtte birine (1/4)", "Tamamına"], answer: 0 }
         ]
     };
 
@@ -632,10 +721,10 @@
 
         scoresText.innerHTML = `Doğru Sayısı: <b style="color: #10b981;">${soloCorrectCount}</b><br>Yanlış Sayısı: <b style="color: #ef4444;">${soloWrongCount}</b>`;
 
-        if (soloCorrectCount >= 8) {
-            announcement.innerText = "🏆 Harika performans! İslam kültürü bilgin oldukça iyi.";
-        } else if (soloCorrectCount >= 5) {
-            announcement.innerText = "👍 Fena değil, biraz daha pratikle mükemmel olabilirsin.";
+        if (soloCorrectCount >= 85) {
+            announcement.innerText = "🏆 Olağanüstü performans! İslam kültürü bilgin kusursuz.";
+        } else if (soloCorrectCount >= 50) {
+            announcement.innerText = "👍 Oldukça iyi bir sonuç, biraz daha pratikle tamamını yapabilirsin.";
         } else {
             announcement.innerText = "📖 Kendini geliştirmek için Ayetin Vakti içeriklerine göz atabilirsin.";
         }
@@ -910,7 +999,7 @@
         document.getElementById('roomCodeInput').value = '';
     }
 
-    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA DÜZELTMESİ ---
+    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA ---
     async function fetchPrayerTimes(city) {
         const tuneParam = "10,0,0,0,0,0"; 
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
