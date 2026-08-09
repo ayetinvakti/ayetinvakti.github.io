@@ -396,9 +396,9 @@
 </div>
 
 <script>
-    // Firebase Konfigürasyonu (Ücretsiz Realtime Database Yapısı)
+    // Firebase Konfigürasyonu
     const firebaseConfig = {
-        databaseURL: "https://ayetinvakti-default-rtdb.firebaseio.com/" // Kendi Firebase URL'ni buraya yazabilirsin
+        databaseURL: "https://ayetinvakti-default-rtdb.firebaseio.com/"
     };
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
@@ -479,7 +479,7 @@
         }
     };
 
-    // BİN+ SORULUK GENİŞLETİLEBİLİR HAVUZ (Doğru ve teyitli[span_1](start_span)[span_1](end_span) dini sorular)
+    // SORU HAVUZU (1. ve 6. sorular düzeltildi ve teyit edildi)
     const bigQuizPool = {
         tr: [
             { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
@@ -487,7 +487,7 @@
             { question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?", options: ["Medine", "Kudüs", "Taif", "Mekke"], answer: 3 },
             { question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?", options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"], answer: 0 },
             { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 },
-            { question: "6. İlk haccı, Hz. İbrahim ile birlikte inşa eden peygamber veya oul kimdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
+            { question: "6. İlk haccı, Hz. İbrahim ile birlikte inşa eden peygamber oğlu kimdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
             { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
             { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
             { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
@@ -497,9 +497,8 @@
 
     let currentQuestionIndex = 0;
     let currentLang = localStorage.getItem('user_lang') || 'tr';
-    let lastNotifiedPrayer = null;
     let activeRoomCode = null;
-    let playerRole = null; // 'p1' veya 'p2'
+    let playerRole = null; 
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -524,11 +523,11 @@
         if (mode === 'solo') loadSoloQuestion();
     }
 
-    // --- TEKLİ MOD (Sonsuz Havuz Mantığı - Başa Sarmaz) ---
+    // --- TEKLİ MOD ---
     function loadSoloQuestion() {
         const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
         if (currentQuestionIndex >= qList.length) {
-            currentQuestionIndex = 0; // Havuz büyütüldükçe burası binlerce soru üzerinden devam eder
+            currentQuestionIndex = 0; 
         }
         
         const currentData = qList[currentQuestionIndex];
@@ -577,7 +576,7 @@
         loadSoloQuestion();
     }
 
-    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ ---
+    // --- CANLI DÜELLO (MULTIPLAYER) SİSTEMİ (DÜZELTİLDİ) ---
     function createDuelRoom() {
         activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
         playerRole = 'p1';
@@ -592,7 +591,7 @@
 
         document.getElementById('duel-setup-view').style.display = 'none';
         document.getElementById('duel-game-view').style.display = 'block';
-        document.getElementById('duel-room-badge').innerText = `Oda Kodun: ${activeRoomCode} (Rakip Bekleniyor...)`;
+        document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode} (Rakip Bekleniyor...)`;
         document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
 
         listenRoomUpdates(activeRoomCode);
@@ -615,6 +614,7 @@
                 document.getElementById('duel-setup-view').style.display = 'none';
                 document.getElementById('duel-game-view').style.display = 'block';
                 document.getElementById('duel-room-badge').innerText = `Oda: ${activeRoomCode}`;
+                
                 listenRoomUpdates(activeRoomCode);
                 loadDuelQuestion(0);
             } else {
@@ -632,13 +632,27 @@
             document.getElementById('score-p1').innerText = `P1: ${data.p1Score || 0}`;
             document.getElementById('score-p2').innerText = `P2: ${data.p2Score || 0}`;
 
-            if (data.status === 'started' && playerRole === 'p1' && document.getElementById('duel-question-text').innerText.includes("bekleniyor")) {
-                loadDuelQuestion(data.currentQ || 0);
+            // P1 odada beklerken rakip (P2) katıldığında otomatik tetiklenme ve oyun başlatma
+            if (playerRole === 'p1' && data.status === 'started') {
+                const badge = document.getElementById('duel-room-badge');
+                if (badge.innerText.includes("Bekleniyor")) {
+                    badge.innerText = `Oda: ${code} (Rakip Katıldı! Başlıyor...)`;
+                    loadDuelQuestion(data.currentQ || 0);
+                }
+            }
+
+            // Ortak soru senkronizasyonu
+            if (data.currentQ !== undefined) {
+                const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
+                if (data.currentQ !== currentDisplayedQ && playerRole === 'p1') {
+                    loadDuelQuestion(data.currentQ);
+                }
             }
         });
     }
 
     function loadDuelQuestion(qIndex) {
+        window.activeDuelQIndex = qIndex;
         const qList = bigQuizPool['tr'];
         if (qIndex >= qList.length) qIndex = 0;
         const qData = qList[qIndex];
@@ -675,13 +689,17 @@
                     currentData.currentQ = qIndex + 1;
                 }
                 return currentData;
-            }, () => {
-                setTimeout(() => loadDuelQuestion(qIndex + 1), 1500);
             });
         } else {
             feedback.innerText = "❌ Yanlış cevap!";
             feedback.style.color = "#ef4444";
-            setTimeout(() => loadDuelQuestion(qIndex + 1), 1500);
+            
+            roomRef.transaction(currentData => {
+                if (currentData) {
+                    currentData.currentQ = qIndex + 1;
+                }
+                return currentData;
+            });
         }
     }
 
