@@ -1,12 +1,16 @@
-const CACHE_NAME = 'ayetim-vakti-v4';
+const CACHE_NAME = 'ayetim-vakti-v5';
 const assetsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
-    '/icon.png'
+    '/icon.png',
+    '/esma.html'
+    // Projendeki diğer HTML veya JS/CSS dosyalarını buraya ekleyebilirsin:
+    // '/zaman.html', 
+    // '/kible.html'
 ];
 
-// Kurulum aşaması
+// Kurulum aşaması: Dosyaları önbelleğe al
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -32,18 +36,31 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Önce sunucudan taze veriyi çek, internet yoksa önbelleğe git
+// Fetch stratejisi: Önce internetten dene, başarılı olursa önbelleği güncelle; internet yoksa önbellekten sun
 self.addEventListener('fetch', (event) => {
+    // Sadece GET isteklerini önbellekle
+    if (event.request.method !== 'GET') return;
+
     event.respondWith(
         fetch(event.request)
             .then((networkResponse) => {
-                return caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
-                });
+                // Eğer yanıt geçerliyse klonlayıp önbelleğe at
+                if (networkResponse && networkResponse.status === 200) {
+                    const responseClone = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseClone);
+                    });
+                }
+                return networkResponse;
             })
             .catch(() => {
-                return caches.match(event.request);
+                // İnternet yoksa önbellekten bulmaya çalış
+                return caches.match(event.request).then((cachedResponse) => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    // İsteğe bağlı: Önbellekte de yoksa özel bir offline sayfası döndürebilirsin
+                });
             })
     );
 });
