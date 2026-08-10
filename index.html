@@ -190,69 +190,6 @@
             margin: 10px 0;
             resize: none;
         }
-
-        /* --- Canlı Sohbet (Chat) Stilleri --- */
-        .chat-box-container {
-            display: flex;
-            flex-direction: column;
-            height: 250px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: var(--bg-color);
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-message-item {
-            padding: 8px 12px;
-            border-radius: 8px;
-            max-width: 80%;
-            font-size: 0.85rem;
-            word-break: break-word;
-        }
-        .chat-message-item.user {
-            background: var(--accent-color);
-            color: #fff;
-            align-self: flex-end;
-        }
-        .chat-message-item.support {
-            background: rgba(148, 163, 184, 0.15);
-            color: var(--text-main);
-            align-self: flex-start;
-        }
-        .chat-input-area {
-            display: flex;
-            border-top: 1px solid var(--border-color);
-            padding: 6px;
-            gap: 6px;
-            background: var(--card-bg);
-        }
-        .chat-input {
-            flex: 1;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-main);
-            font-size: 0.85rem;
-        }
-        .chat-send-btn {
-            background: var(--accent-color);
-            color: #fff;
-            border: none;
-            padding: 0 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
     </style>
 </head>
 <body>
@@ -356,7 +293,7 @@
     </div>
 </div>
 
-<!-- Asistan 3'lü Seçim ve İşlem Modalı -->
+<!-- Asistan Seçim ve İşlem Modalı (Güncellendi) -->
 <div class="modal-overlay" id="assistantModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -364,52 +301,27 @@
             <button class="modal-close" onclick="closeAssistantModal()">✕</button>
         </div>
         
-        <!-- Ana 3 Seçenek Kısmı -->
+        <!-- Ana Seçenekler Kısmı -->
         <div id="assistantMainView">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
                 Size nasıl yardımcı olabiliriz? Lütfen bir seçenek seçin:
             </div>
             <div class="assistant-options">
-                <button class="assistant-option-btn" onclick="handleSupportClick()">
-                    <span style="font-size: 1.2rem;">👥</span>
-                    <div>
-                        <div style="font-weight: 600;">Destek Ekibi</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Canlı destek ekibimizle görüşün</div>
-                    </div>
-                </button>
                 <a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" class="assistant-option-btn">
                     <span style="font-size: 1.2rem;">🤖</span>
                     <div>
-                        <div style="font-weight: 600;">Ayet Asist</div>
+                        <div style="font-weight: 600;">Ayet Asistanı</div>
                         <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Yapay zeka asistanımıza soru sorun</div>
                     </div>
                 </a>
                 <button class="assistant-option-btn" onclick="openComplaintForm()">
                     <span style="font-size: 1.2rem;">📝</span>
                     <div>
-                        <div style="font-weight: 600;">Şikayet ve Öneri</div>
+                        <div style="font-weight: 600;">Şikayet, Destek ve Öneri</div>
                         <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Görüş ve taleplerinizi iletin</div>
                     </div>
                 </button>
             </div>
-        </div>
-
-        <!-- Destek Ekibi Canlı Sohbet Ekranı -->
-        <div id="assistantSupportView" style="display: none;">
-            <div id="supportStatusMessage" style="font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;"></div>
-            
-            <!-- Canlı Chat Kutusu -->
-            <div id="liveChatSection" style="display: none;">
-                <div class="chat-box-container">
-                    <div class="chat-messages" id="chatMessagesList"></div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chatMessageInput" class="chat-input" placeholder="Mesajınızı yazın...">
-                        <button class="chat-send-btn" onclick="sendChatMessage()">Gönder</button>
-                    </div>
-                </div>
-            </div>
-
-            <button class="modal-save-btn" style="margin-top: 10px;" onclick="backToAssistantMain()">Geri Dön</button>
         </div>
 
         <!-- Şikayet / Öneri Form Ekranı -->
@@ -752,7 +664,6 @@
     let playerRole = null; 
     let activeRoomRef = null;
     let connectionRef = null;
-    let chatListenerRef = null;
 
     // --- ASİSTAN MODAL YÖNETİMİ ---
     function toggleAssistantModal() {
@@ -763,104 +674,19 @@
 
     function closeAssistantModal() {
         document.getElementById('assistantModal').classList.remove('active');
-        if (chatListenerRef) {
-            chatListenerRef.off(); // Dinlemeyi kapat
-            chatListenerRef = null;
-        }
     }
 
     function backToAssistantMain() {
         document.getElementById('assistantMainView').style.display = 'block';
-        document.getElementById('assistantSupportView').style.display = 'none';
         document.getElementById('assistantComplaintView').style.display = 'none';
         document.getElementById('assistantModalTitle').innerText = "Ayetin Vakti Asistan";
-        
-        if (chatListenerRef) {
-            chatListenerRef.off();
-            chatListenerRef = null;
-        }
-    }
-
-    // Destek Ekibi ve Canlı Sohbet Akışı
-    function handleSupportClick() {
-        document.getElementById('assistantMainView').style.display = 'none';
-        document.getElementById('assistantSupportView').style.display = 'block';
-        document.getElementById('assistantModalTitle').innerText = "Canlı Destek Sohbeti";
-
-        const msgBox = document.getElementById('supportStatusMessage');
-        const chatSection = document.getElementById('liveChatSection');
-        msgBox.innerHTML = "Bağlantı kontrol ediliyor...";
-        chatSection.style.display = 'none';
-
-        rdb.ref('settings/supportOnline').once('value', snapshot => {
-            const isOnline = snapshot.val();
-            
-            if (isOnline === true) {
-                msgBox.innerHTML = "🟢 Destek ekibimiz çevrim içi. Mesajınızı yazıp sohbete başlayabilirsiniz:";
-                chatSection.style.display = 'block';
-                initLiveChat();
-            } else {
-                msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
-                chatSection.style.display = 'none';
-            }
-        }, error => {
-            msgBox.innerHTML = "🔴 Bağlantı hatası oluştu.";
-            chatSection.style.display = 'none';
-        });
-    }
-
-    // Canlı Sohbet Mesajlarını Dinleme ve Gönderme
-    function initLiveChat() {
-        const messagesList = document.getElementById('chatMessagesList');
-        messagesList.innerHTML = '';
-
-        // Oturuma özel bir kullanıcı ID'si oluşturalım (tarayıcı bazlı kalıcı)
-        let userId = localStorage.getItem('chat_user_id');
-        if (!userId) {
-            userId = 'user_' + Math.random().toString(36.substring(2, 9));
-            localStorage.setItem('chat_user_id', userId);
-        }
-
-        if (chatListenerRef) chatListenerRef.off();
-
-        // Destek sohbet havuzu (Kullanıcı ID'sine göre ayrı oda)
-        chatListenerRef = rdb.ref('supportChats/' + userId + '/messages');
-        
-        chatListenerRef.on('child_added', snapshot => {
-            const data = snapshot.val();
-            if (!data) return;
-
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `chat-message-item ${data.sender}`;
-            msgDiv.innerText = data.text;
-            messagesList.appendChild(msgDiv);
-            messagesList.scrollTop = messagesList.scrollHeight; // En alta kaydır
-        });
-    }
-
-    function sendChatMessage() {
-        const input = document.getElementById('chatMessageInput');
-        const text = input.value.trim();
-        if (!text) return;
-
-        let userId = localStorage.getItem('chat_user_id');
-        
-        rdb.ref('supportChats/' + userId + '/messages').push({
-            sender: 'user',
-            text: text,
-            timestamp: Date.now()
-        }).then(() => {
-            input.value = '';
-        }).catch(err => {
-            alert("Mesaj gönderilemedi: " + err.message);
-        });
     }
 
     // Şikayet / Öneri Formunu Aç
     function openComplaintForm() {
         document.getElementById('assistantMainView').style.display = 'none';
         document.getElementById('assistantComplaintView').style.display = 'block';
-        document.getElementById('assistantModalTitle').innerText = "Şikayet ve Öneri";
+        document.getElementById('assistantModalTitle').innerText = "Şikayet, Destek ve Öneri";
         document.getElementById('complaintInputText').value = '';
     }
 
