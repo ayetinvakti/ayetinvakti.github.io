@@ -139,6 +139,8 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             z-index: 999;
             text-decoration: none;
+            cursor: pointer;
+            border: none;
             transition: transform 0.2s, background-color 0.2s;
         }
         .ai-float-btn:hover {
@@ -147,6 +149,46 @@
         }
         .ai-float-btn:active {
             transform: scale(0.9);
+        }
+
+        /* --- Asistan Seçim Modalı Stilleri ---. */
+        .assistant-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .assistant-option-btn {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .assistant-option-btn:hover {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--accent-color);
+        }
+        .feedback-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            margin: 10px 0;
+            resize: none;
         }
     </style>
 </head>
@@ -248,6 +290,62 @@
             <option value="Düzce">Düzce</option>
         </select>
         <button class="modal-save-btn" onclick="saveSelectedCity()" data-i18n="modal_loc_btn">Konumu Uygula</button>
+    </div>
+</div>
+
+<!-- Asistan 3'lü Seçim ve İşlem Modalı -->
+<div class="modal-overlay" id="assistantModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title" id="assistantModalTitle">Ayetin Vakti Asistan</div>
+            <button class="modal-close" onclick="closeAssistantModal()">✕</button>
+        </div>
+        
+        <!-- Ana 3 Seçenek Kısmı -->
+        <div id="assistantMainView">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
+                Size nasıl yardımcı olabiliriz? Lütfen bir seçenek seçin:
+            </div>
+            <div class="assistant-options">
+                <button class="assistant-option-btn" onclick="handleSupportClick()">
+                    <span style="font-size: 1.2rem;">👥</span>
+                    <div>
+                        <div style="font-weight: 600;">Destek Ekibi</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Canlı destek ekibimizle görüşün</div>
+                    </div>
+                </button>
+                <a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" class="assistant-option-btn">
+                    <span style="font-size: 1.2rem;">🤖</span>
+                    <div>
+                        <div style="font-weight: 600;">Ayet Asist</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Yapay zeka asistanımıza soru sorun</div>
+                    </div>
+                </a>
+                <button class="assistant-option-btn" onclick="openComplaintForm()">
+                    <span style="font-size: 1.2rem;">📝</span>
+                    <div>
+                        <div style="font-weight: 600;">Şikayet ve Öneri</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Görüş ve taleplerinizi iletin</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Destek Ekibi Durum Ekranı -->
+        <div id="assistantSupportView" style="display: none;">
+            <div id="supportStatusMessage" style="font-size: 0.9rem; margin: 15px 0; line-height: 1.4; font-weight: 500;"></div>
+            <button class="modal-save-btn" onclick="backToAssistantMain()">Geri Dön</button>
+        </div>
+
+        <!-- Şikayet / Öneri Form Ekranı -->
+        <div id="assistantComplaintView" style="display: none;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">
+                Talep, şikayet veya önerilerinizi bize yazabilirsiniz:
+            </div>
+            <textarea id="complaintInputText" class="feedback-textarea" placeholder="Mesajınızı buraya yazın..."></textarea>
+            <button class="modal-save-btn" onclick="submitComplaint()">Talebi Gönder</button>
+            <button class="modal-save-btn" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); margin-top: 8px;" onclick="backToAssistantMain()">Geri Dön</button>
+        </div>
     </div>
 </div>
 
@@ -449,10 +547,10 @@
     © Ayetin Vakti • <span data-i18n="footer_slogan">Huzur ve İbadet Rehberliğiniz</span>
 </div>
 
-<!-- Asistan Yüzen Buton Entegrasyonu -->
-<a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" class="ai-float-btn" title="Asistana Sor">
+<!-- Asistan Yüzen Buton (Modalı tetikler) -->
+<button class="ai-float-btn" onclick="toggleAssistantModal()" title="Asistana Sor">
     💬
-</a>
+</button>
 
 <script>
     // Firebase Konfigürasyonu
@@ -563,7 +661,7 @@
             { question: "13. Kur'an-ı Kerim'in kalbi olarak nitelendirilen sure hangisidir?", options: ["Mülk Suresi", "Yâsîn Suresi", "Fetih Suresi", "Nebe Suresi"], answer: 1 },
             { question: "14. İslam'ın inanç esasları (imanın şartı) kaç tanedir?", options: ["4", "5", "6", "7"], answer: 2 },
             { question: "15. İslam'ın şartları kaç tanedir?", options: ["4", "5", "6", "7"], answer: 1 },
-            { question: "16. İlk namaz ne zaman farz kılınmıştır?", options: ["Miraç Kandili'nde", "Kadir Gecesi'nde", "Hicret sırasında", "Bedir Savaşı'nda"], answer: 0 },
+            { question: "16. İlk namaz ne zaman farz kılınmıştır?", options: ["Miraç Kandili'nde", "Kadir Gecesi'nde", "Hicret sırasında", "Bedir Savaşı'nde"], answer: 0 },
             { question: "17. Peygamber Efendimizin (s.a.v.) annesinin adı nedir?", options: ["Âmine", "Hacer", "Hatice", "Fatıma"], answer: 0 },
             { question: "18. Peygamber Efendimizin (s.a.v.) babasının adı nedir?", options: ["Ebu Talib", "Abdülmuttalip", "Abdullah", "Ebu Cehil"], answer: 2 },
             { question: "19. Zemzem suyu hangi şehrimizdedir?", options: ["Kudüs", "Mekke", "Medine", "İstanbul"], answer: 1 },
@@ -579,6 +677,77 @@
     let playerRole = null; 
     let activeRoomRef = null;
     let connectionRef = null;
+
+    // --- ASİSTAN MODAL YÖNETİMİ ---
+    function toggleAssistantModal() {
+        const modal = document.getElementById('assistantModal');
+        modal.classList.toggle('active');
+        backToAssistantMain(); // Modal açıldığında ana menüye getir
+    }
+
+    function closeAssistantModal() {
+        document.getElementById('assistantModal').classList.remove('active');
+    }
+
+    function backToAssistantMain() {
+        document.getElementById('assistantMainView').style.display = 'block';
+        document.getElementById('assistantSupportView').style.display = 'none';
+        document.getElementById('assistantComplaintView').style.display = 'none';
+        document.getElementById('assistantModalTitle').innerText = "Ayetin Vakti Asistan";
+    }
+
+    // 1. Şık: Destek Ekibi Durum Kontrolü
+    function handleSupportClick() {
+        document.getElementById('assistantMainView').style.display = 'none';
+        document.getElementById('assistantSupportView').style.display = 'block';
+        document.getElementById('assistantModalTitle').innerText = "Destek Ekibi";
+
+        const msgBox = document.getElementById('supportStatusMessage');
+        msgBox.innerHTML = "Kontrol ediliyor...";
+
+        // Firebase üzerinden destek ekibinin online olup olmadığını kontrol et (Örnek node: 'settings/supportOnline')
+        rdb.ref('settings/supportOnline').once('value', snapshot => {
+            const isOnline = snapshot.val(); // True veya False döneceğini varsayıyoruz
+            
+            if (isOnline === true) {
+                msgBox.innerHTML = "🟢 Destek ekibimiz şu an çevrim içi! Sizi sohbete bağlıyoruz...";
+                // İsterseniz burada canlı sohbet sayfasına yönlendirme yapabilirsiniz:
+                // window.location.href = "canli-destek.html";
+            } else {
+                msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
+            }
+        }, error => {
+            // Firebase'de düğüm yoksa veya hata alırsanız varsayılan olarak kapalı yazsın:
+            msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
+        });
+    }
+
+    // 3. Şık: Şikayet ve Öneri Formunu Aç
+    function openComplaintForm() {
+        document.getElementById('assistantMainView').style.display = 'none';
+        document.getElementById('assistantComplaintView').style.display = 'block';
+        document.getElementById('assistantModalTitle').innerText = "Şikayet ve Öneri";
+        document.getElementById('complaintInputText').value = '';
+    }
+
+    // Şikayet / Öneriyi Firebase'e Kaydetme
+    function submitComplaint() {
+        const text = document.getElementById('complaintInputText').value.trim();
+        if (!text) {
+            alert("Lütfen boş bırakmayın!");
+            return;
+        }
+
+        rdb.ref('complaints').push({
+            message: text,
+            date: new Date().toISOString()
+        }).then(() => {
+            alert("✅ Talebiniz başarıyla iletildi. Teşekkür ederiz!");
+            closeAssistantModal();
+        }).catch(err => {
+            alert("Gönderilemedi, hata oluştu: " + err.message);
+        });
+    }
 
     function setLanguage(lang) {
         currentLang = lang;
