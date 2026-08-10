@@ -121,6 +121,33 @@
 
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
         body.light-mode .drawer-item { background: rgba(0,0,0,0.01); }
+
+        /* --- Asistan Yüzen Buton (Floating Action Button) Stili --- */
+        .ai-float-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .ai-float-btn:hover {
+            transform: scale(1.05);
+            background-color: #059669;
+        }
+        .ai-float-btn:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
 <body>
@@ -314,7 +341,6 @@
                     <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🌙</button>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
                         <input type="text" id="roomCodeInput" class="duel-input" placeholder="Oda Kodu (Örn: 4821)" maxlength="6" inputmode="numeric">
-
                         <button class="duel-action-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
                     </div>
                 </div>
@@ -422,6 +448,11 @@
 <div class="footer">
     © Ayetin Vakti • <span data-i18n="footer_slogan">Huzur ve İbadet Rehberliğiniz</span>
 </div>
+
+<!-- Asistan Yüzen Buton Entegrasyonu -->
+<a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" class="ai-float-btn" title="Asistana Sor">
+    💬
+</a>
 
 <script>
     // Firebase Konfigürasyonu
