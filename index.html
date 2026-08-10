@@ -151,7 +151,7 @@
             transform: scale(0.9);
         }
 
-        /* --- Asistan Seçim Modalı Stilleri ---. */
+        /* --- Asistan Seçim Modalı Stilleri --- */
         .assistant-options {
             display: flex;
             flex-direction: column;
@@ -696,7 +696,7 @@
         document.getElementById('assistantModalTitle').innerText = "Ayetin Vakti Asistan";
     }
 
-    // 1. Şık: Destek Ekibi Durum Kontrolü
+    // 1. Şık: Destek Ekibi Durum Kontrolü (Firebase Entegrasyonlu)
     function handleSupportClick() {
         document.getElementById('assistantMainView').style.display = 'none';
         document.getElementById('assistantSupportView').style.display = 'block';
@@ -705,19 +705,17 @@
         const msgBox = document.getElementById('supportStatusMessage');
         msgBox.innerHTML = "Kontrol ediliyor...";
 
-        // Firebase üzerinden destek ekibinin online olup olmadığını kontrol et (Örnek node: 'settings/supportOnline')
+        // Firebase üzerinden destek ekibinin çevrim içi olup olmadığını kontrol eder
         rdb.ref('settings/supportOnline').once('value', snapshot => {
-            const isOnline = snapshot.val(); // True veya False döneceğini varsayıyoruz
+            const isOnline = snapshot.val();
             
             if (isOnline === true) {
-                msgBox.innerHTML = "🟢 Destek ekibimiz şu an çevrim içi! Sizi sohbete bağlıyoruz...";
-                // İsterseniz burada canlı sohbet sayfasına yönlendirme yapabilirsiniz:
-                // window.location.href = "canli-destek.html";
+                msgBox.innerHTML = "🟢 Destek ekibimiz şu an çevrim içi! Lütfen mesajınızı iletin veya sohbete başlayın.";
+                // İsterseniz buraya canlı sohbet yönlendirmesi ekleyebilirsiniz
             } else {
                 msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
             }
         }, error => {
-            // Firebase'de düğüm yoksa veya hata alırsanız varsayılan olarak kapalı yazsın:
             msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
         });
     }
@@ -1120,7 +1118,7 @@
         document.getElementById('roomCodeInput').value = '';
     }
 
-    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA DÜZELTMESİ ---
+    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA ---
     async function fetchPrayerTimes(city) {
         const tuneParam = "10,0,0,0,0,0"; 
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
