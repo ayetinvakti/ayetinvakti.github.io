@@ -190,6 +190,69 @@
             margin: 10px 0;
             resize: none;
         }
+
+        /* --- Canlı Sohbet (Chat) Stilleri --- */
+        .chat-box-container {
+            display: flex;
+            flex-direction: column;
+            height: 250px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-color);
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-message-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            font-size: 0.85rem;
+            word-break: break-word;
+        }
+        .chat-message-item.user {
+            background: var(--accent-color);
+            color: #fff;
+            align-self: flex-end;
+        }
+        .chat-message-item.support {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-main);
+            align-self: flex-start;
+        }
+        .chat-input-area {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 6px;
+            gap: 6px;
+            background: var(--card-bg);
+        }
+        .chat-input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+        .chat-send-btn {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -331,10 +394,22 @@
             </div>
         </div>
 
-        <!-- Destek Ekibi Durum Ekranı -->
+        <!-- Destek Ekibi Canlı Sohbet Ekranı -->
         <div id="assistantSupportView" style="display: none;">
-            <div id="supportStatusMessage" style="font-size: 0.9rem; margin: 15px 0; line-height: 1.4; font-weight: 500;"></div>
-            <button class="modal-save-btn" onclick="backToAssistantMain()">Geri Dön</button>
+            <div id="supportStatusMessage" style="font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;"></div>
+            
+            <!-- Canlı Chat Kutusu -->
+            <div id="liveChatSection" style="display: none;">
+                <div class="chat-box-container">
+                    <div class="chat-messages" id="chatMessagesList"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatMessageInput" class="chat-input" placeholder="Mesajınızı yazın...">
+                        <button class="chat-send-btn" onclick="sendChatMessage()">Gönder</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="modal-save-btn" style="margin-top: 10px;" onclick="backToAssistantMain()">Geri Dön</button>
         </div>
 
         <!-- Şikayet / Öneri Form Ekranı -->
@@ -677,16 +752,21 @@
     let playerRole = null; 
     let activeRoomRef = null;
     let connectionRef = null;
+    let chatListenerRef = null;
 
     // --- ASİSTAN MODAL YÖNETİMİ ---
     function toggleAssistantModal() {
         const modal = document.getElementById('assistantModal');
         modal.classList.toggle('active');
-        backToAssistantMain(); // Modal açıldığında ana menüye getir
+        backToAssistantMain(); 
     }
 
     function closeAssistantModal() {
         document.getElementById('assistantModal').classList.remove('active');
+        if (chatListenerRef) {
+            chatListenerRef.off(); // Dinlemeyi kapat
+            chatListenerRef = null;
+        }
     }
 
     function backToAssistantMain() {
@@ -694,33 +774,89 @@
         document.getElementById('assistantSupportView').style.display = 'none';
         document.getElementById('assistantComplaintView').style.display = 'none';
         document.getElementById('assistantModalTitle').innerText = "Ayetin Vakti Asistan";
+        
+        if (chatListenerRef) {
+            chatListenerRef.off();
+            chatListenerRef = null;
+        }
     }
 
-    // 1. Şık: Destek Ekibi Durum Kontrolü (Firebase Entegrasyonlu)
+    // Destek Ekibi ve Canlı Sohbet Akışı
     function handleSupportClick() {
         document.getElementById('assistantMainView').style.display = 'none';
         document.getElementById('assistantSupportView').style.display = 'block';
-        document.getElementById('assistantModalTitle').innerText = "Destek Ekibi";
+        document.getElementById('assistantModalTitle').innerText = "Canlı Destek Sohbeti";
 
         const msgBox = document.getElementById('supportStatusMessage');
-        msgBox.innerHTML = "Kontrol ediliyor...";
+        const chatSection = document.getElementById('liveChatSection');
+        msgBox.innerHTML = "Bağlantı kontrol ediliyor...";
+        chatSection.style.display = 'none';
 
-        // Firebase üzerinden destek ekibinin çevrim içi olup olmadığını kontrol eder
         rdb.ref('settings/supportOnline').once('value', snapshot => {
             const isOnline = snapshot.val();
             
             if (isOnline === true) {
-                msgBox.innerHTML = "🟢 Destek ekibimiz şu an çevrim içi! Lütfen mesajınızı iletin veya sohbete başlayın.";
-                // İsterseniz buraya canlı sohbet yönlendirmesi ekleyebilirsiniz
+                msgBox.innerHTML = "🟢 Destek ekibimiz çevrim içi. Mesajınızı yazıp sohbete başlayabilirsiniz:";
+                chatSection.style.display = 'block';
+                initLiveChat();
             } else {
                 msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
+                chatSection.style.display = 'none';
             }
         }, error => {
-            msgBox.innerHTML = "🔴 Şu an destek ekibi çevrim dışı, lütfen sonra tekrar deneyin.";
+            msgBox.innerHTML = "🔴 Bağlantı hatası oluştu.";
+            chatSection.style.display = 'none';
         });
     }
 
-    // 3. Şık: Şikayet ve Öneri Formunu Aç
+    // Canlı Sohbet Mesajlarını Dinleme ve Gönderme
+    function initLiveChat() {
+        const messagesList = document.getElementById('chatMessagesList');
+        messagesList.innerHTML = '';
+
+        // Oturuma özel bir kullanıcı ID'si oluşturalım (tarayıcı bazlı kalıcı)
+        let userId = localStorage.getItem('chat_user_id');
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36.substring(2, 9));
+            localStorage.setItem('chat_user_id', userId);
+        }
+
+        if (chatListenerRef) chatListenerRef.off();
+
+        // Destek sohbet havuzu (Kullanıcı ID'sine göre ayrı oda)
+        chatListenerRef = rdb.ref('supportChats/' + userId + '/messages');
+        
+        chatListenerRef.on('child_added', snapshot => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message-item ${data.sender}`;
+            msgDiv.innerText = data.text;
+            messagesList.appendChild(msgDiv);
+            messagesList.scrollTop = messagesList.scrollHeight; // En alta kaydır
+        });
+    }
+
+    function sendChatMessage() {
+        const input = document.getElementById('chatMessageInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        let userId = localStorage.getItem('chat_user_id');
+        
+        rdb.ref('supportChats/' + userId + '/messages').push({
+            sender: 'user',
+            text: text,
+            timestamp: Date.now()
+        }).then(() => {
+            input.value = '';
+        }).catch(err => {
+            alert("Mesaj gönderilemedi: " + err.message);
+        });
+    }
+
+    // Şikayet / Öneri Formunu Aç
     function openComplaintForm() {
         document.getElementById('assistantMainView').style.display = 'none';
         document.getElementById('assistantComplaintView').style.display = 'block';
@@ -728,7 +864,6 @@
         document.getElementById('complaintInputText').value = '';
     }
 
-    // Şikayet / Öneriyi Firebase'e Kaydetme
     function submitComplaint() {
         const text = document.getElementById('complaintInputText').value.trim();
         if (!text) {
@@ -770,7 +905,7 @@
         if (mode === 'solo') loadSoloQuestion();
     }
 
-    // --- TEKLİ MOD (SONSUZ/KLASİK) & BİTİŞ EKRANI ---
+    // --- TEKLİ MOD & BİTİŞ EKRANI ---
     function loadSoloQuestion() {
         const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
         
@@ -859,7 +994,7 @@
     // --- CANLI DÜELLO (MULTIPLAYER) ---
     function createDuelRoom() {
         if (!window.firebase || !firebase.database) {
-            alert("Firebase kütüphanesi yüklenemedi! İnternet bağlantınızı kontrol edin.");
+            alert("Firebase kütüphanesi yüklenemedi!");
             return;
         }
 
@@ -886,12 +1021,12 @@
             document.getElementById('duel-game-view').style.display = 'block';
             document.getElementById('duel-active-content').style.display = 'block';
             document.getElementById('duel-result-view').style.display = 'none';
-            document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Rakip Bekleniyor...)`;
+            document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Bekleniyor...)`;
             document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
 
             listenRoomUpdates();
         }).catch(err => {
-            alert("Oda kurulamadı! Hata: " + err.message);
+            alert("Oda kurulamadı: " + err.message);
         });
     }
 
@@ -900,7 +1035,7 @@
         const code = codeInput ? codeInput.value.trim() : '';
         
         if (!code) {
-            alert("Lütfen geçerli bir oda kodu girin!");
+            alert("Lütfen oda kodu girin!");
             return;
         }
 
@@ -928,10 +1063,8 @@
                     listenRoomUpdates();
                 });
             } else {
-                alert("❌ Hata: Bu koda ait aktif bir oda bulunamadı! Oda kodunu kontrol edin.");
+                alert("❌ Bu koda ait aktif oda bulunamadı!");
             }
-        }, error => {
-            alert("Bağlantı hatası: " + error.message);
         });
     }
 
@@ -950,7 +1083,6 @@
             if (!data) return;
 
             const rivalOnline = (playerRole === 'p1') ? data.p2Online : data.p1Online;
-            const myOnline = (playerRole === 'p1') ? data.p1Online : data.p2Online;
 
             if (data.status === 'started' && rivalOnline === false) {
                 showDuelResultScreen(data, true);
@@ -1008,14 +1140,14 @@
         scoresText.innerHTML = `Senin Skorun: <b>${myScore}</b><br>Rakibin Skoru: <b>${rivalScore}</b>`;
 
         if (isDisconnected) {
-            winnerText.innerText = "⚠️ Rakibin bağlantısı koptu / odadan ayrıldı! Hükmen kazandın! 🏆";
+            winnerText.innerText = "⚠️ Rakibin bağlantısı koptu! Hükmen kazandın! 🏆";
             winnerText.style.color = "#10b981";
         } else {
             if (myScore > rivalScore) {
                 winnerText.innerText = "Tebrikler, Düelloyu Kazandın! 🥇";
                 winnerText.style.color = "#10b981";
             } else if (myScore < rivalScore) {
-                winnerText.innerText = "Maalesef Rakibin Kazandı. Bir Sonrakine Artık! 🥈";
+                winnerText.innerText = "Maalesef Rakibin Kazandı. 🥈";
                 winnerText.style.color = "#ef4444";
             } else {
                 winnerText.innerText = "Düello Berabere Bitti! 🤝";
@@ -1031,7 +1163,7 @@
 
         const qData = qList[qIndex];
 
-        document.getElementById('duel-question-text').innerText = `[Düello Soru ${qIndex + 1} / ${qList.length}] ${qData.question}`;
+        document.getElementById('duel-question-text').innerText = `[Soru ${qIndex + 1} / ${qList.length}] ${qData.question}`;
         const container = document.getElementById('duel-options-container');
         container.innerHTML = '';
         document.getElementById('duel-feedback-text').innerText = '';
@@ -1230,8 +1362,8 @@
 
             if (titleElement) {
                 const pNameKey = `time_${targetPrayer.name === 'İmsak' ? 'imsak' : targetPrayer.name === 'Güneş' ? 'sunrise' : targetPrayer.name === 'Öğle' ? 'dhuhr' : targetPrayer.name === 'İkindi' ? 'asr' : targetPrayer.name === 'Akşam' ? 'maghrib' : 'isha'}`;
-                const localizedName = translations[currentLang][pNameKey] || targetPrayer.name;
-                titleElement.innerText = currentLang === 'en' ? `${localizedName} time remaining` : `${localizedName} vaktine kalan süre`;
+                const localizedName = translations[currentLang][pNameKey] / targetPrayer.name;
+                titleElement.innerText = currentLang === 'en' ? `${targetPrayer.name} time remaining` : `${targetPrayer.name} vaktine kalan süre`;
             }
 
             let diff = targetDate - now;
