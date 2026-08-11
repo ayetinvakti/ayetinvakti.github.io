@@ -653,6 +653,13 @@
         "Shawwal": "Şevval", "Dhu al-Qi'dah": "Zilkade", "Dhu al-Hijjah": "Zilhicce"
     };
 
+    // Miladi Aylar Çeviri Sözlüğü
+    const gregorianMonthsTr = {
+        "January": "Ocak", "February": "Şubat", "March": "Mart", "April": "Nisan",
+        "May": "Mayıs", "June": "Haziran", "July": "Temmuz", "August": "Ağustos",
+        "September": "Eylül", "October": "Ekim", "November": "Kasım", "December": "Aralık"
+    };
+
     // SORU HAVUZU
     const bigQuizPool = {
         tr: [
@@ -1131,16 +1138,14 @@
         const greg = apiData.date.gregorian;
         const hijri = apiData.date.hijri;
 
-        try {
-            const [gDay, gMonthNum, gYear] = [greg.day, greg.month.number, greg.year];
-            const parsedDate = new Date(`${gYear}-${gMonthNum}-${gDay}`);
-            const localeCode = currentLang === 'tr' ? 'tr-TR' : 'en-US';
-            const formattedGregorian = parsedDate.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('current-date-text').innerText = formattedGregorian;
-        } catch (e) {
-            document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
+        // Miladi Tarih Güncellemesi (Invalid Date hatasını önlemek için manuel formatlama)
+        let gMonthName = greg.month.en;
+        if (currentLang === 'tr' && gregorianMonthsTr[gMonthName]) {
+            gMonthName = gregorianMonthsTr[gMonthName];
         }
+        document.getElementById('current-date-text').innerText = `${greg.day} ${gMonthName} ${greg.year}`;
 
+        // Hicri Tarih Güncellemesi
         let hijriMonthName = hijri.month.en;
         if (currentLang === 'tr' && hijriMonthsTr[hijriMonthName]) {
             hijriMonthName = hijriMonthsTr[hijriMonthName];
