@@ -645,6 +645,14 @@
         }
     };
 
+    // Hicri Aylar Çeviri Sözlüğü (API İngilizce döndüğü için Türkçeye çeviriyoruz)
+    const hijriMonthsTr = {
+        "Muharram": "Muharrem", "Safar": "Safer", "Rabi' al-awwal": "Rebiülevvel",
+        "Rabi' al-thani": "Rebiülahir", "Jumada al-ula": "Cemaziyelevvel", "Jumada al-thani": "Cemaziyelahir",
+        "Rajab": "Recep", "Sha'ban": "Şaban", "Ramadan": "Ramazan",
+        "Shawwal": "Şevval", "Dhu al-Qi'dah": "Zilkade", "Dhu al-Hijjah": "Zilhicce"
+    };
+
     // SORU HAVUZU
     const bigQuizPool = {
         tr: [
@@ -679,6 +687,7 @@
     let playerRole = null; 
     let activeRoomRef = null;
     let connectionRef = null;
+    let lastFetchedData = null; // Tarihleri dil değişiminde tekrar API'ye gitmeden güncellemek için
 
     // --- ASİSTAN MODAL YÖNETİMİ ---
     function toggleAssistantModal() {
@@ -734,6 +743,11 @@
             }
         });
         loadSoloQuestion();
+
+        // Dil değiştiğinde tarihleri güncel dilde tekrar yazdır
+        if (lastFetchedData) {
+            updateDateUI(lastFetchedData);
+        }
     }
 
     function switchQuizMode(mode) {
@@ -1091,7 +1105,7 @@
         document.getElementById('roomCodeInput').value = '';
     }
 
-    // --- NAMAZ VAKİTLERİ VE SAAT HESAPLAMA ---
+    // --- NAMAZ VAKİTLERİ VE TARİH DÜZENLEMESİ ---
     async function fetchPrayerTimes(city) {
         const tuneParam = "10,0,0,0,0,0"; 
         const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
@@ -1109,14 +1123,38 @@
             document.getElementById('val-aksam').innerText = times.Maghrib;
             document.getElementById('val-yatsi').innerText = times.Isha;
 
-            const greg = data.data.date.gregorian;
-            document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
-            const hijri = data.data.date.hijri;
-            document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
+            lastFetchedData = data.data; // Veriyi sakla
+            updateDateUI(lastFetchedData);
         } catch (error) {
             console.error("Vakitler alınamadı:", error);
             document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
         }
+    }
+
+    // Tarihlerin dile göre (tr / en) düzgün yazdırılmasını sağlayan fonksiyon
+    function updateDateUI(apiData) {
+        if (!apiData) return;
+        const greg = apiData.date.gregorian;
+        const hijri = apiData.date.hijri;
+
+        // Miladi Tarihi tarayıcının seçili diline göre tam formatla yazdırıyoruz (Örn: 11 Ağustos 2026 veya 11 August 2026)
+        try {
+            const [gDay, gMonthNum, gYear] = [greg.day, greg.month.number, greg.year];
+            const parsedDate = new Date(`${gYear}-${gMonthNum}-${gDay}`);
+            const localeCode = currentLang === 'tr' ? 'tr-TR' : 'en-US';
+            const formattedGregorian = parsedDate.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('current-date-text').innerText = formattedGregorian;
+        } catch (e) {
+            // Hata olursa doğrudan API'den geleni yaz
+            document.getElementById('current-date-text').innerText = `${greg.day} ${greg.month.en} ${greg.year}`;
+        }
+
+        // Hicri Takvim Ay Çevirisi ve Gösterimi
+        let hijriMonthName = hijri.month.en;
+        if (currentLang === 'tr' && hijriMonthsTr[hijriMonthName]) {
+            hijriMonthName = hijriMonthsTr[hijriMonthName];
+        }
+        document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijriMonthName} ${hijri.year}`;
     }
 
     function toggleDrawer() {
