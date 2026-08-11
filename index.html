@@ -39,6 +39,16 @@
         .menu-btn:active, .icon-btn:active, .quiz-option-btn:active, .duel-action-btn:active, .quiz-next-btn:active, .modal-save-btn:active { transform: scale(0.96); }
         .app-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); text-decoration: none; }
 
+        /* --- Ayetin Vakti Altı Dua Alanı Stili --- */
+        .app-subtitle-dua {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 14px;
+            letter-spacing: 0.3px;
+        }
+
         /* Konum ve Tarih Barı */
         .location-bar { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 0.9rem; }
         .location-city { font-weight: 600; cursor: pointer; color: var(--accent-color); margin-bottom: 2px; }
@@ -293,7 +303,7 @@
     </div>
 </div>
 
-<!-- Asistan Seçim ve İşlem Modalı (Güncellendi) -->
+<!-- Asistan Seçim ve İşlem Modalı -->
 <div class="modal-overlay" id="assistantModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -372,6 +382,11 @@
             </button>
         </div>
     </header>
+
+    <!-- DUASI EKLENEN YER -->
+    <div class="app-subtitle-dua">
+        Rabbim kolaylaştır, zorlaştırma; Rabbim hayırla sonuçlandır.
+    </div>
 
     <div class="location-bar">
         <div class="location-info">
