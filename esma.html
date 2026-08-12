@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Esmaül Hüsna | Ayetin Vakti</title>
     
-    <!-- Tema Sıçramasını Önleyici Script -->
+    <!-- Tema Sıçramasını Önleyici Script (Sayfa açılır açılmaz temayı uygular) -->
     <script>
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -67,11 +67,6 @@
             justify-content: space-between;
             padding: 8px 0;
             margin-bottom: 4px;
-        }
-
-        .nav-btns {
-            display: flex;
-            gap: 8px;
         }
 
         .nav-btn {
@@ -197,10 +192,7 @@
 <div class="container">
     <header class="navbar">
         <a href="index.html" class="nav-btn" title="Geri Dön">←</a>
-        <div class="nav-btns">
-            <button id="change-esma" class="nav-btn" title="Rastgele Değiştir">🔄</button>
-            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
-        </div>
+        <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
     </header>
 
     <div class="page-header">
@@ -208,8 +200,107 @@
         <p>Allah'ın en güzel 99 ismi ve anlamları</p>
     </div>
 
-    <div class="esma-grid" id="esma-container">
-        <!-- 99 İsim Listesi (JavaScript ile yönetilecek) -->
+    <div class="esma-grid">
+        <!-- 99 İsim Listesi -->
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">1</div><div class="esma-info"><h3>Er-Rahmân</h3><p>Dünyada bütün mahlukata merhamet eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحْمَٰنُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">2</div><div class="esma-info"><h3>Er-Rahîm</h3><p>Ahirette sadece müminlere ikram eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">3</div><div class="esma-info"><h3>El-Melik</h3><p>Mülkün, kainatın sahibi ve mutlak hükümdarı.</p></div></div><div class="esma-arabic-text">ٱلْمَلِكُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">4</div><div class="esma-info"><h3>El-Kuddûs</h3><p>Her türlü eksiklikten uzak, tertemiz.</p></div></div><div class="esma-arabic-text">ٱلْقُدُّوسُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">5</div><div class="esma-info"><h3>Es-Selâm</h3><p>Her türlü tehlikeden kurtaran, esenlik veren.</p></div></div><div class="esma-arabic-text">ٱلسَّلَامُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">6</div><div class="esma-info"><h3>El-Mü'min</h3><p>Güven veren, emin kılan, inanç veren.</p></div></div><div class="esma-arabic-text">ٱلْمُؤْمِنُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">7</div><div class="esma-info"><h3>El-Müheymin</h3><p>Gözeten, koruyan, her şeyi görüp yöneten.</p></div></div><div class="esma-arabic-text">ٱلْمُهَيْمِنُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">8</div><div class="esma-info"><h3>El-Azîz</h3><p>İzzet sahibi, yegane üstün, mağlup edilemeyen.</p></div></div><div class="esma-arabic-text">ٱلْعَزِيزُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">9</div><div class="esma-info"><h3>El-Cebbâr</h3><p>Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.</p></div></div><div class="esma-arabic-text">ٱلْجَبَّارُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">10</div><div class="esma-info"><h3>El-Mtekebbir</h3><p>Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.</p></div></div><div class="esma-arabic-text">ٱلْمُتَكَبِّرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">11</div><div class="esma-info"><h3>El-Hâlık</h3><p>Yaratan, yoktan var eden, ölçüye göre biçimlendiren.</p></div></div><div class="esma-arabic-text">ٱلْخَالِقُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">12</div><div class="esma-info"><h3>El-Bâri'</h3><p>Örneksiz ve kusursuz yaratan.</p></div></div><div class="esma-arabic-text">ٱلْبَارِئُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">13</div><div class="esma-info"><h3>El-Musavvir</h3><p>Varlıklara şekil ve suret veren.</p></div></div><div class="esma-arabic-text">ٱلْمُصَوِّرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">14</div><div class="esma-info"><h3>El-Gaffâr</h3><p>Günahları örten, bağışlaması çok olan.</p></div></div><div class="esma-arabic-text">ٱلْغَفَّارُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">15</div><div class="esma-info"><h3>El-Kahhâr</h3><p>Her şeye, her an galip ve hakim olan.</p></div></div><div class="esma-arabic-text">ٱلْقَهَّارُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">16</div><div class="esma-info"><h3>El-Vehhâb</h3><p>Karşılıksız bol bol bağışlayan, ikram eden.</p></div></div><div class="esma-arabic-text">ٱلْوَهَّابُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">17</div><div class="esma-info"><h3>Er-Rezzâk</h3><p>Bütün mahlukatın rızkını veren ve ihtiyacını karşılayan.</p></div></div><div class="esma-arabic-text">ٱلرَّزَّاقُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">18</div><div class="esma-info"><h3>El-Fettâh</h3><p>Her türlü zorlukları açan, rahmet kapılarını aralayan.</p></div></div><div class="esma-arabic-text">ٱلْفَتَّاحُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">19</div><div class="esma-info"><h3>El-Alîm</h3><p>Her şeyi en ince detayına kadar bilen.</p></div></div><div class="esma-arabic-text">ٱلْعَلِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">20</div><div class="esma-info"><h3>El-Kâbıd</h3><p>Dilediğinin rızkını daraltan, sıkan (can alan).</p></div></div><div class="esma-arabic-text">ٱلْقَابِضُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">21</div><div class="esma-info"><h3>El-Bâsıt</h3><p>Dilediğinin rızkını genişleten, açan (can veren).</p></div></div><div class="esma-arabic-text">ٱلْبَاسِطُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">22</div><div class="esma-info"><h3>El-Hâfıd</h3><p>Kafirleri ve gururluları alçaltan, aşağı indiren.</p></div></div><div class="esma-arabic-text">ٱلْخَافِضُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">23</div><div class="esma-info"><h3>Er-Râfi'</h3><p>Şeref veren, yükselten.</p></div></div><div class="esma-arabic-text">ٱلرَّافِعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">24</div><div class="esma-info"><h3>El-Muiz</h3><p>Dilediğine izzet ve şeref veren.</p></div></div><div class="esma-arabic-text">ٱلْمُعِزُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">25</div><div class="esma-info"><h3>El-Müzil</h3><p>Dilediğini zayıf ve hor kılan.</p></div></div><div class="esma-arabic-text">ٱلْمُذِلُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">26</div><div class="esma-info"><h3>Es-Semî'</h3><p>Her şeyi en iyi işiten, duaları kabul eden.</p></div></div><div class="esma-arabic-text">ٱلسَّمِيعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">27</div><div class="esma-info"><h3>El-Basîr</h3><p>Her şeyi en iyi gören, gizli açık her şeye vakıf olan.</p></div></div><div class="esma-arabic-text">ٱلْبَصِيرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">28</div><div class="esma-info"><h3>El-Hakem</h3><p>Mutlak hakim, hak ile batılı ayıran, adaletle hükmeden.</p></div></div><div class="esma-arabic-text">ٱلْحَكَمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">29</div><div class="esma-info"><h3>El-Adl</h3><p>Mutlak adalet sahibi, hakkaniyetli.</p></div></div><div class="esma-arabic-text">ٱلْعَدْلُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">30</div><div class="esma-info"><h3>El-Lâtîf</h3><p>İç yüzünden haberdar olan, kullarına lütuf ve ihsanlarda bulunan.</p></div></div><div class="esma-arabic-text">ٱَللَّطِيفُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">31</div><div class="esma-info"><h3>El-Habîr</h3><p>Her şeyden, gizli saklı işlerden haberdar olan.</p></div></div><div class="esma-arabic-text">ٱَلْخَبِيرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">32</div><div class="esma-info"><h3>El-Halîm</h3><p>Cezada acele etmeyen, yumuşak davranan, affı seven.</p></div></div><div class="esma-arabic-text">ٱَلْحَلِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">33</div><div class="esma-info"><h3>El-Azîm</h3><p>Pek yüce, azamet sahibi, büyüklükte benzeri olmayan.</p></div></div><div class="esma-arabic-text">ٱَلْعَظِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">34</div><div class="esma-info"><h3>El-Ğafûr</h3><p>Bağışlaması, mağfireti çok olan.</p></div></div><div class="esma-arabic-text">ٱَلْغَفُورُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">35</div><div class="esma-info"><h3>Eş-Şekûr</h3><p>Az amele karşılık çok sevap veren, kıymet bilen.</p></div></div><div class="esma-arabic-text">ٱلشَّكُورُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">36</div><div class="esma-info"><h3>El-Aliyy</h3><p>Pek yüce, şanı ve makamı en üstün olan.</p></div></div><div class="esma-arabic-text">ٱلْعَلِيُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">37</div><div class="esma-info"><h3>El-Kebîr</h3><p>Çok büyük, ulu, azamet sahibi.</p></div></div><div class="esma-arabic-text">ٱلْكَبِيرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">38</div><div class="esma-info"><h3>El-Hafîz</h3><p>Her şeyi koruyup gözeten, muhafaza eden.</p></div></div><div class="esma-arabic-text">ٱلْحَفِيظُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">39</div><div class="esma-info"><h3>El-Mukît</h3><p>Her yaratılmışın rızkını, gıdasını veren, tayin eden.</p></div></div><div class="esma-arabic-text">ٱلْمُقِيتُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">40</div><div class="esma-info"><h3>El-Hasîb</h3><p>Kulların hesabını en iyi gören, kifayet eden.</p></div></div><div class="esma-arabic-text">ٱلْحَسِيبُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">41</div><div class="esma-info"><h3>El-Celîl</h3><p>Celal ve azamet sahibi, yücelik ve ululuk sahibi.</p></div></div><div class="esma-arabic-text">ٱلْجَلِيلُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">42</div><div class="esma-info"><h3>El-Kerîm</h3><p>Çok cömert, ikramı bol, kerem sahibi.</p></div></div><div class="esma-arabic-text">ٱلْكَرِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">43</div><div class="esma-info"><h3>Er-Rakîb</h3><p>Bütün varlıkları ve işleri her an gözetim altında tutan.</p></div></div><div class="esma-arabic-text">ٱلرَّقِيبُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">44</div><div class="esma-info"><h3>El-Mucîb</h3><p>Dualara, çağrılara icabet eden, karşılık veren.</p></div></div><div class="esma-arabic-text">ٱلْمُجِيبُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">45</div><div class="esma-info"><h3>El-Vâsi'</h3><p>İlmi ve rahmetiyle her şeyi kuşatan, geniş olan.</p></div></div><div class="esma-arabic-text">ٱلْوَاسِعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">46</div><div class="esma-info"><h3>El-Hakîm</h3><p>Her işi hikmetli, hikmet sahibi.</p></div></div><div class="esma-arabic-text">ٱلْحَكِيمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">47</div><div class="esma-info"><h3>El-Vedûd</h3><p>Kullarını çok seven, sevilmeye layık olan.</p></div></div><div class="esma-arabic-text">ٱَلْوَدُودُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">48</div><div class="esma-info"><h3>El-Mecîd</h3><p>Şanı yüce, şerefi çok üstün olan.</p></div></div><div class="esma-arabic-text">ٱَلْمَجِيدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">49</div><div class="esma-info"><h3>El-Bâis</h3><p>Ölüleri dirilten, peygamber gönderen.</p></div></div><div class="esma-arabic-text">ٱَلْبَاعِثُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">50</div><div class="esma-info"><h3>Eş-Şehîd</h3><p>Her zaman ve her yerde hazır ve nazır olan, şahitlik eden.</p></div></div><div class="esma-arabic-text">ٱلشَّهِيدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">51</div><div class="esma-info"><h3>El-Hakk</h3><p>Varlığı hiç değişmeden duran, gerçek ilah.</p></div></div><div class="esma-arabic-text">ٱلْحَقُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">52</div><div class="esma-info"><h3>El-Vekîl</h3><p>Kendisine güvenilip dayanılan, işleri idare eden.</p></div></div><div class="esma-arabic-text">ٱَلْوَكِيلُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">53</div><div class="esma-info"><h3>El-Kaviyy</h3><p>Pek kuvvetli, sınırsız güç sahibi.</p></div></div><div class="esma-arabic-text">ٱَلْقَوِيُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">54</div><div class="esma-info"><h3>El-Metîn</h3><p>Çok sağlam, metanetli, sarsılmaz güç sahibi.</p></div></div><div class="esma-arabic-text">ٱَلْمَتِينُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">55</div><div class="esma-info"><h3>El-Veliyy</h3><p>İnananların dostu, yardımcı olan.</p></div></div><div class="esma-arabic-text">ٱَلْوَلِيُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">56</div><div class="esma-info"><h3>El-Hamîd</h3><p>Övülmeye tek layık olan, hamdedilen.</p></div></div><div class="esma-arabic-text">ٱَلْحَمِيدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">57</div><div class="esma-info"><h3>El-Muhsî</h3><p>Yarattığı ve yapacağı her şeyin sayısını tam bilen.</p></div></div><div class="esma-arabic-text">ٱَلْمُحْصِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">58</div><div class="esma-info"><h3>El-Mubdî'</h3><p>Maddesiz ve örneksiz yaratan, ilkten var eden.</p></div></div><div class="esma-arabic-text">ٱَلْمُبْدِئُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">59</div><div class="esma-info"><h3>El-Muîd</h3><p>Yarattıklarını yok edip, tekrar diriltecek olan.</p></div></div><div class="esma-arabic-text">ٱَلْمُعِيدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">60</div><div class="esma-info"><h3>El-Muhyî</h3><p>Can veren, hayat bağışlayan, şifa veren.</p></div></div><div class="esma-arabic-text">ٱَلْمُحْيِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">61</div><div class="esma-info"><h3>El-Mumît</h3><p>Canlıların ölümünü yaratan, öldüren.</p></div></div><div class="esma-arabic-text">ٱلْمُمِيتُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">62</div><div class="esma-info"><h3>El-Hayy</h3><p>Diri, ebedi hayat sahibi, hiç ölmeyen.</p></div></div><div class="esma-arabic-text">ٱَلْحَيُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">63</div><div class="esma-info"><h3>El-Kayyûm</h3><p>Bütün varlıkları ayakta tutan, zatıyla kaim olan.</p></div></div><div class="esma-arabic-text">ٱَلْقَيُّومُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">64</div><div class="esma-info"><h3>El-Vâcid</h3><p>İstediğini, istediği an bulan, hiçbir şeyi kaybetmeyen.</p></div></div><div class="esma-arabic-text">ٱَلْوَاجِدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">65</div><div class="esma-info"><h3>El-Mâcid</h3><p>Kadrü şanı yüce, kerem ve cömertliği bol olan.</p></div></div><div class="esma-arabic-text">ٱَلْمَاجِدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">66</div><div class="esma-info"><h3>El-Vâhid</h3><p>Tek, bir, zâtında, sıfatlarında ve fiillerinde ortağı olmayan.</p></div></div><div class="esma-arabic-text">ٱَلْوَاحِدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">67</div><div class="esma-info"><h3>Es-Samed</h3><p>Her şey kendisine muhtaç olan ama kendisi hiçbir şeye muhtaç olmayan.</p></div></div><div class="esma-arabic-text">ٱلصَّمَدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">68</div><div class="esma-info"><h3>El-Kâdir</h3><p>Dilediğini her şeye gücü yeten, muktedir olan.</p></div></div><div class="esma-arabic-text">ٱَلْقَادِرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">69</div><div class="esma-info"><h3>El-Muktedir</h3><p>Her şeye gücü yeten, tasarrufu altında bulunduran.</p></div></div><div class="esma-arabic-text">ٱَلْمُقْتَدِرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">70</div><div class="esma-info"><h3>El-Mukaddim</h3><p>Dilediğini öne geçiren, öne alan.</p></div></div><div class="esma-arabic-text">ٱَلْمُقَدِّمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">71</div><div class="esma-info"><h3>El-Muahhir</h3><p>Dilediğini arkaya bırakan, erteleyen.</p></div></div><div class="esma-arabic-text">ٱَلْمُؤَخِّرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">72</div><div class="esma-info"><h3>El-Evvel</h3><p>Her şeyden önce var olan, başlangıcı olmayan.</p></div></div><div class="esma-arabic-text">ٱَلْأَوَّلُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">73</div><div class="esma-info"><h3>El-Âhir</h3><p>Her şey yok olduktan sonra kalan, sonu olmayan.</p></div></div><div class="esma-arabic-text">ٱَلْآخِرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">74</div><div class="esma-info"><h3>El-Zâhir</h3><p>Varlığı açık, kati delillerle bilinen, aşikar olan.</p></div></div><div class="esma-arabic-text">ٱَلظَّاهِرُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">75</div><div class="esma-info"><h3>El-Bâtın</h3><p>Aklın idrak edemeyeceği kadar gizli, mahiyeti gizli olan.</p></div></div><div class="esma-arabic-text">ٱَلْبَاطِنُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">76</div><div class="esma-info"><h3>El-Vâlî</h3><p>Kainatı ve her an olup bitenleri yöneten, idare eden.</p></div></div><div class="esma-arabic-text">ٱَلْوَالِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">77</div><div class="esma-info"><h3>El-Müteâlî</h3><p>Aklın alabileceği her şeyden çok yüce, münezzeh olan.</p></div></div><div class="esma-arabic-text">ٱَلْمُتَعَالِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">78</div><div class="esma-info"><h3>El-Berr</h3><p>İyilik ve ihsanı bol, kullarına kolaylık gösteren.</p></div></div><div class="esma-arabic-text">ٱَلْبَرُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">79</div><div class="esma-info"><h3>Et-Tewvâb</h3><p>Tövbeleri kabul eden, günahları bağışlayan.</p></div></div><div class="esma-arabic-text">ٱلتَّوَابُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">80</div><div class="esma-info"><h3>El-Müntekim</h3><p>Asi ve zalimlerin cezasını veren, intikam alan.</p></div></div><div class="esma-arabic-text">ٱَلْمُنْتَقِمُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">81</div><div class="esma-info"><h3>El-Afüvv</h3><p>Affeden, günahları bağışlayan, suçları silen.</p></div></div><div class="esma-arabic-text">ٱَلْعَفُوُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">82</div><div class="esma-info"><h3>Er-Raûf</h3><p>Çok merhametli, pek şefkatli.</p></div></div><div class="esma-arabic-text">ٱلرَّؤُوفُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">83</div><div class="esma-info"><h3>Mülkü'l-Mülk</h3><p>Mülkün, kainatın ebedi ve hakiki sahibi.</p></div></div><div class="esma-arabic-text">مَالِكُ ٱLْمُلْكِ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">84</div><div class="esma-info"><h3>Zü'l-Celâli ve'l-İkrâm</h3><p>Hem büyüklük, celal sahibi hem de ikram, cömertlik sahibi.</p></div></div><div class="esma-arabic-text">ذُٱلْجَلَالِ وَٱلْإِكْرَامِ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">85</div><div class="esma-info"><h3>El-Muksit</h3><p>Bütün işlerini adalet ve uyum içinde yapan, hak sahibine hakkını veren.</p></div></div><div class="esma-arabic-text">ٱَلْمُقْسِطُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">86</div><div class="esma-info"><h3>El-Câmi'</h3><p>İstediklerini dilediği gün ve yerde toplayan.</p></div></div><div class="esma-arabic-text">ٱَلْجَامِعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">87</div><div class="esma-info"><h3>El-Ğaniyy</h3><p>Çok zengin, hiç kimseye ve hiçbir şeye muhtaç olmayan.</p></div></div><div class="esma-arabic-text">ٱَلْغَنِيُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">88</div><div class="esma-info"><h3>El-Muğnî</h3><p>Dilediğini zengin eden, bolluk veren.</p></div></div><div class="esma-arabic-text">ٱَلْمُغْنِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">89</div><div class="esma-info"><h3>El-Mâni'</h3><p>Kötü şeylerin gerçekleşmesine engel olan.</p></div></div><div class="esma-arabic-text">ٱَلْمَانِعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">90</div><div class="esma-info"><h3>Ed-Dârr</h3><p>Zarar verici şeyleri yaratan (imtihan için).</p></div></div><div class="esma-arabic-text">ٱَلضَّارُّ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">91</div><div class="esma-info"><h3>En-Nâfi'</h3><p>Fayda verici şeyleri yaratan, hayır ihsan eden.</p></div></div><div class="esma-arabic-text">ٱلنَّافِعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">92</div><div class="esma-info"><h3>En-Nûr</h3><p>Alemleri nurlandıran, aydınlatan, nur veren.</p></div></div><div class="esma-arabic-text">ٱلنُّورُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">93</div><div class="esma-info"><h3>El-Hâdî</h3><p>Hidayet veren, doğru yolu gösteren.</p></div></div><div class="esma-arabic-text">ٱَلْهَادِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">94</div><div class="esma-info"><h3>El-Bedî'</h3><p>Örneksiz, eşsiz, harikalar yaratan.</p></div></div><div class="esma-arabic-text">ٱَلْبَدِيعُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">95</div><div class="esma-info"><h3>El-Bâkî</h3><p>Varlığının sonu olmayan, ebedi kalan.</p></div></div><div class="esma-arabic-text">ٱَلْبَاقِي</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">96</div><div class="esma-info"><h3>El-Vâris</h3><p>Her şeyin hakiki varisi, her şey yok olduğunda baki kalan.</p></div></div><div class="esma-arabic-text">ٱَلْوَارِثُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">97</div><div class="esma-info"><h3>Er-Reşîd</h3><p>Bütün işleri hikmete uygun, doğru yolu gösteren.</p></div></div><div class="esma-arabic-text">ٱلرَّشِيدُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">98</div><div class="esma-info"><h3>Es-Sabûr</h3><p>Cezada hiç acele etmeyen, çok sabırlı.</p></div></div><div class="esma-arabic-text">ٱلصَّبُورُ</div></div>
+        <div class="esma-card"><div class="esma-left"><div class="esma-number">99</div><div class="esma-info"><h3>Allah</h3><p>Bütün güzel isimleri ve sıfatları zatında toplayan en yüce özel isim.</p></div></div><div class="esma-arabic-text">ٱللَّه</div></div>
     </div>
 </div>
 
@@ -217,144 +308,11 @@
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
 
-<!-- Esma Listesi ve Fonksiyonlar Scripti -->
+<!-- Tema Değiştirme Scripti -->
 <script>
-    const esmaListesi = [
-        {no: 1, name: "Er-Rahmân", desc: "Dünyada bütün mahlukata merhamet eden.", arabic: "ٱلرَّحْمَٰنُ"},
-        {no: 2, name: "Er-Rahîm", desc: "Ahirette sadece müminlere ikram eden.", arabic: "ٱلرَّحِيمُ"},
-        {no: 3, name: "El-Melik", desc: "Mülkün, kainatın sahibi ve mutlak hükümdarı.", arabic: "ٱلْمَلِكُ"},
-        {no: 4, name: "El-Kuddûs", desc: "Her türlü eksiklikten uzak, tertemiz.", arabic: "ٱلْقُدُّوسُ"},
-        {no: 5, name: "Es-Selâm", desc: "Her türlü tehlikeden kurtaran, esenlik veren.", arabic: "ٱلسَّلَامُ"},
-        {no: 6, name: "El-Mü'min", desc: "Güven veren, emin kılan, inanç veren.", arabic: "ٱلْمُؤْمِنُ"},
-        {no: 7, name: "El-Müheymin", desc: "Gözeten, koruyan, her şeyi görüp yöneten.", arabic: "ٱلْمُهَيْمِنُ"},
-        {no: 8, name: "El-Azîz", desc: "İzzet sahibi, yegane üstün, mağlup edilemeyen.", arabic: "ٱلْعَزِيزُ"},
-        {no: 9, name: "El-Cebbâr", desc: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.", arabic: "ٱلْجَبَّارُ"},
-        {no: 10, name: "El-Mütekebbir", desc: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.", arabic: "ٱلْمُتَكَبِّرُ"},
-        {no: 11, name: "El-Hâlık", desc: "Yaratan, yoktan var eden, ölçüye göre biçimlendiren.", arabic: "ٱلْخَالِقُ"},
-        {no: 12, name: "El-Bâri'", desc: "Örneksiz ve kusursuz yaratan.", arabic: "ٱلْبَارِئُ"},
-        {no: 13, name: "El-Musavvir", desc: "Varlıklara şekil ve suret veren.", arabic: "ٱلْمُصَوِّرُ"},
-        {no: 14, name: "El-Gaffâr", desc: "Günahları örten, bağışlaması çok olan.", arabic: "ٱلْغَفَّارُ"},
-        {no: 15, name: "El-Kahhâr", desc: "Her şeye, her an galip ve hakim olan.", arabic: "ٱلْقَهَّارُ"},
-        {no: 16, name: "El-Vehhâb", desc: "Karşılıksız bol bol bağışlayan, ikram eden.", arabic: "ٱلْوَهَّابُ"},
-        {no: 17, name: "Er-Rezzâk", desc: "Bütün mahlukatın rızkını veren ve ihtiyacını karşılayan.", arabic: "ٱلرَّزَّاقُ"},
-        {no: 18, name: "El-Fettâh", desc: "Her türlü zorlukları açan, rahmet kapılarını aralayan.", arabic: "ٱلْفَتَّاحُ"},
-        {no: 19, name: "El-Alîm", desc: "Her şeyi en ince detayına kadar bilen.", arabic: "ٱلْعَلِيمُ"},
-        {no: 20, name: "El-Kâbıd", desc: "Dilediğinin rızkını daraltan, sıkan (can alan).", arabic: "ٱلْقَابِضُ"},
-        {no: 21, name: "El-Bâsıt", desc: "Dilediğinin rızkını genişleten, açan (can veren).", arabic: "ٱلْبَاسِطُ"},
-        {no: 22, name: "El-Hâfıd", desc: "Kafirleri ve gururluları alçaltan, aşağı indiren.", arabic: "ٱلْخَافِضُ"},
-        {no: 23, name: "Er-Râfi'", desc: "Şeref veren, yükselten.", arabic: "ٱلرَّافِعُ"},
-        {no: 24, name: "El-Muiz", desc: "Dilediğine izzet ve şeref veren.", arabic: "ٱلْمُعِزُّ"},
-        {no: 25, name: "El-Müzil", desc: "Dilediğini zayıf ve hor kılan.", arabic: "ٱلْمُذِلُّ"},
-        {no: 26, name: "Es-Semî'", desc: "Her şeyi en iyi işiten, duaları kabul eden.", arabic: "ٱلسَّمِيعُ"},
-        {no: 27, name: "El-Basîr", desc: "Her şeyi en iyi gören, gizli açık her şeye vakıf olan.", arabic: "ٱلْبَصِيرُ"},
-        {no: 28, name: "El-Hakem", desc: "Mutlak hakim, hak ile batılı ayıran, adaletle hükmeden.", arabic: "ٱلْحَكَمُ"},
-        {no: 29, name: "El-Adl", desc: "Mutlak adalet sahibi, hakkaniyetli.", arabic: "ٱلْعَدْلُ"},
-        {no: 30, name: "El-Lâtîf", desc: "İç yüzünden haberdar olan, kullarına lütuf ve ihsanlarda bulunan.", arabic: "ٱَللَّطِيفُ"},
-        {no: 31, name: "El-Habîr", desc: "Her şeyden, gizli saklı işlerden haberdar olan.", arabic: "ٱَلْخَبِيرُ"},
-        {no: 32, name: "El-Halîm", desc: "Cezada acele etmeyen, yumuşak davranan, affı seven.", arabic: "ٱَلْحَلِيمُ"},
-        {no: 33, name: "El-Azîm", desc: "Pek yüce, azamet sahibi, büyüklükte benzeri olmayan.", arabic: "ٱَلْعَظِيمُ"},
-        {no: 34, name: "El-Ğafûr", desc: "Bağışlaması, mağfireti çok olan.", arabic: "ٱَلْغَفُورُ"},
-        {no: 35, name: "Eş-Şekûr", desc: "Az amele karşılık çok sevap veren, kıymet bilen.", arabic: "ٱلشَّكُورُ"},
-        {no: 36, name: "El-Aliyy", desc: "Pek yüce, şanı ve makamı en üstün olan.", arabic: "ٱلْعَلِيُّ"},
-        {no: 37, name: "El-Kebîr", desc: "Çok büyük, ulu, azamet sahibi.", arabic: "ٱلْكَبِيرُ"},
-        {no: 38, name: "El-Hafîz", desc: "Her şeyi koruyup gözeten, muhafaza eden.", arabic: "ٱلْحَفِيظُ"},
-        {no: 39, name: "El-Mukît", desc: "Her yaratılmışın rızkını, gıdasını veren, tayin eden.", arabic: "ٱلْمُقِيتُ"},
-        {no: 40, name: "El-Hasîb", desc: "Kulların hesabını en iyi gören, kifayet eden.", arabic: "ٱلْحَسِيبُ"},
-        {no: 41, name: "El-Celîl", desc: "Celal ve azamet sahibi, yücelik ve ululuk sahibi.", arabic: "ٱلْجَلِيلُ"},
-        {no: 42, name: "El-Kerîm", desc: "Çok cömert, ikramı bol, kerem sahibi.", arabic: "ٱلْكَرِيمُ"},
-        {no: 43, name: "Er-Rakîb", desc: "Bütün varlıkları ve işleri her an gözetim altında tutan.", arabic: "ٱلرَّقِيبُ"},
-        {no: 44, name: "El-Mucîb", desc: "Dualara, çağrılara icabet eden, karşılık veren.", arabic: "ٱلْمُجِيبُ"},
-        {no: 45, name: "El-Vâsi'", desc: "İlmi ve rahmetiyle her şeyi kuşatan, geniş olan.", arabic: "ٱلْوَاسِعُ"},
-        {no: 46, name: "El-Hakîm", desc: "Her işi hikmetli, hikmet sahibi.", arabic: "ٱلْحَكِيمُ"},
-        {no: 47, name: "El-Vedûd", desc: "Kullarını çok seven, sevilmeye layık olan.", arabic: "ٱَلْوَدُودُ"},
-        {no: 48, name: "El-Mecîd", desc: "Şanı yüce, şerefi çok üstün olan.", arabic: "ٱَلْمَجِيدُ"},
-        {no: 49, name: "El-Bâis", desc: "Ölüleri dirilten, peygamber gönderen.", arabic: "ٱَلْبَاعِثُ"},
-        {no: 50, name: "Eş-Şehîd", desc: "Her zaman ve her yerde hazır ve nazır olan, şahitlik eden.", arabic: "ٱلشَّهِيدُ"},
-        {no: 51, name: "El-Hakk", desc: "Varlığı hiç değişmeden duran, gerçek ilah.", arabic: "ٱلْحَقُّ"},
-        {no: 52, name: "El-Vekîl", desc: "Kendisine güvenilip dayanılan, işleri idare eden.", arabic: "ٱَلْوَكِيلُ"},
-        {no: 53, name: "El-Kaviyy", desc: "Pek kuvvetli, sınırsız güç sahibi.", arabic: "ٱَلْقَوِيُّ"},
-        {no: 54, name: "El-Metîn", desc: "Çok sağlam, metanetli, sarsılmaz güç sahibi.", arabic: "ٱَلْمَتِينُ"},
-        {no: 55, name: "El-Veliyy", desc: "İnananların dostu, yardımcı olan.", arabic: "ٱَلْوَلِيُّ"},
-        {no: 56, name: "El-Hamîd", desc: "Övülmeye tek layık olan, hamdedilen.", arabic: "ٱَلْحَمِيدُ"},
-        {no: 57, name: "El-Muhsî", desc: "Yarattığı ve yapacağı her şeyin sayısını tam bilen.", arabic: "ٱَلْمُحْصِي"},
-        {no: 58, name: "El-Mubdî'", desc: "Maddesiz ve örneksiz yaratan, ilkten var eden.", arabic: "ٱَلْمُبْدِئُ"},
-        {no: 59, name: "El-Muîd", desc: "Yarattıklarını yok edip, tekrar diriltecek olan.", arabic: "ٱَلْمُعِيدُ"},
-        {no: 60, name: "El-Muhyî", desc: "Can veren, hayat bağışlayan, şifa veren.", arabic: "ٱَلْمُحْيِي"},
-        {no: 61, name: "El-Mumît", desc: "Canlıların ölümünü yaratan, öldüren.", arabic: "ٱلْمُمِيتُ"},
-        {no: 62, name: "El-Hayy", desc: "Diri, ebedi hayat sahibi, hiç ölmeyen.", arabic: "ٱَلْحَيُّ"},
-        {no: 63, name: "El-Kayyûm", desc: "Bütün varlıkları ayakta tutan, zatıyla kaim olan.", arabic: "ٱَلْقَيُّومُ"},
-        {no: 64, name: "El-Vâcid", desc: "İstediğini, istediği an bulan, hiçbir şeyi kaybetmeyen.", arabic: "ٱَلْوَاجِدُ"},
-        {no: 65, name: "El-Mâcid", desc: "Kadrü şanı yüce, kerem ve cömertliği bol olan.", arabic: "ٱَلْمَاجِدُ"},
-        {no: 66, name: "El-Vâhid", desc: "Tek, bir, zâtında, sıfatlarında ve fiillerinde ortağı olmayan.", arabic: "ٱَلْوَاحِدُ"},
-        {no: 67, name: "Es-Samed", desc: "Her şey kendisine muhtaç olan ama kendisi hiçbir şeye muhtaç olmayan.", arabic: "ٱلصَّمَدُ"},
-        {no: 68, name: "El-Kâdir", desc: "Dilediğini her şeye gücü yeten, muktedir olan.", arabic: "ٱَلْقَادِرُ"},
-        {no: 69, name: "El-Muktedir", desc: "Her şeye gücü yeten, tasarrufu altında bulunduran.", arabic: "ٱَلْمُقْتَدِرُ"},
-        {no: 70, name: "El-Mukaddim", desc: "Dilediğini öne geçiren, öne alan.", arabic: "ٱَلْمُقَدِّمُ"},
-        {no: 71, name: "El-Muahhir", desc: "Dilediğini arkaya bırakan, erteleyen.", arabic: "ٱَلْمُؤَخِّرُ"},
-        {no: 72, name: "El-Evvel", desc: "Her şeyden önce var olan, başlangıcı olmayan.", arabic: "ٱَلْأَوَّلُ"},
-        {no: 73, name: "El-Âhir", desc: "Her şey yok olduktan sonra kalan, sonu olmayan.", arabic: "ٱَلْآخِرُ"},
-        {no: 74, name: "El-Zâhir", desc: "Varlığı açık, kati delillerle bilinen, aşikar olan.", arabic: "ٱَلظَّاهِرُ"},
-        {no: 75, name: "El-Bâtın", desc: "Aklın idrak edemeyeceği kadar gizli, mahiyeti gizli olan.", arabic: "ٱَلْبَاطِنُ"},
-        {no: 76, name: "El-Vâlî", desc: "Kainatı ve her an olup bitenleri yöneten, idare eden.", arabic: "ٱَلْوَالِي"},
-        {no: 77, name: "El-Müteâlî", desc: "Aklın alabileceği her şeyden çok yüce, münezzeh olan.", arabic: "ٱَلْمُتَعَالِي"},
-        {no: 78, name: "El-Berr", desc: "İyilik ve ihsanı bol, kullarına kolaylık gösteren.", arabic: "ٱَلْبَرُّ"},
-        {no: 79, name: "Et-Tevvâb", desc: "Tövbeleri kabul eden, günahları bağışlayan.", arabic: "ٱلتَّوَابُ"},
-        {no: 80, name: "El-Müntekim", desc: "Asi ve zalimlerin cezasını veren, intikam alan.", arabic: "ٱَلْمُنْتَقِمُ"},
-        {no: 81, name: "El-Afüvv", desc: "Affeden, günahları bağışlayan, suçları silen.", arabic: "ٱَلْعَفُوُّ"},
-        {no: 82, name: "Er-Raûf", desc: "Çok merhametli, pek şefkatli.", arabic: "ٱلرَّؤُوفُ"},
-        {no: 83, name: "Mülkü'l-Mülk", desc: "Mülkün, kainatın ebedi ve hakiki sahibi.", arabic: "مَالِكُ ٱلْمُلْكِ"},
-        {no: 84, name: "Zü'l-Celâli ve'l-İkrâm", desc: "Hem büyüklük, celal sahibi hem de ikram, cömertlik sahibi.", arabic: "ذُٱلْجَلَالِ وَٱلْإِكْرَامِ"},
-        {no: 85, name: "El-Muksit", desc: "Bütün işlerini adalet ve uyum içinde yapan, hak sahibine hakkını veren.", arabic: "ٱَلْمُقْسِطُ"},
-        {no: 86, name: "El-Câmi'", desc: "İstediklerini dilediği gün ve yerde toplayan.", arabic: "ٱَلْجَامِعُ"},
-        {no: 87, name: "El-Ğaniyy", desc: "Çok zengin, hiç kimseye ve hiçbir şeye muhtaç olmayan.", arabic: "ٱَلْغَنِيُّ"},
-        {no: 88, name: "El-Muğnî", desc: "Dilediğini zengin eden, bolluk veren.", arabic: "ٱَلْمُغْنِي"},
-        {no: 89, name: "El-Mâni'", desc: "Kötü şeylerin gerçekleşmesine engel olan.", arabic: "ٱَلْمَانِعُ"},
-        {no: 90, name: "Ed-Dârr", desc: "Zarar verici şeyleri yaratan (imtihan için).", arabic: "ٱَلضَّارُّ"},
-        {no: 91, name: "En-Nâfi'", desc: "Fayda verici şeyleri yaratan, hayır ihsan eden.", arabic: "ٱلنَّافِعُ"},
-        {no: 92, name: "En-Nûr", desc: "Alemleri nurlandıran, aydınlatan, nur veren.", arabic: "ٱلنُّورُ"},
-        {no: 93, name: "El-Hâdî", desc: "Hidayet veren, doğru yolu gösteren.", arabic: "ٱَلْهَادِي"},
-        {no: 94, name: "El-Bedî'", desc: "Örneksiz, eşsiz, harikalar yaratan.", arabic: "ٱَلْبَدِيعُ"},
-        {no: 95, name: "El-Bâkî", desc: "Varlığının sonu olmayan, ebedi kalan.", arabic: "ٱَلْبَاقِي"},
-        {no: 96, name: "El-Vâris", desc: "Her şeyin hakiki varisi, her şey yok olduğunda baki kalan.", arabic: "ٱَلْوَارِثُ"},
-        {no: 97, name: "Er-Reşîd", desc: "Bütün işleri hikmete uygun, doğru yolu gösteren.", arabic: "ٱلرَّشِيدُ"},
-        {no: 98, name: "Es-Sabûr", desc: "Cezada hiç acele etmeyen, çok sabırlı.", arabic: "ٱلصَّبُورُ"},
-        {no: 99, name: "Allah", desc: "Bütün güzel isimleri ve sıfatları zatında toplayan en yüce özel isim.", arabic: "ٱللَّه"}
-    ];
-
-    const container = document.getElementById('esma-container');
-    const changeEsmaBtn = document.getElementById('change-esma');
-
-    // Rastgele bir Esma seçip ekrana basan fonksiyon
-    function renderRandomEsma() {
-        const randomIndex = Math.floor(Math.random() * esmaListesi.length);
-        const esma = esmaListesi[randomIndex];
-
-        container.innerHTML = `
-            <div class="esma-card">
-                <div class="esma-left">
-                    <div class="esma-number">${esma.no}</div>
-                    <div class="esma-info">
-                        <h3>${esma.name}</h3>
-                        <p>${esma.desc}</p>
-                    </div>
-                </div>
-                <div class="esma-arabic-text">${esma.arabic}</div>
-            </div>
-        `;
-    }
-
-    // Uygulamaya her girip çıkıldığında veya sayfa açıldığında farklı esma gelsin diye:
-    // Eğer her yenilemede değişmesini istiyorsan doğrudan çağırıyoruz:
-    renderRandomEsma();
-
-    // Değiştir butonuna basıldığında rastgele yeni bir Esma getir
-    changeEsmaBtn.addEventListener('click', () => {
-        renderRandomEsma();
-    });
-
-    // Tema Değiştirme Scripti
     const themeToggleBtn = document.getElementById('theme-toggle');
     
+    // Buton ikonunu anlık duruma göre ayarla
     function updateIcon() {
         if (document.documentElement.classList.contains('light-mode')) {
             themeToggleBtn.textContent = '☀️';
