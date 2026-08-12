@@ -1389,5 +1389,15 @@
         randomEsma();
     });
 </script>
+        <!-- Service Worker Kaydı (PWA Çevrimdışı Desteği) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Ayetin Vakti: Service Worker başarıyla kaydedildi.', reg.scope))
+                    .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
+            });
+        }
+    </script>
 </body>
 </html>
