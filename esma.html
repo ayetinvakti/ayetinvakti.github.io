@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Esmaül Hüsna | Ayetin Vakti</title>
     
-    <!-- Tema Sıçramasını Önleyici Script -->
+    <!-- Tema Sıçramasını Önleyici Script (Sayfa açılır açılmaz temayı uygular) -->
     <script>
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -22,6 +22,15 @@
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
+        }
+
+        /* Açık Tema (Light Mode) Değişkenleri */
+        html.light-mode {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
         }
 
         * {
@@ -51,7 +60,6 @@
             gap: 16px;
         }
 
-        /* Üst Bar / Navbar */
         .navbar {
             width: 100%;
             display: flex;
@@ -75,7 +83,7 @@
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
         }
 
         .nav-btn:hover {
@@ -83,7 +91,6 @@
             transform: scale(1.05);
         }
 
-        /* Sayfa Başlığı */
         .page-header {
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             border-radius: 18px;
@@ -104,7 +111,6 @@
             opacity: 0.9;
         }
 
-        /* Esma Listesi Grid */
         .esma-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -120,7 +126,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease;
         }
 
         .esma-card:hover {
@@ -179,34 +185,23 @@
             color: var(--accent-color);
             font-weight: 600;
         }
-
-        /* Açık Tema (Light Mode) Ayarları */
-        body.light-mode {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Üst Bar (Geri Tuşu ve Tema Butonu) -->
     <header class="navbar">
         <a href="index.html" class="nav-btn" title="Geri Dön">←</a>
         <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
     </header>
 
-    <!-- Sayfa Başlığı -->
     <div class="page-header">
         <h1>Esmaül Hüsna</h1>
         <p>Allah'ın en güzel 99 ismi ve anlamları</p>
     </div>
 
-    <!-- Esma Listesi (99 İsim) -->
     <div class="esma-grid">
+        <!-- 99 İsim Listesi -->
         <div class="esma-card"><div class="esma-left"><div class="esma-number">1</div><div class="esma-info"><h3>Er-Rahmân</h3><p>Dünyada bütün mahlukata merhamet eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحْمَٰنُ</div></div>
         <div class="esma-card"><div class="esma-left"><div class="esma-number">2</div><div class="esma-info"><h3>Er-Rahîm</h3><p>Ahirette sadece müminlere ikram eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحِيمُ</div></div>
         <div class="esma-card"><div class="esma-left"><div class="esma-number">3</div><div class="esma-info"><h3>El-Melik</h3><p>Mülkün, kainatın sahibi ve mutlak hükümdarı.</p></div></div><div class="esma-arabic-text">ٱلْمَلِكُ</div></div>
@@ -317,12 +312,16 @@
 <script>
     const themeToggleBtn = document.getElementById('theme-toggle');
     
-    // Sayfa yüklendiğinde ikonun durumunu ayarla
-    if (document.documentElement.classList.contains('light-mode')) {
-        themeToggleBtn.textContent = '☀️';
-    } else {
-        themeToggleBtn.textContent = '🌙';
+    // Buton ikonunu anlık duruma göre ayarla
+    function updateIcon() {
+        if (document.documentElement.classList.contains('light-mode')) {
+            themeToggleBtn.textContent = '☀️';
+        } else {
+            themeToggleBtn.textContent = '🌙';
+        }
     }
+
+    updateIcon();
 
     themeToggleBtn.addEventListener('click', () => {
         document.documentElement.classList.toggle('light-mode');
@@ -330,11 +329,10 @@
         
         if (isLight) {
             localStorage.setItem('theme', 'light');
-            themeToggleBtn.textContent = '☀️';
         } else {
             localStorage.setItem('theme', 'dark');
-            themeToggleBtn.textContent = '🌙';
         }
+        updateIcon();
     });
 </script>
 
