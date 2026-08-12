@@ -62,7 +62,7 @@
         .countdown-title { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 4px; }
         .countdown-timer { font-size: 2.5rem; font-weight: 700; text-align: center; color: var(--accent-color); margin-bottom: 16px; }
         
-        /* Kerahat Detay Alanı (İstediğin Görsel Stil) */
+        /* Kerahat Detay Alanı */
         .kerahat-box {
             text-align: center;
             margin-top: 14px;
@@ -77,7 +77,7 @@
         .kerahat-timer {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #f59e0b; /* Dikkat çekici amber/turuncu ton */
+            color: #f59e0b;
         }
 
         .times-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 14px; }
@@ -121,12 +121,31 @@
         .grid-title { font-size: 0.8rem; font-weight: 600; }
         .badge-yeni { position: absolute; top: 6px; right: 6px; background: #ef4444; color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 6px; font-weight: 700; }
 
-        /* Esma Banner */
+        /* Esma Banner ve Şık Yenileme Butonu */
         .esma-banner { text-decoration: none; color: inherit; display: block; text-align: center; }
         .esma-arabic { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 4px; font-family: serif; }
         .esma-name { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
         .esma-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
         .esma-link { font-size: 0.75rem; color: var(--accent-color); font-weight: 600; }
+        
+        .esma-refresh-btn {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .esma-refresh-btn:hover {
+            background: rgba(16, 185, 129, 0.2);
+            transform: rotate(90deg);
+        }
 
         /* Drawer & Modal */
         .drawer-overlay, .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; }
@@ -151,7 +170,7 @@
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
         body.light-mode .drawer-item { background: rgba(0,0,0,0.01); }
 
-        /* --- Asistan Yüzen Buton (Floating Action Button) Stili --- */
+        /* --- Asistan Yüzen Buton --- */
         .ai-float-btn {
             position: fixed;
             bottom: 24px;
@@ -180,45 +199,10 @@
             transform: scale(0.9);
         }
 
-        /* --- Asistan Seçim Modalı Stilleri --- */
-        .assistant-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .assistant-option-btn {
-            background: rgba(0, 0, 0, 0.02);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 12px 14px;
-            border-radius: 12px;
-            text-align: left;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-        .assistant-option-btn:hover {
-            background: rgba(16, 185, 129, 0.05);
-            border-color: var(--accent-color);
-        }
-        .feedback-textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-main);
-            font-size: 0.9rem;
-            margin: 10px 0;
-            resize: none;
-        }
+        .assistant-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+        .assistant-option-btn { background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 14px; border-radius: 12px; text-align: left; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
+        .assistant-option-btn:hover { background: rgba(16, 185, 129, 0.05); border-color: var(--accent-color); }
+        .feedback-textarea { width: 100%; height: 100px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 0.9rem; margin: 10px 0; resize: none; }
     </style>
 </head>
 <body>
@@ -330,7 +314,6 @@
             <button class="modal-close" onclick="closeAssistantModal()">✕</button>
         </div>
         
-        <!-- Ana Seçenekler Kısmı -->
         <div id="assistantMainView">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
                 Size nasıl yardımcı olabiliriz? Lütfen bir seçenek seçin:
@@ -353,7 +336,6 @@
             </div>
         </div>
 
-        <!-- Şikayet / Öneri Form Ekranı -->
         <div id="assistantComplaintView" style="display: none;">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">
                 Talep, şikayet veya önerilerinizi bize yazabilirsiniz:
@@ -404,7 +386,6 @@
         </div>
     </header>
 
-    <!-- DUASI EKLENEN YER -->
     <div class="app-subtitle-dua">
         Rabbim kolaylaştır, zorlaştırma; Rabbim hayırla sonuçlandır.
     </div>
@@ -429,13 +410,11 @@
             <div id="quiz-progress" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Mod Seç</div>
         </div>
         
-        <!-- Mod Seçim Sekmeleri -->
         <div class="quiz-mode-selector">
             <button class="mode-tab-btn active" id="tab-solo" onclick="switchQuizMode('solo')">Tek Kişilik</button>
             <button class="mode-tab-btn" id="tab-duel" onclick="switchQuizMode('duel')">👥 Canlı Düello</button>
         </div>
 
-        <!-- Solo / Tek Kişilik Soru Alanı -->
         <div id="solo-quiz-area">
             <div id="solo-question-view">
                 <div class="quiz-question" id="quiz-question-text">Yükleniyor...</div>
@@ -445,7 +424,6 @@
                     <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
                 </div>
             </div>
-            <!-- Tekli Mod Bitiş Ekranı -->
             <div id="solo-result-view" style="display: none;" class="duel-result-box">
                 <div class="duel-result-title">🎉 Test Tamamlandı!</div>
                 <div class="duel-result-scores" id="solo-final-scores-text">Skorlar hesaplanıyor...</div>
@@ -454,7 +432,6 @@
             </div>
         </div>
 
-        <!-- Online / Canlı Düello Alanı -->
         <div id="duel-quiz-area" style="display: none;">
             <div id="duel-setup-view">
                 <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla ortak tur halinde kapışmak için oda kur ya da kodu gir:</div>
@@ -481,7 +458,6 @@
                         <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
                     </div>
                 </div>
-                <!-- Sonuç Ekranı Alanı -->
                 <div id="duel-result-view" style="display: none;" class="duel-result-box">
                     <div class="duel-result-title">🏆 Düello Bitti / Sonuç Ekranı</div>
                     <div class="duel-result-scores" id="duel-final-scores-text">Skorlar hesaplanıyor...</div>
@@ -497,7 +473,6 @@
         <div class="countdown-title" id="next-prayer-title">Vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         
-        <!-- KERAHAT DETAY ALANI -->
         <div class="kerahat-box">
             <div class="kerahat-title" id="kerahat-title-text">Kerahatin Çıkmasına</div>
             <div class="kerahat-timer" id="kerahat-timer">--:--</div>
@@ -566,14 +541,16 @@
         </a>
     </div>
 
+    <!-- ESMAÜL HÜSNA KARTI (Şık Yenileme Butonu Eklenmiş Hali) -->
     <div class="content-card">
         <div class="card-header-flex">
             <div class="card-section-title" data-i18n="esma_card_title">🌙 Esmaül Hüsna</div>
+            <button class="esma-refresh-btn" onclick="randomEsma()" title="Rastgele Değiştir">🔄</button>
         </div>
         <a href="esma.html" class="esma-banner" id="esma-banner-link">
-            <div class="esma-arabic">ٱلْغَفُورُ</div>
-            <div class="esma-name">El-Gafûr</div>
-            <div class="esma-desc" data-i18n="esma_card_desc">Günahları tamamen örten ve bağışlayandır.</div>
+            <div class="esma-arabic">ٱللَّهُ</div>
+            <div class="esma-name">Allah</div>
+            <div class="esma-desc" data-i18n="esma_card_desc">Var olan her şeyin gerçek sahibi.</div>
             <span class="esma-link" data-i18n="esma_card_link">Allah'ın 99 İsmini Gör ›</span>
         </a>
     </div>
@@ -583,13 +560,12 @@
     © Ayetin Vakti • <span data-i18n="footer_slogan">Huzur ve İbadet Rehberliğiniz</span>
 </div>
 
-<!-- Asistan Yüzen Buton (Modalı tetikler) -->
+<!-- Asistan Yüzen Buton -->
 <button class="ai-float-btn" onclick="toggleAssistantModal()" title="Asistana Sor">
     💬
 </button>
 
 <script>
-    // Firebase Konfigürasyonu
     const firebaseConfig = {
         apiKey: "AIzaSyCIsUcRHMcSxKPsWm9pSB5ErTeJM4D6R6Y",
         authDomain: "ayetinvakti-3eb7f.firebaseapp.com",
@@ -605,7 +581,55 @@
     }
     const rdb = firebase.database();
 
-    // Çeviri Sözlüğü
+    // Esmaül Hüsna Havuzu (Sayfa her açıldığında ve butona basıldığında buradan rastgele seçilir)
+    const esmaList = [
+        { ar: "ٱللَّهُ", tr: "Allah", desc: "Var olan her şeyin gerçek sahibi." },
+        { ar: "ٱلرَّحْمَٰنُ", tr: "Er-Rahmân", desc: "Dünyada tüm mahlukata merhamet eden." },
+        { ar: "ٱلرَّحِيمُ", tr: "Er-Rahîm", desc: "Ahirette sadece müminlere merhamet eden." },
+        { ar: "ٱلْمَلِكُ", tr: "El-Melik", desc: "Mülkün, kainatın sahibi ve mutlak hükümdarı." },
+        { ar: "ٱلْقُدُّوسُ", tr: "El-Kuddûs", desc: "Her türlü noksanlıktan uzak, münezzeh." },
+        { ar: "ٱلسَّلَامُ", tr: "Es-Selâm", desc: "Kullarına selamete çıkaran, güven veren." },
+        { ar: "ٱلْمُؤْمِنُ", tr: "El-Mü'min", desc: "Güven veren, koruyan, inanç veren." },
+        { ar: "ٱلْمُهَيْمِنُ", tr: "El-Müheymin", desc: "Gözeten, koruyan ve her şeyi denetleyen." },
+        { ar: "ٱلْعَزِيزُ", tr: "El-Azîz", desc: "İzzet sahibi, yegâne galip ve güçlü." },
+        { ar: "ٱلْجَبَّارُ", tr: "El-Cebbâr", desc: "Hükmüne karşı gelinemeyen, kırılanları onaran." },
+        { ar: "ٱلْمُتَكَبِّرُ", tr: "El-Mtekebbir", desc: "Büyüklükte eşi olmayan, her şeyde ululuğunu gösteren." },
+        { ar: "ٱلْخَالِقُ", tr: "El-Hâlık", desc: "Yaratan, yoktan var eden." },
+        { ar: "ٱلْبَارِئُ", tr: "El-Bâri'", desc: "Örnekleri olmaksızın kusursuz yaratan." },
+        { ar: "ٱلْمُصَوِّرُ", tr: "El-Musavvir", desc: "Varlıklara şekil ve suret veren." },
+        { ar: "ٱلْغَفَّارُ", tr: "El-Gaffâr", desc: "Günahları örten ve sürekli bağışlayan." },
+        { ar: "ٱلْقَهَّارُ", tr: "El-Kahhâr", desc: "Her şeye ve her konuya galip gelen, kahreden." },
+        { ar: "ٱلْوَهَّابُ", tr: "El-Vehhâb", desc: "Karşılıksız bol bol bağışlayan, ikram eden." },
+        { ar: "ٱلرَّزَّاقُ", tr: "Er-Rezzâk", desc: "Bütün mahlukatın rızkını veren." },
+        { ar: "ٱلْفَتَّاحُ", tr: "El-Fettâh", desc: "Her türlü sıkıntıları açan ve kolaylaştıran." },
+        { ar: "ٱلْعَلِيمُ", tr: "El-Alîm", desc: "Her şeyi en ince detayına kadar bilen." },
+        { ar: "ٱلْقَابِضُ", tr: "El-Kâbıd", desc: "Dilediğinin rızkını daraltan, ruhları alan." },
+        { ar: "ٱلْبَاسِطُ", tr: "El-Bâsıt", desc: "Dilediğinin rızkını genişleten, ferahlık veren." },
+        { ar: "ٱلْخَافِضُ", tr: "El-Hâfıd", desc: "Kafirleri ve zalimleri alçaltan." },
+        { ar: "ٱلرَّافِعُ", tr: "Er-Râfi'", desc: "Şeref veren, dereceleri yükselten." },
+        { ar: "ٱلْمُعِزُّ", tr: "El-Mu'izz", desc: "Dilediğini aziz eden, yücelten." },
+        { ar: "ٱلْمُذِلُّ", tr: "El-Müzill", desc: "Dilediğini zillete düşüren, alçaltan." },
+        { ar: "ٱلسَّمِيعُ", tr: "Es-Semî'", desc: "Her şeyi en iyi işiten." },
+        { ar: "ٱلْبَصِيرُ", tr: "El-Basîr", desc: "Her şeyi en ince ayrıntısına kadar gören." },
+        { ar: "ٱلْحَكَمُ", tr: "El-Hakem", desc: "Mutlak hüküm veren, hak ile batılı ayıran." },
+        { ar: "ٱلْعَدْلُ", tr: "El-Adl", desc: "Mutlak adalet sahibi, hak giden." },
+        { ar: "ٱللَّطِيفُ", tr: "El-Latîf", desc: "Lütuf sahibi, kullarının işlerinin inceliklerini bilen." },
+        { ar: "ٱلْخَبِيرُ", tr: "El-Habîr", desc: "Her şeyin iç yüzünden, gizlisinden haberdar olan." },
+        { ar: "ٱلْحَلِيمُ", tr: "El-Halîm", desc: "Cezada acele etmeyen, yumuşak davranan." },
+        { ar: "ٱلْعَظِيمُ", tr: "El-Azîm", desc: "Peygamberler ve akıllarca azameti kavranamayacak kadar ulu." },
+        { ar: "ٱلْغَفُورُ", tr: "El-Gafûr", desc: "Günahları tamamen örten ve bağışlayandır." }
+    ];
+
+    function randomEsma() {
+        const random = esmaList[Math.floor(Math.random() * esmaList.length)];
+        const banner = document.getElementById('esma-banner-link');
+        if (banner) {
+            banner.querySelector('.esma-arabic').innerText = random.ar;
+            banner.querySelector('.esma-name').innerText = random.tr;
+            banner.querySelector('.esma-desc').innerText = random.desc;
+        }
+    }
+
     const translations = {
         tr: {
             menu_prayer: "Namaz Vakitleri",
@@ -636,7 +660,6 @@
             grid_quran: "Kur'an-ı Kerim Oku",
             badge_new: "Yeni",
             esma_card_title: "🌙 Esmaül Hüsna",
-            esma_card_desc: "Günahları tamamen örten ve bağışlayandır.",
             esma_card_link: "Allah'ın 99 İsmini Gör ›",
             footer_slogan: "Huzur ve İbadet Rehberliğiniz",
             modal_loc_title: "Konum Seçin",
@@ -674,7 +697,6 @@
             grid_quran: "Read Quran",
             badge_new: "New",
             esma_card_title: "🌙 Asmaul Husna",
-            esma_card_desc: "The All-Forgiving, the Repeatedly Forgiving.",
             esma_card_link: "View 99 Names of Allah ›",
             footer_slogan: "Your Guide to Peace and Worship",
             modal_loc_title: "Select Location",
@@ -1244,7 +1266,6 @@
 
             if (prayers[0].time === '--:--') return;
 
-            // 1. ANA NAMAZ SAYACI MANTIĞI
             let targetPrayer = null;
             let targetDate = null;
 
@@ -1285,22 +1306,19 @@
 
             if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
 
-
-            // 2. KERAHAT VAKTİ HESAPLAMA MANTIĞI
             const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
             let gunesDate = new Date();
             gunesDate.setHours(gunesH, gunesM, 0, 0);
             
-            let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000); // 45 dk sonra biter
+            let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000);
 
             const [aksamH, aksamM] = prayers[4].time.split(':').map(Number);
             let aksamDate = new Date();
             aksamDate.setHours(aksamH, aksamM, 0, 0);
             
-            let aksamKerahatStart = new Date(aksamDate.getTime() - 45 * 60000); // Akşama 45 dk kala başlar
+            let aksamKerahatStart = new Date(aksamDate.getTime() - 45 * 60000);
 
             if (now >= gunesDate && now <= gunesKerahatEnd) {
-                // Güneş doğuş kerahat vakti içerisindeyiz
                 let kDiff = gunesKerahatEnd - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
@@ -1308,7 +1326,6 @@
                 if (kerahatTitleEl) kerahatTitleEl.innerText = "Kerahatin Çıkmasına";
                 if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
             } else if (now >= aksamKerahatStart && now <= aksamDate) {
-                // Akşam ezanından önceki kerahat vakti içerisindeyiz
                 let kDiff = aksamDate - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
@@ -1316,7 +1333,6 @@
                 if (kerahatTitleEl) kerahatTitleEl.innerText = "Akşam Kerahatinin Çıkmasına";
                 if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
             } else {
-                // Kerahat vakti değilse, bir sonraki kerahate kalan süreyi gösterelim
                 let nextKerahatTarget = null;
                 if (now < gunesDate) {
                     nextKerahatTarget = gunesDate;
@@ -1368,6 +1384,9 @@
         fetchPrayerTimes(savedCity);
         requestNotificationPermission();
         startCountdown();
+        
+        // Sayfa açıldığında rastgele Esma getirme fonksiyonu çağrılıyor
+        randomEsma();
     });
 </script>
 </body>
