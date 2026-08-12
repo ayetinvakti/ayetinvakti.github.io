@@ -61,7 +61,26 @@
         /* Sayaç Bölümü */
         .countdown-title { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 4px; }
         .countdown-timer { font-size: 2.5rem; font-weight: 700; text-align: center; color: var(--accent-color); margin-bottom: 16px; }
-        .times-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+        
+        /* Kerahat Detay Alanı (İstediğin Görsel Stil) */
+        .kerahat-box {
+            text-align: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .kerahat-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+        .kerahat-timer {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f59e0b; /* Dikkat çekici amber/turuncu ton */
+        }
+
+        .times-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 14px; }
         .time-box { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 2px; text-align: center; }
         .time-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.05); }
         .time-name { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 2px; }
@@ -473,9 +492,17 @@
         </div>
     </div>
 
+    <!-- SAYAÇ VE KERAHAT KARTI -->
     <div class="countdown-card">
         <div class="countdown-title" id="next-prayer-title">Vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
+        
+        <!-- EKLENEN KERAHAT DETAY ALANI -->
+        <div class="kerahat-box">
+            <div class="kerahat-title" id="kerahat-title-text">Kerahatin Çıkmasına</div>
+            <div class="kerahat-timer" id="kerahat-timer">--:--</div>
+        </div>
+
         <div class="times-grid" id="times-grid">
             <div class="time-box" data-name="İmsak">
                 <span class="time-name" data-i18n="time_imsak">İmsak</span>
@@ -658,7 +685,6 @@
         }
     };
 
-    // Hicri Aylar Çeviri Sözlüğü (API İngilizce döndüğü için Türkçeye çeviriyoruz)
     const hijriMonthsTr = {
         "Muharram": "Muharrem", "Safar": "Safer", "Rabi' al-awwal": "Rebiülevvel",
         "Rabi' al-thani": "Rebiülahir", "Jumada al-ula": "Cemaziyelevvel", "Jumada al-thani": "Cemaziyelahir",
@@ -666,14 +692,12 @@
         "Shawwal": "Şevval", "Dhu al-Qi'dah": "Zilkade", "Dhu al-Hijjah": "Zilhicce"
     };
 
-    // Miladi Aylar Çeviri Sözlüğü
     const gregorianMonthsTr = {
         "January": "Ocak", "February": "Şubat", "March": "Mart", "April": "Nisan",
         "May": "Mayıs", "June": "Haziran", "July": "Temmuz", "August": "Ağustos",
         "September": "Eylül", "October": "Ekim", "November": "Kasım", "December": "Aralık"
     };
 
-    // SORU HAVUZU
     const bigQuizPool = {
         tr: [
             { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
@@ -709,7 +733,6 @@
     let connectionRef = null;
     let lastFetchedData = null;
 
-    // --- ASİSTAN MODAL YÖNETİMİ ---
     function toggleAssistantModal() {
         const modal = document.getElementById('assistantModal');
         modal.classList.toggle('active');
@@ -1151,14 +1174,12 @@
         const greg = apiData.date.gregorian;
         const hijri = apiData.date.hijri;
 
-        // Miladi Tarih Güncellemesi (Invalid Date hatasını önlemek için manuel formatlama)
         let gMonthName = greg.month.en;
         if (currentLang === 'tr' && gregorianMonthsTr[gMonthName]) {
             gMonthName = gregorianMonthsTr[gMonthName];
         }
         document.getElementById('current-date-text').innerText = `${greg.day} ${gMonthName} ${greg.year}`;
 
-        // Hicri Tarih Güncellemesi
         let hijriMonthName = hijri.month.en;
         if (currentLang === 'tr' && hijriMonthsTr[hijriMonthName]) {
             hijriMonthName = hijriMonthsTr[hijriMonthName];
@@ -1206,6 +1227,9 @@
         const timerElement = document.getElementById('countdown-timer');
         const titleElement = document.getElementById('next-prayer-title');
         const timeBoxes = document.querySelectorAll('.times-grid .time-box');
+        
+        const kerahatTimerEl = document.getElementById('kerahat-timer');
+        const kerahatTitleEl = document.getElementById('kerahat-title-text');
 
         setInterval(() => {
             const now = new Date();
@@ -1220,6 +1244,7 @@
 
             if (prayers[0].time === '--:--') return;
 
+            // 1. ANA NAMAZ SAYACI MANTIĞI
             let targetPrayer = null;
             let targetDate = null;
 
@@ -1259,6 +1284,68 @@
             let s = (totalSeconds % 60).toString().padStart(2, '0');
 
             if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
+
+
+            // 2. KERAHAT VAKTİ HESAPLAMA MANTIĞI
+            // Örnek: Güneş kerahat süresi (Güneş vaktinden itibaren 45 dk) veya Akşam'a 45 dk kala
+            const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
+            let gunesDate = new Date();
+            gunesDate.setHours(gunesH, gunesM, 0, 0);
+            
+            let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000); // 45 dk sonra biter
+
+            const [aksamH, aksamM] = prayers[4].time.split(':').map(Number);
+            let aksamDate = new Date();
+            aksamDate.setHours(aksamH, aksamM, 0, 0);
+            
+            let aksamKerahatStart = new Date(aksamDate.getTime() - 45 * 60000); // Akşama 45 dk kala başlar
+
+            if (now >= gunesDate && now <= gunesKerahatEnd) {
+                // Güneş doğuş kerahat vakti içerisindeyiz
+                let kDiff = gunesKerahatEnd - now;
+                let kSec = Math.floor(kDiff / 1000);
+                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
+                let ks = (kSec % 60).toString().padStart(2, '0');
+                if (kerahatTitleEl) kerahatTitleEl.innerText = "Kerahatin Çıkmasına";
+                if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
+            } else if (now >= aksamKerahatStart && now <= aksamDate) {
+                // Akşam ezanından önceki kerahat vakti içerisindeyiz
+                let kDiff = aksamDate - now;
+                let kSec = Math.floor(kDiff / 1000);
+                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
+                let ks = (kSec % 60).toString().padStart(2, '0');
+                if (kerahatTitleEl) kerahatTitleEl.innerText = "Akşam Kerahatinin Çıkmasına";
+                if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
+            } else {
+                // Kerahat vakti değilse, bir sonraki kerahate kalan süreyi gösterelim (Güneş veya Akşam öncesi)
+                let nextKerahatTarget = null;
+                if (now < gunesDate) {
+                    nextKerahatTarget = gunesDate;
+                } else if (now < aksamKerahatStart) {
+                    nextKerahatTarget = aksamKerahatStart;
+                } else {
+                    // Yarınki güneş vaktine bak
+                    let tomorrowGunes = new Date(gunesDate);
+                    tomorrowGunes.setDate(tomorrowGunes.getDate() + 1);
+                    nextKerahatTarget = tomorrowGunes;
+                }
+
+                let kDiff = nextKerahatTarget - now;
+                let kSec = Math.floor(kDiff / 1000);
+                let kh = Math.floor(kSec / 3600);
+                let km = Math.floor((kSec % 3600) / 60);
+                let ks = kSec % 60;
+
+                if (kerahatTitleEl) kerahatTitleEl.innerText = "Gelecek Kerahate Kalan";
+                if (kerahatTimerEl) {
+                    if (kh > 0) {
+                        kerahatTimerEl.innerText = `${kh} sa. ${km} dk.`;
+                    } else {
+                        kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
+                    }
+                }
+            }
+
         }, 1000);
     }
 
