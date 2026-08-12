@@ -497,7 +497,7 @@
         <div class="countdown-title" id="next-prayer-title">Vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         
-        <!-- EKLENEN KERAHAT DETAY ALANI -->
+        <!-- KERAHAT DETAY ALANI -->
         <div class="kerahat-box">
             <div class="kerahat-title" id="kerahat-title-text">Kerahatin Çıkmasına</div>
             <div class="kerahat-timer" id="kerahat-timer">--:--</div>
@@ -1287,7 +1287,6 @@
 
 
             // 2. KERAHAT VAKTİ HESAPLAMA MANTIĞI
-            // Örnek: Güneş kerahat süresi (Güneş vaktinden itibaren 45 dk) veya Akşam'a 45 dk kala
             const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
             let gunesDate = new Date();
             gunesDate.setHours(gunesH, gunesM, 0, 0);
@@ -1317,14 +1316,13 @@
                 if (kerahatTitleEl) kerahatTitleEl.innerText = "Akşam Kerahatinin Çıkmasına";
                 if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
             } else {
-                // Kerahat vakti değilse, bir sonraki kerahate kalan süreyi gösterelim (Güneş veya Akşam öncesi)
+                // Kerahat vakti değilse, bir sonraki kerahate kalan süreyi gösterelim
                 let nextKerahatTarget = null;
                 if (now < gunesDate) {
                     nextKerahatTarget = gunesDate;
                 } else if (now < aksamKerahatStart) {
                     nextKerahatTarget = aksamKerahatStart;
                 } else {
-                    // Yarınki güneş vaktine bak
                     let tomorrowGunes = new Date(gunesDate);
                     tomorrowGunes.setDate(tomorrowGunes.getDate() + 1);
                     nextKerahatTarget = tomorrowGunes;
