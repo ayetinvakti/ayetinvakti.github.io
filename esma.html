@@ -22,7 +22,6 @@
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
-            --drawer-bg: #1e293b;
         }
 
         * {
@@ -52,46 +51,39 @@
             gap: 16px;
         }
 
-        /* Üst Bar */
+        /* Üst Bar / Navbar */
         .navbar {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
+            padding: 8px 0;
+            margin-bottom: 4px;
+        }
+
+        .nav-btn {
+            width: 42px;
+            height: 42px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.3rem;
-            cursor: pointer;
-            text-decoration: none;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .app-title {
+            color: var(--text-color);
             font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent-color);
+            cursor: pointer;
             text-decoration: none;
-            font-family: 'Georgia', serif;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
-        /* Başlık Alanı */
+        .nav-btn:hover {
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        /* Sayfa Başlığı */
         .page-header {
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             border-radius: 18px;
@@ -201,13 +193,10 @@
 <body>
 
 <div class="container">
-    <!-- Üst Bar -->
+    <!-- Üst Bar (Geri Tuşu ve Tema Butonu) -->
     <header class="navbar">
-        <div class="nav-left">
-            <a href="index.html" class="back-btn">‹</a>
-            <a href="index.html" class="app-title">Ayetin Vakti</a>
-        </div>
-        <div style="font-size: 1.2rem;">✨</div>
+        <a href="index.html" class="nav-btn" title="Geri Dön">←</a>
+        <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
     </header>
 
     <!-- Sayfa Başlığı -->
@@ -323,6 +312,31 @@
 <div class="footer">
     © Ayetin Vakti • <span>Huzur ve İbadet Rehberliğiniz</span>
 </div>
+
+<!-- Tema Değiştirme Scripti -->
+<script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    
+    // Sayfa yüklendiğinde ikonun durumunu ayarla
+    if (document.documentElement.classList.contains('light-mode')) {
+        themeToggleBtn.textContent = '☀️';
+    } else {
+        themeToggleBtn.textContent = '🌙';
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('light-mode');
+        const isLight = document.documentElement.classList.contains('light-mode');
+        
+        if (isLight) {
+            localStorage.setItem('theme', 'light');
+            themeToggleBtn.textContent = '☀️';
+        } else {
+            localStorage.setItem('theme', 'dark');
+            themeToggleBtn.textContent = '🌙';
+        }
+    });
+</script>
 
 </body>
 </html>
