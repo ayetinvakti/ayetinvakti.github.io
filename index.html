@@ -357,6 +357,8 @@
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><div class="drawer-icon-box">🧭</div><span data-i18n="menu_qibla">Kıble Pusulası</span></a>
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><div class="drawer-icon-box">📿</div><span data-i18n="menu_dhikr">Zikirmatik</span></a>
         <a href="https://ayetinvakti.github.io/kaza-namazi/" class="drawer-item"><div class="drawer-icon-box">⏳</div><span data-i18n="menu_kaza">Kaza Namazı</span></a>
+        <!-- Manevi Tarım & İbadet (5-5 Namaz Reposu) Sol Menüye Eklendi -->
+        <a href="https://ayetinvakti.github.io/manevi-tarim/" class="drawer-item"><div class="drawer-icon-box">🌱</div><span>Manevi Tarım & İbadet</span></a>
         <a href="https://ayetinvakti.github.io/zekat-hesaplama/" class="drawer-item"><div class="drawer-icon-box">💰</div><span data-i18n="menu_zekat">Zekat Hesaplama</span></a>
         <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><div class="drawer-icon-box">📖</div><span data-i18n="menu_quran">Kur'an-ı Kerim Oku</span></a>
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><div class="drawer-icon-box">✨</div><span data-i18n="menu_verse">Günün Ayeti</span></a>
@@ -541,7 +543,7 @@
         </a>
     </div>
 
-    <!-- ESMAÜL HÜSNA KARTI (Şık Yenileme Butonu Eklenmiş Hali) -->
+    <!-- ESMAÜL HÜSNA KARTI -->
     <div class="content-card">
         <div class="card-header-flex">
             <div class="card-section-title" data-i18n="esma_card_title">🌙 Esmaül Hüsna</div>
@@ -581,7 +583,6 @@
     }
     const rdb = firebase.database();
 
-    // Esmaül Hüsna Havuzu (Sayfa her açıldığında ve butona basıldığında buradan rastgele seçilir)
     const esmaList = [
         { ar: "ٱللَّهُ", tr: "Allah", desc: "Var olan her şeyin gerçek sahibi." },
         { ar: "ٱلرَّحْمَٰنُ", tr: "Er-Rahmân", desc: "Dünyada tüm mahlukata merhamet eden." },
@@ -1385,11 +1386,9 @@
         requestNotificationPermission();
         startCountdown();
         
-        // Sayfa açıldığında rastgele Esma getirme fonksiyonu çağrılıyor
         randomEsma();
     });
 </script>
-        <!-- Service Worker Kaydı (PWA Çevrimdışı Desteği) -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
