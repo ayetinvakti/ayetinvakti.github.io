@@ -476,7 +476,7 @@
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         
         <div class="kerahat-box">
-            <div class="kerahat-title" id="kerahat-title-text">Kerahatin Çıkmasına</div>
+            <div class="kerahat-title" id="kerahat-title-text">Gelecek Kerahate Kalan</div>
             <div class="kerahat-timer" id="kerahat-timer">--:--</div>
         </div>
 
@@ -594,7 +594,7 @@
         { ar: "ٱلْمُهَيْمِنُ", tr: "El-Müheymin", desc: "Gözeten, koruyan ve her şeyi denetleyen." },
         { ar: "ٱلْعَزِيزُ", tr: "El-Azîz", desc: "İzzet sahibi, yegâne galip ve güçlü." },
         { ar: "ٱلْجَبَّارُ", tr: "El-Cebbâr", desc: "Hükmüne karşı gelinemeyen, kırılanları onaran." },
-        { ar: "ٱلْمُتَكَبِّرُ", tr: "El-Mtekebbir", desc: "Büyüklükte eşi olmayan, her şeyde ululuğunu gösteren." },
+        { ar: "ٱلْمُتَكَبِّرُ", tr: "El-Mütekebbir", desc: "Büyüklükte eşi olmayan, her şeyde ululuğunu gösteren." },
         { ar: "ٱلْخَالِقُ", tr: "El-Hâlık", desc: "Yaratan, yoktan var eden." },
         { ar: "ٱلْبَارِئُ", tr: "El-Bâri'", desc: "Örnekleri olmaksızın kusursuz yaratan." },
         { ar: "ٱلْمُصَوِّرُ", tr: "El-Musavvir", desc: "Varlıklara şekil ve suret veren." },
@@ -1307,36 +1307,55 @@
 
             if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
 
+            /* YENİ KERAHAT HESAPLAMA SİSTEMİ */
+            // 1. Güneş (Sunrise) Kerahati (Doğduktan sonra 45 dk)
             const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
             let gunesDate = new Date();
             gunesDate.setHours(gunesH, gunesM, 0, 0);
-            
             let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000);
 
+            // 2. Öğle (Dhuhr/Zeval) Kerahati (Öğleye 45 dk kala)
+            const [ogleH, ogleM] = prayers[2].time.split(':').map(Number);
+            let ogleDate = new Date();
+            ogleDate.setHours(ogleH, ogleM, 0, 0);
+            let ogleKerahatStart = new Date(ogleDate.getTime() - 45 * 60000);
+
+            // 3. Akşam (Maghrib/Gurub) Kerahati (Akşama 45 dk kala)
             const [aksamH, aksamM] = prayers[4].time.split(':').map(Number);
             let aksamDate = new Date();
             aksamDate.setHours(aksamH, aksamM, 0, 0);
-            
             let aksamKerahatStart = new Date(aksamDate.getTime() - 45 * 60000);
 
+            let kTitle = "";
+            let kTimer = "";
+            let nextKerahatTarget = null;
+
             if (now >= gunesDate && now <= gunesKerahatEnd) {
+                kTitle = "Kerahatin Çıkmasına (Güneş)";
                 let kDiff = gunesKerahatEnd - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
                 let ks = (kSec % 60).toString().padStart(2, '0');
-                if (kerahatTitleEl) kerahatTitleEl.innerText = "Kerahatin Çıkmasına";
-                if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
+                kTimer = `${km} dk. ${ks} sn.`;
+            } else if (now >= ogleKerahatStart && now <= ogleDate) {
+                kTitle = "Kerahatin Çıkmasına (Öğle)";
+                let kDiff = ogleDate - now;
+                let kSec = Math.floor(kDiff / 1000);
+                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
+                let ks = (kSec % 60).toString().padStart(2, '0');
+                kTimer = `${km} dk. ${ks} sn.`;
             } else if (now >= aksamKerahatStart && now <= aksamDate) {
+                kTitle = "Kerahatin Çıkmasına (Akşam)";
                 let kDiff = aksamDate - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
                 let ks = (kSec % 60).toString().padStart(2, '0');
-                if (kerahatTitleEl) kerahatTitleEl.innerText = "Akşam Kerahatinin Çıkmasına";
-                if (kerahatTimerEl) kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
+                kTimer = `${km} dk. ${ks} sn.`;
             } else {
-                let nextKerahatTarget = null;
                 if (now < gunesDate) {
                     nextKerahatTarget = gunesDate;
+                } else if (now < ogleKerahatStart) {
+                    nextKerahatTarget = ogleKerahatStart;
                 } else if (now < aksamKerahatStart) {
                     nextKerahatTarget = aksamKerahatStart;
                 } else {
@@ -1345,21 +1364,22 @@
                     nextKerahatTarget = tomorrowGunes;
                 }
 
+                kTitle = "Gelecek Kerahate Kalan";
                 let kDiff = nextKerahatTarget - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let kh = Math.floor(kSec / 3600);
                 let km = Math.floor((kSec % 3600) / 60);
                 let ks = kSec % 60;
-
-                if (kerahatTitleEl) kerahatTitleEl.innerText = "Gelecek Kerahate Kalan";
-                if (kerahatTimerEl) {
-                    if (kh > 0) {
-                        kerahatTimerEl.innerText = `${kh} sa. ${km} dk.`;
-                    } else {
-                        kerahatTimerEl.innerText = `${km} dk. ${ks} sn.`;
-                    }
+                
+                if (kh > 0) {
+                    kTimer = `${kh} sa. ${km} dk.`;
+                } else {
+                    kTimer = `${km} dk. ${ks} sn.`;
                 }
             }
+
+            if (kerahatTitleEl) kerahatTitleEl.innerText = kTitle;
+            if (kerahatTimerEl) kerahatTimerEl.innerText = kTimer;
 
         }, 1000);
     }
