@@ -4,6 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti</title>
+    
+    <!-- Titremesiz Gelişmiş Tema, Renk Paleti ve Dil Entegrasyonu (Anti-Flicker Script) -->
+    <script>
+        (function() {
+            // Dil ve RTL ayarı
+            var userLang = localStorage.getItem('user_lang') || 'tr';
+            if (userLang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else if (userLang === 'en') {
+                document.documentElement.setAttribute('lang', 'en');
+            } else {
+                document.documentElement.setAttribute('lang', 'tr');
+            }
+
+            // Tema ayarı
+            var savedTheme = localStorage.getItem('theme');
+            var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
+            
+            if (isLight) {
+                document.documentElement.classList.add('light-mode');
+            }
+
+            // Özel Renk Paleti (custom_bg, custom_text, custom_accent)
+            var customBg = localStorage.getItem('custom_bg');
+            var customText = localStorage.getItem('custom_text');
+            var customAccent = localStorage.getItem('custom_accent');
+            
+            if (customBg) document.documentElement.style.setProperty('--bg-color', customBg);
+            if (customText) document.documentElement.style.setProperty('--text-main', customText);
+            if (customAccent) document.documentElement.style.setProperty('--accent-color', customAccent);
+        })();
+    </script>
+
     <!-- Firebase SDK'ları -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -203,6 +238,27 @@
         .assistant-option-btn { background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 14px; border-radius: 12px; text-align: left; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
         .assistant-option-btn:hover { background: rgba(16, 185, 129, 0.05); border-color: var(--accent-color); }
         .feedback-textarea { width: 100%; height: 100px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 0.9rem; margin: 10px 0; resize: none; }
+
+        /* --- RTL UYUMLULUK KODLARI (Arapça vs. için) --- */
+        html[dir="rtl"] { text-align: right; }
+        html[dir="rtl"] .nav-left { flex-direction: row-reverse; }
+        html[dir="rtl"] .drawer { left: auto; right: -300px; }
+        html[dir="rtl"] .drawer.active { left: auto; right: 0; }
+        html[dir="rtl"] .drawer-header, 
+        html[dir="rtl"] .card-header-flex, 
+        html[dir="rtl"] .navbar, 
+        html[dir="rtl"] .location-bar, 
+        html[dir="rtl"] .modal-header, 
+        html[dir="rtl"] .quiz-footer, 
+        html[dir="rtl"] .assistant-option-btn, 
+        html[dir="rtl"] .duel-scoreboard, 
+        html[dir="rtl"] .dueling-lobby > div { flex-direction: row-reverse; }
+        html[dir="rtl"] .drawer-item { flex-direction: row-reverse; text-align: right; }
+        html[dir="rtl"] .ai-float-btn { right: auto; left: 24px; }
+        html[dir="rtl"] .quiz-option-btn, 
+        html[dir="rtl"] .assistant-option-btn { text-align: right; }
+        html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
+        html[dir="rtl"] .location-city { direction: rtl; }
     </style>
 </head>
 <body>
@@ -357,7 +413,6 @@
         <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="drawer-item"><div class="drawer-icon-box">🧭</div><span data-i18n="menu_qibla">Kıble Pusulası</span></a>
         <a href="https://ayetinvakti.github.io/Zikirmatik/" class="drawer-item"><div class="drawer-icon-box">📿</div><span data-i18n="menu_dhikr">Zikirmatik</span></a>
         <a href="https://ayetinvakti.github.io/kaza-namazi/" class="drawer-item"><div class="drawer-icon-box">⏳</div><span data-i18n="menu_kaza">Kaza Namazı</span></a>
-        <!-- Manevi Tarım & İbadet (5-5 Namaz Reposu) Sol Menüye Eklendi -->
         <a href="https://ayetinvakti.github.io/5-5-namaz/" class="drawer-item"><div class="drawer-icon-box">🤲🏻</div><span>5-5 Namaz</span></a>
         <a href="https://ayetinvakti.github.io/zekat-hesaplama/" class="drawer-item"><div class="drawer-icon-box">💰</div><span data-i18n="menu_zekat">Zekat Hesaplama</span></a>
         <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><div class="drawer-icon-box">📖</div><span data-i18n="menu_quran">Kur'an-ı Kerim Oku</span></a>
@@ -523,7 +578,7 @@
             <div class="grid-title" data-i18n="grid_dhikr">Zikirmatik</div>
         </a>
         <a href="https://ayetinvakti.github.io/kaza-namazi/" class="menu-grid-card">
-            <span class="badge-yeni">Yeni</span>
+            <span class="badge-yeni" data-i18n="badge_new">Yeni</span>
             <div class="grid-icon-box">⏳</div>
             <div class="grid-title" data-i18n="grid_kaza">Kaza Namazı</div>
         </a>
@@ -705,6 +760,43 @@
             modal_loc_btn: "Apply Location",
             correct_answer: "✨ Correct Answer!",
             wrong_answer: "❌ Wrong Answer!"
+        },
+        ar: {
+            menu_prayer: "أوقات الصلاة",
+            menu_qibla: "بوصلة القبلة",
+            menu_dhikr: "مسبحة إلكترونية",
+            menu_kaza: "الصلوات الفائتة",
+            menu_zekat: "حساب الزكاة",
+            menu_quran: "قراءة القرآن الكريم",
+            menu_verse: "آية اليوم",
+            menu_esma: "أسماء الله الحسنى",
+            menu_days: "الأيام الدينية",
+            menu_youtube: "قناة يوتيوب",
+            menu_settings: "الإعدادات",
+            hijri_calendar_title: "التقويم الهجري",
+            quiz_title: "📝 اختبار الثقافة الإسلامية",
+            quiz_next: "السؤال التالي",
+            time_imsak: "الإمساك",
+            time_sunrise: "الشروق",
+            time_dhuhr: "الظهر",
+            time_asr: "العصر",
+            time_maghrib: "المغرب",
+            time_isha: "العشاء",
+            grid_qibla: "القبلة",
+            grid_prayer: "أوقات الصلاة",
+            grid_dhikr: "مسبحة",
+            grid_kaza: "قضاء",
+            grid_verse: "آية اليوم",
+            grid_quran: "قراءة القرآن",
+            badge_new: "جديد",
+            esma_card_title: "🌙 أسماء الله الحسنى",
+            esma_card_link: "عرض 99 اسماً ›",
+            footer_slogan: "دليلك للسلام والعبادة",
+            modal_loc_title: "اختر الموقع",
+            modal_loc_desc: "اختر المدينة لعرض أوقات الصلاة:",
+            modal_loc_btn: "تطبيق الموقع",
+            correct_answer: "✨ إجابة صحيحة!",
+            wrong_answer: "❌ إجابة خاطئة!"
         }
     };
 
@@ -732,17 +824,31 @@
             { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
             { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
             { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
-            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 },
-            { question: "11. Günde kaç vakit farz namaz kılınmaktadır?", options: ["3", "4", "5", "6"], answer: 2 },
-            { question: "12. Aşağıdakilerden hangisi amenerrasulü olarak bilinen ayetlerin yer aldığı suredir?", options: ["Bakara Suresi", "Fatiha Suresi", "Yasin Suresi", "Mulk Suresi"], answer: 0 },
-            { question: "13. Kur'an-ı Kerim'in kalbi olarak nitelendirilen sure hangisidir?", options: ["Mülk Suresi", "Yâsîn Suresi", "Fetih Suresi", "Nebe Suresi"], answer: 1 },
-            { question: "14. İslam'ın inanç esasları (imanın şartı) kaç tanedir?", options: ["4", "5", "6", "7"], answer: 2 },
-            { question: "15. İslam'ın şartları kaç tanedir?", options: ["4", "5", "6", "7"], answer: 1 },
-            { question: "16. İlk namaz ne zaman farz kılınmıştır?", options: ["Miraç Kandili'nde", "Kadir Gecesi'nde", "Hicret sırasında", "Bedir Savaşı'nde"], answer: 0 },
-            { question: "17. Peygamber Efendimizin (s.a.v.) annesinin adı nedir?", options: ["Âmine", "Hacer", "Hatice", "Fatıma"], answer: 0 },
-            { question: "18. Peygamber Efendimizin (s.a.v.) babasının adı nedir?", options: ["Ebu Talib", "Abdülmuttalip", "Abdullah", "Ebu Cehil"], answer: 2 },
-            { question: "19. Zemzem suyu hangi şehrimizdedir?", options: ["Kudüs", "Mekke", "Medine", "İstanbul"], answer: 1 },
-            { question: "20. Mescid-i Nebevi hangi şehirdedir?", options: ["Mekke", "Medine", "Kudüs", "Şam"], answer: 1 }
+            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 }
+        ],
+        en: [
+            { question: "1. Which of the following does not break wudu?", options: ["Vomiting a mouthful", "Fainting", "Crying", "Laughing aloud in prayer"], answer: 2 },
+            { question: "2. What is the longest surah in the Quran?", options: ["Surah Yasin", "Surah Al-Baqarah", "Surah Al Imran", "Surah Al-Ikhlas"], answer: 1 },
+            { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
+            { question: "4. In which month is Hajj performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharram", "Shawwal"], answer: 0 },
+            { question: "5. What is a 20-page section of the Quran called?", options: ["Surah", "Ayah", "Juz", "Meal"], answer: 2 },
+            { question: "6. Which prophet son helped Prophet Ibrahim build the Kaaba?", options: ["Prophet Ishaq", "Prophet Ismail", "Prophet Yaqub", "Prophet Yusuf"], answer: 1 },
+            { question: "7. Surah Al-Fil narrates the invasion of which city?", options: ["Mecca", "Medina", "Taif", "Damascus"], answer: 0 },
+            { question: "8. Who is the head of angels (angel of revelation)?", options: ["Azrael", "Israfil", "Mikael", "Jibreel"], answer: 3 },
+            { question: "9. What is the first word of the Shahada?", options: ["Ashhadu (I bear witness)", "La ilaha (There is no god)", "Muhammadan", "Rasuluhu"], answer: 0 },
+            { question: "10. What is the Islamic term for standing in prayer?", options: ["Ruku", "Sujood", "Qiyam", "Qa'dah"], answer: 2 }
+        ],
+        ar: [
+            { question: "1. أي مما يلي لا ينقض الوضوء؟", options: ["القيء ملء الفم", "الإغماء", "البكاء", "الضحك بصوت عال في الصلاة"], answer: 2 },
+            { question: "2. ما هي أطول سورة في القرآن الكريم؟", options: ["سورة يس", "سورة البقرة", "سورة آل عمران", "سورة الإخلاص"], answer: 1 },
+            { question: "3. في أي مدينة ولد النبي محمد (صلى الله عليه وسلم)؟", options: ["المدينة المنورة", "القدس", "الطائف", "مكة المكرمة"], answer: 3 },
+            { question: "4. في أي شهر يتم أداء فريضة الحج؟", options: ["ذو الحجة", "رمضان", "محرم", "شوال"], answer: 0 },
+            { question: "5. ماذا يسمى الجزء المكون من 20 صفحة في القرآن؟", options: ["سورة", "آية", "جزء", "معنى"], answer: 2 },
+            { question: "6. من هو ابن النبي الذي ساعد النبي إبراهيم في بناء الكعبة؟", options: ["النبي إسحاق", "النبي إسماعيل", "النبي يعقوب", "النبي يوسف"], answer: 1 },
+            { question: "7. سورة الفيل تروي غزو أي مدينة؟", options: ["مكة المكرمة", "المدينة المنورة", "الطائف", "دمشق"], answer: 0 },
+            { question: "8. من هو رئيس الملائكة (ملك الوحي)؟", options: ["عزرائيل", "إسرافيل", "ميكائيل", "جبريل"], answer: 3 },
+            { question: "9. ما هي الكلمة الأولى من الشهادة؟", options: ["أشهد", "لا إله", "محمداً", "رسوله"], answer: 0 },
+            { question: "10. ما هو المصطلح الإسلامي للوقوف في الصلاة؟", options: ["الركوع", "السجود", "القيام", "القعدة"], answer: 2 }
         ]
     };
 
@@ -801,12 +907,23 @@
         currentLang = lang;
         localStorage.setItem('user_lang', lang);
         
+        // RTL ve Lang Attribute Ayarları
+        if (lang === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+        }
+        
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (translations[lang] && translations[lang][key]) {
                 el.innerText = translations[lang][key];
             }
         });
+        
+        currentQuestionIndex = 0; // Dil değiştiğinde quizi başa sar
         loadSoloQuestion();
 
         if (lastFetchedData) {
@@ -836,7 +953,7 @@
         document.getElementById('solo-result-view').style.display = 'none';
         
         const currentData = qList[currentQuestionIndex];
-        document.getElementById('quiz-progress').innerText = `Soru ${currentQuestionIndex + 1} / ${qList.length}`;
+        document.getElementById('quiz-progress').innerText = currentLang === 'ar' ? `${qList.length} / ${currentQuestionIndex + 1} السؤال` : (currentLang === 'en' ? `Question ${currentQuestionIndex + 1} / ${qList.length}` : `Soru ${currentQuestionIndex + 1} / ${qList.length}`);
         document.getElementById('quiz-question-text').innerText = currentData.question;
         
         const container = document.getElementById('quiz-options-container');
@@ -886,19 +1003,22 @@
     function showSoloResultScreen() {
         document.getElementById('solo-question-view').style.display = 'none';
         document.getElementById('solo-result-view').style.display = 'block';
-        document.getElementById('quiz-progress').innerText = "Test Bitti";
+        document.getElementById('quiz-progress').innerText = currentLang === 'ar' ? "انتهى الاختبار" : (currentLang === 'en' ? "Quiz Finished" : "Test Bitti");
 
         const scoresText = document.getElementById('solo-final-scores-text');
         const announcement = document.getElementById('solo-announcement');
+        
+        let correctStr = currentLang === 'ar' ? "الإجابات الصحيحة" : (currentLang === 'en' ? "Correct Answers" : "Doğru Sayısı");
+        let wrongStr = currentLang === 'ar' ? "الإجابات الخاطئة" : (currentLang === 'en' ? "Wrong Answers" : "Yanlış Sayısı");
 
-        scoresText.innerHTML = `Doğru Sayısı: <b style="color: #10b981;">${soloCorrectCount}</b><br>Yanlış Sayısı: <b style="color: #ef4444;">${soloWrongCount}</b>`;
+        scoresText.innerHTML = `${correctStr}: <b style="color: #10b981;">${soloCorrectCount}</b><br>${wrongStr}: <b style="color: #ef4444;">${soloWrongCount}</b>`;
 
         if (soloCorrectCount >= 8) {
-            announcement.innerText = "🏆 Harika performans! İslam kültürü bilgin oldukça iyi.";
+            announcement.innerText = currentLang === 'ar' ? "🏆 أداء رائع!" : "🏆 Harika performans! İslam kültürü bilgin oldukça iyi.";
         } else if (soloCorrectCount >= 5) {
-            announcement.innerText = "👍 Fena değil, biraz daha pratikle mükemmel olabilirsin.";
+            announcement.innerText = currentLang === 'ar' ? "👍 ليس سيئاً، يمكن أن تكون أفضل." : "👍 Fena değil, biraz daha pratikle mükemmel olabilirsin.";
         } else {
-            announcement.innerText = "📖 Kendini geliştirmek için Ayetin Vakti içeriklerine göz atabilirsin.";
+            announcement.innerText = currentLang === 'ar' ? "📖 يمكنك تصفح المزيد من المحتوى لتحسين نفسك." : "📖 Kendini geliştirmek için Ayetin Vakti içeriklerine göz atabilirsin.";
         }
     }
 
@@ -1019,7 +1139,7 @@
                 }
             }
 
-            const qList = bigQuizPool['tr'];
+            const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
 
             if (targetQ >= qList.length) {
@@ -1075,7 +1195,7 @@
 
     function loadDuelQuestion(qIndex) {
         window.activeDuelQIndex = qIndex;
-        const qList = bigQuizPool['tr'];
+        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
         if (qIndex >= qList.length) return;
 
         const qData = qList[qIndex];
@@ -1296,7 +1416,7 @@
             });
 
             if (titleElement) {
-                titleElement.innerText = currentLang === 'en' ? `${targetPrayer.name} time remaining` : `${targetPrayer.name} vaktine kalan süre`;
+                titleElement.innerText = currentLang === 'ar' ? `الوقت المتبقي لـ ${targetPrayer.name}` : (currentLang === 'en' ? `${targetPrayer.name} time remaining` : `${targetPrayer.name} vaktine kalan süre`);
             }
 
             let diff = targetDate - now;
@@ -1308,19 +1428,16 @@
             if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
 
             /* YENİ KERAHAT HESAPLAMA SİSTEMİ */
-            // 1. Güneş (Sunrise) Kerahati (Doğduktan sonra 45 dk)
             const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
             let gunesDate = new Date();
             gunesDate.setHours(gunesH, gunesM, 0, 0);
             let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000);
 
-            // 2. Öğle (Dhuhr/Zeval) Kerahati (Öğleye 45 dk kala)
             const [ogleH, ogleM] = prayers[2].time.split(':').map(Number);
             let ogleDate = new Date();
             ogleDate.setHours(ogleH, ogleM, 0, 0);
             let ogleKerahatStart = new Date(ogleDate.getTime() - 45 * 60000);
 
-            // 3. Akşam (Maghrib/Gurub) Kerahati (Akşama 45 dk kala)
             const [aksamH, aksamM] = prayers[4].time.split(':').map(Number);
             let aksamDate = new Date();
             aksamDate.setHours(aksamH, aksamM, 0, 0);
@@ -1330,27 +1447,31 @@
             let kTimer = "";
             let nextKerahatTarget = null;
 
+            let langMin = currentLang === 'ar' ? 'د' : (currentLang === 'en' ? 'min.' : 'dk.');
+            let langSec = currentLang === 'ar' ? 'ث' : (currentLang === 'en' ? 'sec.' : 'sn.');
+            let langHour = currentLang === 'ar' ? 'س' : (currentLang === 'en' ? 'hr.' : 'sa.');
+
             if (now >= gunesDate && now <= gunesKerahatEnd) {
-                kTitle = "Kerahatin Çıkmasına (Güneş)";
+                kTitle = currentLang === 'ar' ? "الخروج من كراهة (الشمس)" : (currentLang === 'en' ? "Time until Makruh ends (Sunrise)" : "Kerahatin Çıkmasına (Güneş)");
                 let kDiff = gunesKerahatEnd - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
                 let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} dk. ${ks} sn.`;
+                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
             } else if (now >= ogleKerahatStart && now <= ogleDate) {
-                kTitle = "Kerahatin Çıkmasına (Öğle)";
+                kTitle = currentLang === 'ar' ? "الخروج من كراهة (الظهر)" : (currentLang === 'en' ? "Time until Makruh ends (Dhuhr)" : "Kerahatin Çıkmasına (Öğle)");
                 let kDiff = ogleDate - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
                 let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} dk. ${ks} sn.`;
+                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
             } else if (now >= aksamKerahatStart && now <= aksamDate) {
-                kTitle = "Kerahatin Çıkmasına (Akşam)";
+                kTitle = currentLang === 'ar' ? "الخروج من كراهة (المغرب)" : (currentLang === 'en' ? "Time until Makruh ends (Maghrib)" : "Kerahatin Çıkmasına (Akşam)");
                 let kDiff = aksamDate - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let km = Math.floor(kSec / 60).toString().padStart(2, '0');
                 let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} dk. ${ks} sn.`;
+                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
             } else {
                 if (now < gunesDate) {
                     nextKerahatTarget = gunesDate;
@@ -1364,7 +1485,7 @@
                     nextKerahatTarget = tomorrowGunes;
                 }
 
-                kTitle = "Gelecek Kerahate Kalan";
+                kTitle = currentLang === 'ar' ? "الوقت المتبقي للكراهة القادمة" : (currentLang === 'en' ? "Time until next Makruh" : "Gelecek Kerahate Kalan");
                 let kDiff = nextKerahatTarget - now;
                 let kSec = Math.floor(kDiff / 1000);
                 let kh = Math.floor(kSec / 3600);
@@ -1372,9 +1493,9 @@
                 let ks = kSec % 60;
                 
                 if (kh > 0) {
-                    kTimer = `${kh} sa. ${km} dk.`;
+                    kTimer = `${kh} ${langHour} ${km} ${langMin}`;
                 } else {
-                    kTimer = `${km} dk. ${ks} sn.`;
+                    kTimer = `${km} ${langMin} ${ks} ${langSec}`;
                 }
             }
 
