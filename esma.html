@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Esmaül Hüsna | Ayetin Vakti</title>
     
-    <!-- Titremesiz Gelişmiş Tema, Renk Hafızası ve Dil Entegrasyonu -->
+    <!-- Titremesiz Gelişmiş Tema, Renk Hafızası ve Genel Dil Entegrasyonu -->
     <script>
-        // 1. Dil Ayarını Yükle (RTL ve Font ayarları için titremeyi önler)
-        const savedLang = localStorage.getItem('lang') || 'tr';
+        // 1. Genel Ayarlardaki Dil Tercihini Yükle (user_lang ile tam senkronize)
+        const savedLang = localStorage.getItem('user_lang') || 'tr';
         document.documentElement.lang = savedLang;
         if (savedLang === 'ar') {
             document.documentElement.dir = 'rtl';
@@ -21,9 +21,9 @@
             document.documentElement.classList.add('light-mode');
         }
 
-        // 3. Özel Renk Paletini Yükle (Eğer başka bir sayfada ayarlandıysa)
+        // 3. Özel Renk Paletini Yükle
         const customBg = localStorage.getItem('custom_bg');
-        const customCard = localStorage.getItem('custom_card'); // Opsiyonel
+        const customCard = localStorage.getItem('custom_card');
         const customText = localStorage.getItem('custom_text');
         const customAccent = localStorage.getItem('custom_accent');
 
@@ -233,7 +233,7 @@
     <header class="navbar">
         <a href="index.html" class="nav-btn" id="back-btn" title="Geri Dön">←</a>
         <div class="nav-controls">
-            <button id="lang-toggle" class="nav-btn" title="Dili Değiştir">🇹🇷</button>
+            <!-- Bağımsız dil butonu kaldırıldı, tamamen Ayarlar sayfasındaki seçime bağlandı -->
             <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
         </div>
     </header>
@@ -243,7 +243,6 @@
         <p id="page-desc">Allah'ın en güzel 99 ismi ve anlamları</p>
     </div>
 
-    <!-- Performans ve yapı için HTML Esma listesi korundu. İleride dil sözlüğüne eklenebilir. -->
     <div class="esma-grid" id="esma-list">
         <div class="esma-card"><div class="esma-left"><div class="esma-number">1</div><div class="esma-info"><h3>Er-Rahmân</h3><p data-tr="Dünyada bütün mahlukata merhamet eden.">Dünyada bütün mahlukata merhamet eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحْمَٰنُ</div></div>
         <div class="esma-card"><div class="esma-left"><div class="esma-number">2</div><div class="esma-info"><h3>Er-Rahîm</h3><p data-tr="Ahirette sadece müminlere ikram eden.">Ahirette sadece müminlere ikram eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحِيمُ</div></div>
@@ -255,7 +254,6 @@
         <div class="esma-card"><div class="esma-left"><div class="esma-number">8</div><div class="esma-info"><h3>El-Azîz</h3><p data-tr="İzzet sahibi, yegane üstün, mağlup edilemeyen.">İzzet sahibi, yegane üstün, mağlup edilemeyen.</p></div></div><div class="esma-arabic-text">ٱلْعَزِيزُ</div></div>
         <div class="esma-card"><div class="esma-left"><div class="esma-number">9</div><div class="esma-info"><h3>El-Cebbâr</h3><p data-tr="Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.">Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.</p></div></div><div class="esma-arabic-text">ٱلْجَبَّارُ</div></div>
         <div class="esma-card"><div class="esma-left"><div class="esma-number">10</div><div class="esma-info"><h3>El-Mütekebbir</h3><p data-tr="Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.">Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.</p></div></div><div class="esma-arabic-text">ٱلْمُتَكَبِّرُ</div></div>
-        <!-- Liste uzamaması adına ilk 10 HTML olarak eklendi, geri kalanı önceki HTML'den yapıştırabilirsiniz -->
     </div>
 </div>
 
@@ -263,7 +261,6 @@
     © Ayetin Vakti • <span id="footer-span">Huzur ve İbadet Rehberliğiniz</span>
 </div>
 
-<!-- Mantık ve Sistem İşleyişi -->
 <script>
     // --- TEMA YÖNETİMİ ---
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -284,9 +281,7 @@
         updateThemeIcon();
     });
 
-    // --- ÇOKLU DİL YÖNETİMİ (TR, EN, AR) ---
-    const langToggleBtn = document.getElementById('lang-toggle');
-    
+    // --- GENEL DİL YÖNETİMİ (Ayarlar Sayfası Entegreli) ---
     const uiTranslations = {
         tr: {
             docTitle: "Esmaül Hüsna | Ayetin Vakti",
@@ -294,7 +289,6 @@
             pageDesc: "Allah'ın en güzel 99 ismi ve anlamları",
             footerText: "© Ayetin Vakti • ",
             footerSpan: "Huzur ve İbadet Rehberliğiniz",
-            flag: "🇹🇷",
             dir: "ltr"
         },
         en: {
@@ -303,7 +297,6 @@
             pageDesc: "The 99 most beautiful names of Allah and their meanings",
             footerText: "© Time of Ayah • ",
             footerSpan: "Your Guide to Peace and Worship",
-            flag: "🇬🇧",
             dir: "ltr"
         },
         ar: {
@@ -312,46 +305,33 @@
             pageDesc: "أجمل 99 اسماً لله ومعانيها",
             footerText: "© وقت الآية • ",
             footerSpan: "دليلك للسلام والعبادة",
-            flag: "🇸🇦",
             dir: "rtl"
         }
     };
 
-    let currentLang = localStorage.getItem('lang') || 'tr';
+    // Ayarlar sayfasında kaydedilen 'user_lang' değerini okuyoruz
+    const currentLang = localStorage.getItem('user_lang') || 'tr';
 
-    function applyLanguage(lang) {
-        const t = uiTranslations[lang];
+    function applyGlobalLanguage(lang) {
+        const t = uiTranslations[lang] || uiTranslations.tr;
         
-        // Temel Ayarlar
+        // Temel Ayarlar ve Yön (RTL/LTR)
         document.documentElement.lang = lang;
         document.documentElement.dir = t.dir;
         document.title = t.docTitle;
-        langToggleBtn.textContent = t.flag;
 
-        // UI Metinleri
+        // UI Metinlerini Değiştir
         document.getElementById('page-title').textContent = t.pageTitle;
         document.getElementById('page-desc').textContent = t.pageDesc;
         
         const footer = document.getElementById('footer-text');
-        footer.innerHTML = t.footerText + `<span id="footer-span">${t.footerSpan}</span>`;
-
-        // Not: Eğer 99 ismin tamamını da dinamik çevirmek isterseniz,
-        // p etiketlerindeki data-tr, data-en, data-ar nitelikleri okunarak burada güncellenebilir.
-        // Şimdilik HTML boyutunu korumak adına UI ve RTL motoru kuruldu.
+        if (footer) {
+            footer.innerHTML = t.footerText + `<span id="footer-span">${t.footerSpan}</span>`;
+        }
     }
 
-    langToggleBtn.addEventListener('click', () => {
-        // TR -> EN -> AR döngüsü
-        if (currentLang === 'tr') currentLang = 'en';
-        else if (currentLang === 'en') currentLang = 'ar';
-        else currentLang = 'tr';
-        
-        localStorage.setItem('lang', currentLang);
-        applyLanguage(currentLang);
-    });
-
-    // İlk yüklemede dili uygula
-    applyLanguage(currentLang);
+    // Sayfa açılır açılmaz genel ayardaki dili uygula
+    applyGlobalLanguage(currentLang);
 </script>
 
 </body>
