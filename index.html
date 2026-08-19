@@ -259,69 +259,110 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
-        /* --- Modern Kabe İnşa Widget Stilleri --- */
+            /* --- Modern Kabe İnşa Widget Stilleri & Animasyonlar --- */
     .kabe-insa-widget {
-        background: var(--card-bg, #1e2230);
-        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
         border-radius: 24px;
         padding: 20px;
         margin: 16px 0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        color: var(--text-color, #ffffff);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
     }
+    
+    /* Koyu tema uyumu için (Eğer body'de dark sınıfı varsa) */
+    body.dark .kabe-insa-widget, 
+    [data-theme="dark"] .kabe-insa-widget {
+        background: #1e2230;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
     .kabe-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
     }
     .kabe-title-area {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
     .kabe-icon-badge {
-        font-size: 20px;
-        background: rgba(197, 160, 89, 0.15);
-        padding: 8px;
-        border-radius: 12px;
+        font-size: 22px;
+        background: rgba(197, 160, 89, 0.12);
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
     }
-    .kabe-title-text {
-        font-size: 16px;
+    .kabe-title-texts {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .kabe-main-title {
+        font-size: 15px;
         font-weight: 700;
-        color: var(--text-color, #ffffff);
+        color: #1f2937;
+    }
+    body.dark .kabe-main-title, [data-theme="dark"] .kabe-main-title {
+        color: #ffffff;
+    }
+    .kabe-subtitle {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+    }
+    body.dark .kabe-subtitle, [data-theme="dark"] .kabe-subtitle {
+        color: #94a3b8;
+    }
+    .kabe-badge-pill {
+        background: rgba(197, 160, 89, 0.1);
+        padding: 6px 12px;
+        border-radius: 20px;
     }
     .progress-percent {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 800;
         color: #c5a059;
     }
-    .kabe-info-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: var(--text-muted, #94a3b8);
-        margin-bottom: 8px;
-    }
     .progress-bar-container {
         height: 10px;
-        background: var(--progress-bg, rgba(0, 0, 0, 0.08));
+        background: #f3f4f6;
         border-radius: 6px;
         overflow: hidden;
         margin-bottom: 16px;
+        position: relative;
+    }
+    body.dark .progress-bar-container, [data-theme="dark"] .progress-bar-container {
+        background: rgba(255, 255, 255, 0.08);
     }
     .progress-bar-fill {
         height: 100%;
         background: linear-gradient(90deg, #c5a059, #e6ca86);
         border-radius: 6px;
+        position: relative;
+        animation: pulseGlow 2s infinite ease-in-out;
     }
+    
+    /* İlerleme çubuğu için modern parıltı animasyonu */
+    @keyframes pulseGlow {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; filter: brightness(1.15); }
+        100% { opacity: 0.8; }
+    }
+
     .insa-button {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
+        justify-content: space-between;
         width: 100%;
-        padding: 14px;
+        padding: 14px 18px;
         background: #c5a059;
         color: #ffffff;
         border-radius: 14px;
@@ -329,11 +370,20 @@
         font-weight: 700;
         font-size: 15px;
         box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
-        transition: transform 0.2s ease;
+        transition: all 0.2s ease;
     }
     .insa-button:active {
         transform: scale(0.98);
     }
+    .button-arrow-icon {
+        font-size: 16px;
+        font-weight: bold;
+        transition: transform 0.2s;
+    }
+    .insa-button:hover .button-arrow-icon {
+        transform: translateX(4px);
+    }
+
 
 
     </style>
@@ -644,26 +694,28 @@
 <div class="kabe-insa-widget">
     <div class="kabe-header">
         <div class="kabe-title-area">
-            <span class="kabe-icon-badge">🕌</span>
-            <span class="kabe-title-text" data-i18n="kabe_title">Manevi Kâbe İnşa</span>
+            <span class="kabe-icon-badge">🤲🏻</span>
+            <div class="kabe-title-texts">
+                <span class="kabe-main-title" data-i18n="kabe_title">Manevi Kâbe İnşa</span>
+                <span class="kabe-subtitle">5-5 Namaz ile Kâbeni Yükselt</span>
+            </div>
         </div>
-        <span class="progress-percent">%65</span>
+        <div class="kabe-badge-pill">
+            <span class="progress-percent">%65</span>
+        </div>
     </div>
     
-    <div class="kabe-info-row">
-        <span class="kabe-subtitle">5-5 Namaz ile Kâbeni Yükselt</span>
-        <span class="kabe-status-text">İlerleme Durumu</span>
-    </div>
-
     <div class="progress-bar-container">
         <div class="progress-bar-fill" style="width: 65%;"></div>
     </div>
     
     <a href="https://ayetinvakti.github.io/5-5-namaz/" class="insa-button">
         <span>İnşaya Katıl</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <div class="button-arrow-icon">→</div>
     </a>
 </div>
+
+
 
 
 
