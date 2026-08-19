@@ -259,102 +259,6 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
-                /* --- Diğer Kartlarla Birebir Uyumlu Kabe İnşa Kartı --- */
-    .kabe-insa-widget {
-        background: var(--card-bg, #161b26); /* Diğer kartların koyu arka plan tonu */
-        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-        border-radius: 20px;
-        padding: 20px;
-        margin: 16px 0;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        position: relative;
-    }
-
-    .kabe-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 14px;
-    }
-    .kabe-title-area {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .kabe-icon-badge {
-        font-size: 20px;
-        background: rgba(197, 160, 89, 0.15);
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-    }
-    .kabe-title-texts {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-    .kabe-main-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #ffffff; /* Koyu temada net beyaz */
-    }
-    .kabe-subtitle {
-        font-size: 11px;
-        font-weight: 400;
-        color: #94a3b8; /* Diğer kartlardaki gri açıklama tonu */
-    }
-    .kabe-badge-pill {
-        background: rgba(197, 160, 89, 0.12);
-        padding: 5px 10px;
-        border-radius: 12px;
-    }
-    .progress-percent {
-        font-size: 13px;
-        font-weight: 700;
-        color: #c5a059;
-    }
-    .progress-bar-container {
-        height: 8px;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 4px;
-        overflow: hidden;
-        margin-bottom: 16px;
-    }
-    .progress-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #c5a059, #e6ca86);
-        border-radius: 4px;
-        transition: width 1s ease-in-out; /* Dolarken akıcı animasyon */
-    }
-    .insa-button {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 13px 16px;
-        background: #c5a059;
-        color: #ffffff;
-        border-radius: 14px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 14px;
-        box-shadow: 0 4px 12px rgba(197, 160, 89, 0.25);
-        transition: transform 0.2s ease;
-    }
-    .insa-button:active {
-        transform: scale(0.98);
-    }
-    .button-arrow-icon {
-        font-size: 15px;
-        font-weight: bold;
-    }
-
-
-
-
     </style>
 </head>
 <body>
@@ -658,31 +562,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Diğer Kartlarla Birebir Uyumlu Manevi Kâbe İnşa Widget'ı -->
-<div class="kabe-insa-widget">
-    <div class="kabe-header">
-        <div class="kabe-title-area">
-            <span class="kabe-icon-badge">🤲🏻</span>
-            <div class="kabe-title-texts">
-                <span class="kabe-main-title" data-i18n="kabe_title">Manevi Kâbe İnşa</span>
-                <span class="kabe-subtitle">5-5 Namaz ile Kâbeni Yükselt</span>
-            </div>
-        </div>
-        <div class="kabe-badge-pill">
-            <span class="progress-percent" id="kabeProgressText">%0</span>
-        </div>
-    </div>
-    
-    <div class="progress-bar-container">
-        <div class="progress-bar-fill" id="kabeProgressBar" style="width: 0%;"></div>
-    </div>
-    
-    <a href="https://ayetinvakti.github.io/5-5-namaz/" class="insa-button">
-        <span>İnşaya Katıl</span>
-        <div class="button-arrow-icon">→</div>
-    </a>
-</div>
 
 <!-- Dinamik İlerleme Hesaplama Scripti -->
 <script>
