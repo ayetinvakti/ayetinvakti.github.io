@@ -259,6 +259,39 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
+    .kabe-insa-widget {
+    background: rgba(255, 255, 255, 0.05); /* Cam efekti için şeffaflık */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 15px 0;
+    text-align: center;
+    color: white;
+}
+
+.kabe-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+
+.progress-bar-container {
+    height: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-bar-fill { height: 100%; background: #c5a059; } /* Altın rengi tonu */
+
+.insa-button {
+    display: block;
+    padding: 12px;
+    background: #c5a059;
+    color: #fff;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
     </style>
 </head>
 <body>
@@ -563,40 +596,25 @@
         </div>
     </div>
 
-    <div class="menu-grid">
-        <a href="https://ayetinvakti.github.io/kible-pusulasi/" class="menu-grid-card">
-            <div class="grid-icon-box">🧭</div>
-            <div class="grid-title" data-i18n="grid_qibla">Kıble Bul</div>
-        </a>
-        <a href="https://ayetinvakti.github.io/Namaz-vakitleri/" class="menu-grid-card">
-            <div class="grid-icon-box">🕌</div>
-            <div class="grid-title" data-i18n="grid_prayer">Namaz Vakti</div>
-        </a>
-        <a href="https://ayetinvakti.github.io/Zikirmatik/" class="menu-grid-card">
-            <span class="badge-yeni" data-i18n="badge_new">Yeni</span>
-            <div class="grid-icon-box">📿</div>
-            <div class="grid-title" data-i18n="grid_dhikr">Zikirmatik</div>
-        </a>
-        <a href="https://ayetinvakti.github.io/kaza-namazi/" class="menu-grid-card">
-            <span class="badge-yeni" data-i18n="badge_new">Yeni</span>
-            <div class="grid-icon-box">⏳</div>
-            <div class="grid-title" data-i18n="grid_kaza">Kaza Namazı</div>
-        </a>
-        <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="menu-grid-card">
-            <div class="grid-icon-box">✨</div>
-            <div class="grid-title" data-i18n="grid_verse">Günün Ayeti</div>
-        </a>
-        <a href="https://www.youtube.com/@AyetinVakti" target="_blank" class="menu-grid-card">
-            <div class="grid-icon-box" style="background: rgba(255, 0, 0, 0.1);">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </div>
-            <div class="grid-title">YouTube</div>
-        </a>
-        <a href="https://ayetinvakti.github.io/kuran-oku/" class="menu-grid-card">
-            <div class="grid-icon-box">📖</div>
-            <div class="grid-title" data-i18n="grid_quran">Kur'an-ı Kerim Oku</div>
-        </a>
+    <!-- Yeni Modern Kabe İnşa Widget'ı -->
+<div class="kabe-insa-widget">
+    <div class="kabe-header">
+        <h3 data-i18n="kabe_title">Manevi Kâbe İnşa</h3>
+        <span class="progress-percent">65% Tamamlandı</span>
     </div>
+    
+    <div class="kabe-visual-box">
+        <!-- Buraya Kabe'nin canlı önizlemesini veya görselini koyacağız -->
+        <div class="visual-placeholder">🕌</div>
+    </div>
+    
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 65%;"></div>
+    </div>
+    
+    <a href="#" class="insa-button">İnşaya Katıl</a>
+</div>
+
 
     <!-- ESMAÜL HÜSNA KARTI -->
     <div class="content-card">
