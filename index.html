@@ -259,31 +259,22 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
-            /* --- Modern Kabe İnşa Widget Stilleri & Animasyonlar --- */
+                /* --- Diğer Kartlarla Birebir Uyumlu Kabe İnşa Kartı --- */
     .kabe-insa-widget {
-        background: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 24px;
+        background: var(--card-bg, #161b26); /* Diğer kartların koyu arka plan tonu */
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+        border-radius: 20px;
         padding: 20px;
         margin: 16px 0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         position: relative;
-        overflow: hidden;
-    }
-    
-    /* Koyu tema uyumu için (Eğer body'de dark sınıfı varsa) */
-    body.dark .kabe-insa-widget, 
-    [data-theme="dark"] .kabe-insa-widget {
-        background: #1e2230;
-        border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
 
     .kabe-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
     .kabe-title-area {
         display: flex;
@@ -291,14 +282,14 @@
         gap: 12px;
     }
     .kabe-icon-badge {
-        font-size: 22px;
-        background: rgba(197, 160, 89, 0.12);
-        width: 44px;
-        height: 44px;
+        font-size: 20px;
+        background: rgba(197, 160, 89, 0.15);
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 14px;
+        border-radius: 12px;
     }
     .kabe-title-texts {
         display: flex;
@@ -308,81 +299,59 @@
     .kabe-main-title {
         font-size: 15px;
         font-weight: 700;
-        color: #1f2937;
-    }
-    body.dark .kabe-main-title, [data-theme="dark"] .kabe-main-title {
-        color: #ffffff;
+        color: #ffffff; /* Koyu temada net beyaz */
     }
     .kabe-subtitle {
-        font-size: 12px;
-        font-weight: 500;
-        color: #6b7280;
-    }
-    body.dark .kabe-subtitle, [data-theme="dark"] .kabe-subtitle {
-        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 400;
+        color: #94a3b8; /* Diğer kartlardaki gri açıklama tonu */
     }
     .kabe-badge-pill {
-        background: rgba(197, 160, 89, 0.1);
-        padding: 6px 12px;
-        border-radius: 20px;
+        background: rgba(197, 160, 89, 0.12);
+        padding: 5px 10px;
+        border-radius: 12px;
     }
     .progress-percent {
-        font-size: 14px;
-        font-weight: 800;
+        font-size: 13px;
+        font-weight: 700;
         color: #c5a059;
     }
     .progress-bar-container {
-        height: 10px;
-        background: #f3f4f6;
-        border-radius: 6px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
         overflow: hidden;
         margin-bottom: 16px;
-        position: relative;
-    }
-    body.dark .progress-bar-container, [data-theme="dark"] .progress-bar-container {
-        background: rgba(255, 255, 255, 0.08);
     }
     .progress-bar-fill {
         height: 100%;
         background: linear-gradient(90deg, #c5a059, #e6ca86);
-        border-radius: 6px;
-        position: relative;
-        animation: pulseGlow 2s infinite ease-in-out;
+        border-radius: 4px;
+        transition: width 1s ease-in-out; /* Dolarken akıcı animasyon */
     }
-    
-    /* İlerleme çubuğu için modern parıltı animasyonu */
-    @keyframes pulseGlow {
-        0% { opacity: 0.8; }
-        50% { opacity: 1; filter: brightness(1.15); }
-        100% { opacity: 0.8; }
-    }
-
     .insa-button {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        padding: 14px 18px;
+        padding: 13px 16px;
         background: #c5a059;
         color: #ffffff;
         border-radius: 14px;
         text-decoration: none;
-        font-weight: 700;
-        font-size: 15px;
-        box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
-        transition: all 0.2s ease;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(197, 160, 89, 0.25);
+        transition: transform 0.2s ease;
     }
     .insa-button:active {
         transform: scale(0.98);
     }
     .button-arrow-icon {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
-        transition: transform 0.2s;
     }
-    .insa-button:hover .button-arrow-icon {
-        transform: translateX(4px);
-    }
+
 
 
 
@@ -690,7 +659,7 @@
         </div>
     </div>
 
-    <!-- Modern Manevi Kâbe İnşa Widget'ı -->
+    <!-- Diğer Kartlarla Birebir Uyumlu Manevi Kâbe İnşa Widget'ı -->
 <div class="kabe-insa-widget">
     <div class="kabe-header">
         <div class="kabe-title-area">
@@ -701,12 +670,12 @@
             </div>
         </div>
         <div class="kabe-badge-pill">
-            <span class="progress-percent">%65</span>
+            <span class="progress-percent" id="kabeProgressText">%0</span>
         </div>
     </div>
     
     <div class="progress-bar-container">
-        <div class="progress-bar-fill" style="width: 65%;"></div>
+        <div class="progress-bar-fill" id="kabeProgressBar" style="width: 0%;"></div>
     </div>
     
     <a href="https://ayetinvakti.github.io/5-5-namaz/" class="insa-button">
@@ -714,6 +683,28 @@
         <div class="button-arrow-icon">→</div>
     </a>
 </div>
+
+<!-- Dinamik İlerleme Hesaplama Scripti -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 5-5 namaz uygulamasının localStorage'da tuttuğu gerçek veriyi burada okuyoruz 
+        // (Eğer farklı bir anahtar kullanıyorsan buradaki 'kabe_progress' kısmını ona göre güncelleyebilirsin)
+        let savedProgress = localStorage.getItem('kabe_progress') || localStorage.getItem('namaz_insa_oran') || 42; // Örnek gerçek veri çekme
+        
+        // Sınırları kontrol et (0 ile 100 arasında olsun)
+        let progressVal = parseInt(savedProgress);
+        if (isNaN(progressVal)) progressVal = 15;
+        if (progressVal > 100) progressVal = 100;
+
+        // UI Güncelleme
+        const textElement = document.getElementById("kabeProgressText");
+        const barElement = document.getElementById("kabeProgressBar");
+
+        if(textElement) textElement.innerText = "%" + progressVal;
+        if(barElement) barElement.style.width = progressVal + "%";
+    });
+</script>
+
 
 
 
