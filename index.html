@@ -259,6 +259,93 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
+        /* --- Günün Hikmetleri Slider CSS --- */
+    .quotes-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        margin-bottom: 12px;
+    }
+    .quotes-slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 15px;
+        padding: 5px 20px 20px 20px; /* Gölgelerin kesilmemesi için alt padding */
+        
+        /* Scrollbar'ı gizleme (Modern görünüm için) */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .quotes-slider::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .quote-card {
+        flex: 0 0 82%; /* Ekranda bir kart tam görünürken, diğerinin ucu gözükecek */
+        min-height: 180px;
+        border-radius: 20px;
+        padding: 25px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        scroll-snap-align: center;
+        position: relative;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        color: #ffffff;
+        overflow: hidden;
+    }
+
+    /* Arka plan renk geçişleri (Premium ambiyans) */
+    .card-emerald { background: linear-gradient(135deg, #134e5e 0%, #71b280 100%); }
+    .card-navy    { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+    .card-desert  { background: linear-gradient(135deg, #936d55 0%, #c19b77 100%); }
+    .card-crimson { background: linear-gradient(135deg, #591b1b 0%, #9a3232 100%); }
+
+    /* Kartın üstüne hafif siyah bir karartma (Yazı okunsun diye) */
+    .quote-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.15);
+        border-radius: 20px;
+    }
+
+    .quote-icon {
+        font-size: 40px;
+        line-height: 1;
+        opacity: 0.3;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-family: serif;
+    }
+
+    .quote-text {
+        position: relative;
+        font-size: 1.05rem;
+        font-weight: 500;
+        line-height: 1.5;
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .quote-author {
+        position: relative;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-align: right;
+        opacity: 0.9;
+    }
+    .quote-author span {
+        font-size: 0.7rem;
+        font-weight: 400;
+        opacity: 0.8;
+    }
+
     </style>
 </head>
 <body>
@@ -563,25 +650,38 @@
         </div>
     </div>
 
-<!-- Dinamik İlerleme Hesaplama Scripti -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 5-5 namaz uygulamasının localStorage'da tuttuğu gerçek veriyi burada okuyoruz 
-        // (Eğer farklı bir anahtar kullanıyorsan buradaki 'kabe_progress' kısmını ona göre güncelleyebilirsin)
-        let savedProgress = localStorage.getItem('kabe_progress') || localStorage.getItem('namaz_insa_oran') || 42; // Örnek gerçek veri çekme
-        
-        // Sınırları kontrol et (0 ile 100 arasında olsun)
-        let progressVal = parseInt(savedProgress);
-        if (isNaN(progressVal)) progressVal = 15;
-        if (progressVal > 100) progressVal = 100;
+<div class="countdown-card" style="padding: 15px 0;"> <div class="quotes-header-flex">
+        <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
+    </div>
+    
+    <div class="quotes-slider">
+        <div class="quote-card card-emerald">
+            <div class="quote-icon">❝</div>
+            <div class="quote-text">İki nimet vardır ki, insanların çoğu onun kıymetini bilmezler: Vücut sağlığı ve boş vakit.</div>
+            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, Rikâk, 1</span></div>
+        </div>
 
-        // UI Güncelleme
-        const textElement = document.getElementById("kabeProgressText");
-        const barElement = document.getElementById("kabeProgressBar");
+        <div class="quote-card card-navy">
+            <div class="quote-icon">❝</div>
+            <div class="quote-text">Her kim Allah'ı gerçekten tanırsa, dili tutulur; O'nun azameti karşısında susar.</div>
+            <div class="quote-author">— İmam Gazzâlî (k.s)</div>
+        </div>
 
-        if(textElement) textElement.innerText = "%" + progressVal;
-        if(barElement) barElement.style.width = progressVal + "%";
-    });
+        <div class="quote-card card-desert">
+            <div class="quote-icon">❝</div>
+            <div class="quote-text">Kalp, Allah'ın evidir. Oraya O'ndan (c.c) başkasını koyma.</div>
+            <div class="quote-author">— Abdülkadir Geylâni (k.s)</div>
+        </div>
+
+        <div class="quote-card card-crimson">
+            <div class="quote-icon">❝</div>
+            <div class="quote-text">Gönülleriniz yorulduğunda, onlara hikmetli sözler bularak dinlendirin.</div>
+            <div class="quote-author">— Hz. Ali (r.a)</div>
+        </div>
+    </div>
+</div>
+
 </script>
 
 
