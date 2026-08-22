@@ -149,14 +149,6 @@
         .duel-result-title { font-size: 1.3rem; font-weight: 700; color: var(--accent-color); margin-bottom: 12px; }
         .duel-result-scores { font-size: 1rem; margin-bottom: 16px; background: rgba(0,0,0,0.03); padding: 12px; border-radius: 12px; }
 
-        /* Menü Grid */
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
-        .menu-grid-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px 8px; text-align: center; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; transition: 0.2s; }
-        .menu-grid-card:hover { border-color: var(--accent-color); }
-        .grid-icon-box { width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .grid-title { font-size: 0.8rem; font-weight: 600; }
-        .badge-yeni { position: absolute; top: 6px; right: 6px; background: #ef4444; color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 6px; font-weight: 700; }
-
         /* Esma Banner ve Şık Yenileme Butonu */
         .esma-banner { text-decoration: none; color: inherit; display: block; text-align: center; }
         .esma-arabic { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 4px; font-family: serif; }
@@ -380,6 +372,11 @@
             border-left: 3px solid var(--accent-color);
             padding: 10px 12px;
             border-radius: 0 12px 12px 0;
+        }
+        html[dir="rtl"] .info-card-body {
+            border-left: none;
+            border-right: 3px solid var(--accent-color);
+            border-radius: 12px 0 0 12px;
         }
     </style>
 </head>
@@ -834,7 +831,7 @@
                 <span>💡</span> <span data-i18n="biliyor_musunuz">Biliyor musunuz?</span>
             </div>
         </div>
-        <div class="info-card-body" id="dailyInfoText" data-i18n="bilgi_1">
+        <div class="info-card-body" id="dailyInfoText">
             Kur'an-ı Kerim'de adı geçen 25 peygamber vardır ve bunların en çok zikredileni Hz. Musa'dır.
         </div>
     </div>
@@ -927,6 +924,160 @@
         }
     }
 
+    // 45'er adet "Biliyor musunuz?" Havuzları (Tr, En, Ar)
+    const biliyorMusunuzHavuzu = {
+        tr: [
+            "Kur'an-ı Kerim'de adı geçen 25 peygamber vardır ve bunların en çok zikredileni Hz. Musa'dır.",
+            "Kur'an'da besmele ile başlamayan tek sure Tevbe Suresidir.",
+            "Neml Suresi'nde hem başında hem de içinde olmak üzere iki kez besmele geçen tek suredir.",
+            "İslamiyet'te ilk müezzin olan Hz. Bilal-i Habeşi, güzel sesli ve sadakatiyle tanınır.",
+            "Kabe'nin örtüsü (Kisve) her yıl hac mevsiminde yenilenmektedir.",
+            "Hira Mağarası, Mekke yakınlarındaki Nur Dağı üzerinde yer almaktadır.",
+            "Mescid-i Nebevi, Hz. Muhammed (s.a.v.) tarafından Medine'de inşa ettirilmiştir.",
+            "İslam'ın ilk yıllarında ilk kıble Mescid-i Aksa idi, daha sonra Kabe'ye çevrildi.",
+            "Kur'an'da adı geçen tek sahabe, Ahzab Suresi'nde geçen Hz. Zeyd bin Harise'dir.",
+            "Zemzem suyu yüzyıllardır tükenmeyen ve yapay olarak üretilemeyen özel bir sudur.",
+            "İslam takvimine (Hicri Takvim) göre yılbaşı Muharrem ayı ile başlar.",
+            "Peygamber Efendimiz'in kabr-i şerifi Mescid-i Nebevi içerisinde 'Ravza-i Mutahhara'da yer alır.",
+            "Meryem Suresi, Kur'an'da bir kadın ismiyle anılan tek suredir.",
+            "Yasin Suresi, Hz. Muhammed (s.a.v.) tarafından 'Kur'an'ın kalbi' olarak nitelendirilmiştir.",
+            "İslam'da ilk şehit olan kadın Hz. Sümeyye'dir.",
+            "Ashab-ı Kehf (Mağara Arkadaşları) hikayesi Kehf Suresi'nde anlatılmaktadır.",
+            "Sevr Mağarası, hicret sırasında Hz. Muhammed (s.a.v.) ve Hz. Ebû Bekir'in saklandığı mağaradır.",
+            "Kudüs'teki Mescid-i Aksa, Müslümanların ilk kıblesi ve üçüncü harremidir.",
+            "İslam'da ilk camii Kuba Mescidi'dir; hicret esnasında Medine yakınlarında inşa edilmiştir.",
+            "Kur'an-ı Kerim'in inmeye başladığı gece Kadir Gecesi olarak adlandırılır.",
+            "Ayetel Kürsi, Bakara Suresi'nin 255. ayetidir ve Allah'ın azametini anlatır.",
+            "İslam'da ilk yazılı anayasa Medine Sözleşmesi olarak kabul edilir.",
+            "Peygamber Efendimiz'in lakabı vahiy gelmeden önce de 'El-Emin' (Güvenilir) idi.",
+            "İslam'da anne haklarına verilen önem 'Cennet annelerin ayakları altındadır' hadisiyle vurgulanmıştır.",
+            "İslam'ın inanç esasları 6, şartları ise 5 tanedir.",
+            "Kurban ibadeti Hz. İbrahim'in oğlu Hz. İsmail'i kurban etme imtihanına dayanır.",
+            "Hac ibadeti sadece Zilhicce ayında belirli günlerde yapılır.",
+            "Ramazan ayı Kur'an'ın indirildiği aydır ve oruç bu ayda farz kılınmıştır.",
+            "Zekat, İslam'ın köprü görevi gören mali ibadetlerinden biridir.",
+            "Kelime-i Şehadet getirmek İslam'ın temel şartlarının ilki kabul edilir.",
+            "Cuma namazı, cemaatle kılınması farz olan haftalık bayram niteliğinde bir namazdır.",
+            "Miraç Kandili, Peygamberimiz'in göğe yükseldiği ve namazın farz kılındığı gecedir.",
+            "Berat Kandili, ramazan ayının habercisi olan ve affın arandığı mübarek bir gecedir.",
+            "Mevlid Kandili, Peygamber Efendimiz'in dünyaya teşrif ettiği gecedir.",
+            "Regaib Kandili, üç ayların başlangıcında yer alan mübarek gecelerdendir.",
+            "İslam'da ilim öğrenmek kadın ve erkek her müslümana farzdır.",
+            "Uhud Savaşı'nda okçuların yerini terk etmesi sonucu savaşın gidişatı değişmiştir.",
+            "Bedir Savaşı, İslam tarihinin ilk büyük askerî ve siyasi zaferidir.",
+            "Hendek Savaşı'nda Medine etrafına kazılan hendeklerle şehir savunulmuştur.",
+            "Veda Hutbesi, Peygamberimiz'in vefatından önce yüz binleri aşan sahabilere yaptığı evrensel hitaptır.",
+            "Ashab-ı Suffa, Mescid-i Nebevi'nin köşesinde ilim öğrenen fakir sahabi grubudur.",
+            "Safâ ve Merve tepeleri arasında yapılan yürüyüşe 'Sa'y' denir.",
+            "Hacerü'l-Esved taşı, Kabe'nin köşesinde yer alan cennetten indiğine inanılan kutsal bir taştır.",
+            "Teyemmüm, su bulunamadığı veya kullanılamadığı durumlarda toprakla yapılan manevi temizliktir.",
+            "İslam'da namaz dinin direği olarak kabul edilmiştir."
+        ],
+        en: [
+            "There are 25 prophets mentioned by name in the Holy Quran, and Prophet Musa (Moses) is mentioned the most.",
+            "Surah At-Tawbah is the only chapter in the Quran that does not begin with Bismillah.",
+            "Surah An-Naml is the only chapter that contains Bismillah twice: at the beginning and within the text.",
+            "Bilal ibn Rabah, the first muezzin in Islam, was widely known for his beautiful voice and loyalty.",
+            "The covering of the Kaaba (Kiswah) is replaced annually during the Hajj season.",
+            "The Cave of Hira is located on Jabal an-Nur near Mecca.",
+            "Al-Masjid an-Nabawi was built by Prophet Muhammad (PBUH) in Medina.",
+            "In the early days of Islam, Al-Aqsa Mosque was the first Qibla before it was changed to the Kaaba.",
+            "Zayd ibn Haritha is the only companion whose name is explicitly mentioned in the Quran (Surah Al-Ahzab).",
+            "Zamzam water is a miraculous water source that has never dried up for centuries.",
+            "The Islamic calendar (Hijri Calendar) begins the year with the month of Muharram.",
+            "The blessed tomb of the Prophet is located inside Al-Masjid an-Nabawi in Rawdah ash-Sharifah.",
+            "Surah Maryam is the only chapter in the Quran named after a woman.",
+            "Surah Yasin is described by Prophet Muhammad (PBUH) as the 'heart of the Quran'.",
+            "Sumayyah bint Khayyat was the first female martyr in Islam.",
+            "The story of the Companions of the Cave (Ashab-ı Kehf) is narrated in Surah Al-Kahf.",
+            "The Cave of Thawr is where the Prophet and Abu Bakr took refuge during the Hijra.",
+            "Al-Aqsa Mosque in Jerusalem is the third holiest site in Islam and was the first Qibla.",
+            "Quba Mosque is the first mosque built in Islam, constructed near Medina during the Hijra.",
+            "The night the Quran began to be revealed is known as Laylat al-Qadr (The Night of Decree).",
+            "Ayat al-Kursi is verse 255 of Surah Al-Baqarah and describes the majesty of Allah.",
+            "The Constitution of Medina is recognized as the first written constitution in Islamic history.",
+            "Before receiving revelation, Prophet Muhammad was famously known as 'Al-Amin' (The Trustworthy).",
+            "The high status of mothers in Islam is emphasized by the saying 'Paradise is under the feet of mothers.'",
+            "There are 6 articles of faith and 5 pillars of Islam.",
+            "The tradition of Qurbani (Sacrifice) commemorates Prophet Ibrahim's test of faith with Ismail.",
+            "The pilgrimage of Hajj is performed exclusively during specific days in the month of Dhu al-Hijjah.",
+            "Ramadan is the month in which the Quran was revealed, and fasting is obligatory during it.",
+            "Zakat is a mandatory financial obligation designed to support the needy in society.",
+            "Declaring the Shahada is considered the foundational pillar of Islam.",
+            "Friday prayer (Jumu'ah) is a weekly congregational prayer of high religious significance.",
+            "Isra and Mi'raj is the miraculous night journey when the five daily prayers were made mandatory.",
+            "Laylat al-Bara'ah (Bara'ah Night) is a blessed night of forgiveness preceding Ramadan.",
+            "Mawlid an-Nabi marks the birth anniversary of Prophet Muhammad (PBUH).",
+            "Regaib Kandili marks the beginning of the blessed Three Months in the Islamic calendar.",
+            "Seeking knowledge is a mandatory duty for every Muslim, male and female.",
+            "The Battle of Uhud taught a crucial lesson about obedience when archers left their positions.",
+            "The Battle of Badr was the first major military and political victory in Islamic history.",
+            "The Battle of the Trench (Khandaq) involved digging a massive defensive ditch around Medina.",
+            "The Farewell Sermon was the final universal address delivered by the Prophet before his passing.",
+            "Ashab-suffa were the poor companions who dedicated their lives to learning at Masjid an-Nabawi.",
+            "The ritual walking between the hills of Safa and Marwa during Hajj and Umrah is called Sa'y.",
+            "The Black Stone (Hajar al-Aswad) is set into the corner of the Kaaba and holds sacred significance.",
+            "Tayammum is the ritual purification using clean earth or sand when water is unavailable.",
+            "Prayer (Salah) is considered the absolute pillar of the Islamic religion."
+        ],
+        ar: [
+            "يوجد 25 نبياً ذُكروا بأسمائهم في القرآن الكريم، وأكثرهم ذكراً هو سيدنا موسى عليه السلام.",
+            "سورة التوبة هي السورة الوحيدة في القرآن الكريم التي لا تبدأ بالبسملة.",
+            "سورة النمل هي السورة الوحيدة التي وردت فيها البسملة مرتين: في بدايتها وفي ثنايا آياتها.",
+            "بلال بن رباح، أول مؤذن في الإسلام، اشتهر بصوته الشجي ووفائه العظيم.",
+            "تُستبدل كسوة الكعبة المشرفة سنوياً خلال موسم الحج.",
+            "غار حراء يقع على جبل النور قرب مكة المكرمة.",
+            "المسجد النبوي الشريف بناه النبي محمد صلى الله عليه وسلم في المدينة المنورة.",
+            "في بداية الإسلام، كان المسجد الأقصى هو القبلة الأولى للمسلمين قبل أن تُحول إلى الكعبة.",
+            "زيد بنارثة هو الصحابي الوحيد الذي ذُكر اسمه صراحة في القرآن الكريم في سورة الأحزاب.",
+            "ماء زمزم هو مصدر مائي مبارك لم ينضب منذ آلاف السنين ولا يمكن تصنعه صناعياً.",
+            "يبدأ التقويم الهجري الإسلامي بشهر محرم.",
+            "يقع الروضة الشريفة وقبر النبي صلى الله عليه وسلم داخل المسجد النبوي.",
+            "سورة مريم هي السورة الوحيدة في القرآن التي سميت باسم امرأة.",
+            "وصف النبي محمد صلى الله عليه وسلم سورة يس بأنها 'قلب القرآن'.",
+            "سمية بنت خياط هي أول شهيدة في الإسلام.",
+            "قصة أصحاب الكهف مذكورة ومفصلة في سورة الكهف.",
+            "غار ثور هو المخبأ الذي التجأ إليه النبي صلى الله عليه وسلم وأبو بكر أثناء الهجرة.",
+            "المسجد الأقصى في القدس هو ثالث الحرمين الشريفين والقبلة الأولى للمسلمين.",
+            "مسجد قباء هو أول مسجد بني في الإسلام قرب المدينة المنورة أثناء الهجرة.",
+            "الليلة التي بدأ فيها نزول القرآن الكريم تسمى ليلة القدر المباركة.",
+            "آية الكرسي هي الآية رقم 255 من سورة البقرة وتصف عظمة الله وقدرته.",
+            "صحيفة المدينة تعتبر أول دستور مكتوب في تاريخ الإسلام.",
+            "قبل البعثة النبوية، اشتهر النبي محمد صلى الله عليه وسلم بلقب 'الأمين'.",
+            "مكانة الأم العظيمة في الإسلام تتجلى في مقولة 'الجنة تحت أقدام الأمهات'.",
+            "أركان الإيمان ستة وأركان الإسلام خمسة.",
+            "شريعة الأضحية تعود إلى قصة ابتداء نبي الله إراهيم بذبح ابنه إسماعيل.",
+            "فريضة الحج تؤدى حصرياً في أيام معدودات من شهر ذي الحجة.",
+            "شهر رمضان هو الشهر الذي أُنزل فيه القرآن وفُرض فيه الصيام.",
+            "الزكاة هي ركن مالي عظيم يهدف إلى دعم المحتاجين وتحقيق التكافل.",
+            "النطق بالشهادتين هو الركن الأساسي الأول الذي يبنى عليه الإسلام.",
+            "صلاة الجمعة هي فريضة أسبوعية جماعية ذات مكانة عظيمة.",
+            "ليلة الإسراء والمعراج هي الليلة المباركة التي فرضت فيها الصلوات الخمس.",
+            "ليلة البراءة (نصف شعبان) هي ليلة مباركة تسبق شهر رمضان وتكثر فيها المغفرة.",
+            "ذكرى المولد النبوي الشريف تحيي ذكرى مولد خاتم الأنبياء.",
+            "رغائب تمثل بداية الأشهر الحرم المباركة في التقويم الإسلامي.",
+            "طلب العلم فريضة على كل مسلم ومسلمة.",
+            "معركة أحد علمت المسلمين أهمية طاعة الأوامر عندما ترك الرماة مواقعهم.",
+            "معركة بدر الكبرى هي أول نصر عسكري وسياسي حاسم للإسلام.",
+            "معركة الخندق تميزت بحفر خندق واسع حول المدينة لحمايتها من الأحزاب.",
+            "خطبة الوداع هي الوصية الكبرى الجامعة التي ألقاها النبي صلى الله عليه وسلم قبل وفاته.",
+            "أهل الصفة هم فقراء الصحابة الذين كرّسوا حياتهم للعلم في المسجد النبوي.",
+            "السعي هو الهرولة المشروعة بين الصفا والمروة أثناء الحج والعمرة.",
+            "الحجر الأسود هو حجر مبارك موضوع في ركن الكعبة ويُعتقد أنه من الجنة.",
+            "التيمم هو طهارة ترابية بديلة للوضوء أو الغسل عند عدم وجود الماء.",
+            "الصلاة تعتبر عماد الدين وركنه الأكين بعد الشهادتين."
+        ]
+    };
+
+    function loadRandomInfo() {
+        const pool = biliyorMusunuzHavuzu[currentLang] || biliyorMusunuzHavuzu['tr'];
+        const randomInfo = pool[Math.floor(Math.random() * pool.length)];
+        const infoEl = document.getElementById('dailyInfoText');
+        if (infoEl) {
+            infoEl.innerText = randomInfo;
+        }
+    }
+
     const translations = {
         tr: {
             menu_prayer: "Namaz Vakitleri",
@@ -963,7 +1114,8 @@
             modal_loc_desc: "Namaz vakitlerini görmek istediğiniz şehri seçin:",
             modal_loc_btn: "Konumu Uygula",
             correct_answer: "✨ Doğru Cevap!",
-            wrong_answer: "❌ Yanlış Cevap!"
+            wrong_answer: "❌ Yanlış Cevap!",
+            biliyor_musunuz: "Biliyor musunuz?"
         },
         en: {
             menu_prayer: "Prayer Times",
@@ -1000,7 +1152,8 @@
             modal_loc_desc: "Select the city where you want to view prayer times:",
             modal_loc_btn: "Apply Location",
             correct_answer: "✨ Correct Answer!",
-            wrong_answer: "❌ Wrong Answer!"
+            wrong_answer: "❌ Wrong Answer!",
+            biliyor_musunuz: "Did you know?"
         },
         ar: {
             menu_prayer: "أوقات الصلاة",
@@ -1037,7 +1190,8 @@
             modal_loc_desc: "اختر المدينة لعرض أوقات الصلاة:",
             modal_loc_btn: "تطبيق الموقع",
             correct_answer: "✨ إجابة صحيحة!",
-            wrong_answer: "❌ إجابة خاطئة!"
+            wrong_answer: "❌ إجابة خاطئة!",
+            biliyor_musunuz: "هل تعلم؟"
         }
     };
 
@@ -1165,6 +1319,7 @@
         
         currentQuestionIndex = 0;
         loadSoloQuestion();
+        loadRandomInfo(); // Dil değiştiğinde de rastgele bilgiyi yeni dile göre güncelle
 
         if (lastFetchedData) {
             updateDateUI(lastFetchedData);
@@ -1767,6 +1922,7 @@
         startCountdown();
         
         randomEsma();
+        loadRandomInfo(); // Sayfa yüklendiğinde rastgele bir bilgi getir
     });
 </script>
 <script>
