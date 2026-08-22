@@ -346,6 +346,42 @@
         font-weight: 400;
         opacity: 0.8;
     }
+    /* Günün Bilgisi / Biliyor musunuz Kartı */
+    .info-card-container {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .info-card-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-card-body {
+        font-size: 0.88rem;
+        color: var(--text-color);
+        line-height: 1.5;
+        background: rgba(16, 185, 129, 0.05);
+        border-left: 3px solid var(--accent-color);
+        padding: 10px 12px;
+        border-radius: 0 12px 12px 0;
+    }
 
     </style>
 </head>
@@ -790,6 +826,17 @@
         </div>
     </div>
 </div>
+    
+    <div class="info-card-container">
+        <div class="info-card-header">
+            <div class="info-card-title">
+                <span>💡</span> <span data-i18n="biliyor_musunuz">Biliyor musunuz?</span>
+            </div>
+        </div>
+        <div class="info-card-body" id="dailyInfoText" data-i18n="bilgi_1">
+            Kur'an-ı Kerim'de adı geçen 25 peygamber vardır ve bunların en çok zikredileni Hz. Musa'dır.
+        </div>
+    </div>
 
 </script>
 
