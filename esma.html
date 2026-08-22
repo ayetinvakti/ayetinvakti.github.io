@@ -156,6 +156,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            cursor: pointer;
             transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease;
         }
 
@@ -206,6 +207,118 @@
             transition: color 0.3s ease;
         }
 
+        /* --- DETAY MODALI STİLLERİ --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .modal-arabic-title {
+            font-family: 'Amiri', serif;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            text-align: center;
+            margin: 4px 0;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        .modal-body div strong {
+            color: var(--accent-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
         .footer {
             margin: 20px 0;
             text-align: center;
@@ -223,7 +336,7 @@
             text-align: left;
         }
         html[dir="rtl"] .nav-btn#back-btn {
-            transform: scaleX(-1); /* Geri ikonunu ters çevir */
+            transform: scaleX(-1);
         }
     </style>
 </head>
@@ -233,7 +346,6 @@
     <header class="navbar">
         <a href="index.html" class="nav-btn" id="back-btn" title="Geri Dön">←</a>
         <div class="nav-controls">
-            <!-- Bağımsız dil butonu kaldırıldı, tamamen Ayarlar sayfasındaki seçime bağlandı -->
             <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
         </div>
     </header>
@@ -244,16 +356,31 @@
     </div>
 
     <div class="esma-grid" id="esma-list">
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">1</div><div class="esma-info"><h3>Er-Rahmân</h3><p data-tr="Dünyada bütün mahlukata merhamet eden.">Dünyada bütün mahlukata merhamet eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحْمَٰنُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">2</div><div class="esma-info"><h3>Er-Rahîm</h3><p data-tr="Ahirette sadece müminlere ikram eden.">Ahirette sadece müminlere ikram eden.</p></div></div><div class="esma-arabic-text">ٱلرَّحِيمُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">3</div><div class="esma-info"><h3>El-Melik</h3><p data-tr="Mülkün, kainatın sahibi ve mutlak hükümdarı.">Mülkün, kainatın sahibi ve mutlak hükümdarı.</p></div></div><div class="esma-arabic-text">ٱلْمَلِكُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">4</div><div class="esma-info"><h3>El-Kuddûs</h3><p data-tr="Her türlü eksiklikten uzak, tertemiz.">Her türlü eksiklikten uzak, tertemiz.</p></div></div><div class="esma-arabic-text">ٱلْقُدُّوسُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">5</div><div class="esma-info"><h3>Es-Selâm</h3><p data-tr="Her türlü tehlikeden kurtaran, esenlik veren.">Her türlü tehlikeden kurtaran, esenlik veren.</p></div></div><div class="esma-arabic-text">ٱلسَّلَامُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">6</div><div class="esma-info"><h3>El-Mü'min</h3><p data-tr="Güven veren, emin kılan, inanç veren.">Güven veren, emin kılan, inanç veren.</p></div></div><div class="esma-arabic-text">ٱلْمُؤْمِنُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">7</div><div class="esma-info"><h3>El-Müheymin</h3><p data-tr="Gözeten, koruyan, her şeyi görüp yöneten.">Gözeten, koruyan, her şeyi görüp yöneten.</p></div></div><div class="esma-arabic-text">ٱلْمُهَيْمِنُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">8</div><div class="esma-info"><h3>El-Azîz</h3><p data-tr="İzzet sahibi, yegane üstün, mağlup edilemeyen.">İzzet sahibi, yegane üstün, mağlup edilemeyen.</p></div></div><div class="esma-arabic-text">ٱلْعَزِيزُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">9</div><div class="esma-info"><h3>El-Cebbâr</h3><p data-tr="Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.">Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.</p></div></div><div class="esma-arabic-text">ٱلْجَبَّارُ</div></div>
-        <div class="esma-card"><div class="esma-left"><div class="esma-number">10</div><div class="esma-info"><h3>El-Mütekebbir</h3><p data-tr="Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.">Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.</p></div></div><div class="esma-arabic-text">ٱلْمُتَكَبِّرُ</div></div>
+        <!-- JavaScript ile dinamik ve tıklanabilir olarak doldurulacak -->
+    </div>
+</div>
+
+<!-- DETAY MODALI -->
+<div class="modal-overlay" id="esmaModal" onclick="closeModalOnOutside(event)">
+    <div class="modal-card">
+        <div class="modal-header">
+            <span id="modalNumber" class="esma-number">1</span>
+            <button class="close-modal-btn" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-arabic-title" id="modalArabic">ٱلرَّحْمَٰنُ</div>
+        <div style="text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--text-color);" id="modalName">Er-Rahmân</div>
+        
+        <div class="modal-body">
+            <div><strong>Anlamı:</strong> <span id="modalMeaning">Dünyada bütün mahlukata merhamet eden.</span></div>
+            <div><strong>Fazileti / Açıklama:</strong> <span id="modalDesc">Günde 298 defa zikredenin kalbi nurlanır, unutkanlığı gider.</span></div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="action-btn primary" onclick="playAudioPronunciation()">
+                🔊 <span id="listen-text">Dinle / Seslendir</span>
+            </button>
+            <button class="action-btn" onclick="closeModal()" id="close-text">Kapat</button>
+        </div>
     </div>
 </div>
 
@@ -262,6 +389,81 @@
 </div>
 
 <script>
+    // --- ESMA VERİ TABANI (Detay ve Faziletler Eklendi) ---
+    const esmaData = [
+        { id: 1, name: "Er-Rahmân", arabic: "ٱلرَّحْمَٰنُ", meaning: "Dünyada bütün mahlukata merhamet eden.", desc: "Günde 298 defa zikredenin kalbi nurlanır, unutkanlığı gider." },
+        { id: 2, name: "Er-Rahîm", arabic: "ٱلرَّحِيمُ", meaning: "Ahirette sadece müminlere ikram eden.", desc: "Günde 100 defa zikreden maddi ve manevi belalardan korunur." },
+        { id: 3, name: "El-Melik", arabic: "ٱلْمَلِكُ", meaning: "Mülkün, kainatın sahibi ve mutlak hükümdarı.", desc: "Günde 121 defa okuyanın işleri kolaylaşır, rızkı genişler." },
+        { id: 4, name: "El-Kuddûs", arabic: "ٱلْقُدُّوسُ", meaning: "Her türlü eksiklikten uzak, tertemiz.", desc: "Günde 100 defa okuyanın kalbi vesveselerden temizlenir." },
+        { id: 5, name: "Es-Selâm", arabic: "ٱلسَّلَامُ", meaning: "Her türlü tehlikeden kurtaran, esenlik veren.", desc: "Korkulan şeylerden emin olmak ve şifa bulmak için okunur." },
+        { id: 6, name: "El-Mü'min", arabic: "ٱلْمُؤْمِنُ", meaning: "Güven veren, emin kılan, inanç veren.", desc: "Korkularından emin olmak için 131 defa zikredilir." },
+        { id: 7, name: "El-Müheymin", arabic: "ٱلْمُهَيْمِنُ", meaning: "Gözeten, koruyan, her şeyi görüp yöneten.", desc: "Gusledip 100 defa zikredenin kalbi ve yüzü nurlanır." },
+        { id: 8, name: "El-Azîz", arabic: "ٱلْعَزِيزُ", meaning: "İzzet sahibi, yegane üstün, mağlup edilemeyen.", desc: "Günde 40 defa okuyan kimse kimseye muhtaç olmaz." },
+        { id: 9, name: "El-Cebbâr", arabic: "ٱلْجَبَّارُ", meaning: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.", desc: "Zalimlerin şerrinden korunmak için zikredilir." },
+        { id: 10, name: "El-Mütekebbir", arabic: "ٱلْمُتَكَبِّرُ", meaning: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.", desc: "Makam ve itibar sahibi olmak için okunur." }
+    ];
+
+    let currentSelectedEsma = null;
+
+    // --- LİSTEYİ RENDER ETME ---
+    function renderEsmaList() {
+        const listContainer = document.getElementById('esma-list');
+        listContainer.innerHTML = '';
+
+        esmaData.forEach(esma => {
+            const card = document.createElement('div');
+            card.className = 'esma-card';
+            card.onclick = () => openModal(esma);
+
+            card.innerHTML = `
+                <div class="esma-left">
+                    <div class="esma-number">${esma.id}</div>
+                    <div class="esma-info">
+                        <h3>${esma.name}</h3>
+                        <p>${esma.meaning}</p>
+                    </div>
+                </div>
+                <div class="esma-arabic-text">${esma.arabic}</div>
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    // --- MODAL İŞLEMLERİ ---
+    function openModal(esma) {
+        currentSelectedEsma = esma;
+        document.getElementById('modalNumber').textContent = `${esma.id}`;
+        document.getElementById('modalArabic').textContent = esma.arabic;
+        document.getElementById('modalName').textContent = esma.name;
+        document.getElementById('modalMeaning').textContent = esma.meaning;
+        document.getElementById('modalDesc').textContent = esma.desc;
+
+        document.getElementById('esmaModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('esmaModal').classList.remove('active');
+    }
+
+    function closeModalOnOutside(event) {
+        if (event.target.id === 'esmaModal') {
+            closeModal();
+        }
+    }
+
+    // --- SESLİ OKUMA (Web Speech API) ---
+    function playAudioPronunciation() {
+        if (!currentSelectedEsma) return;
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(currentSelectedEsma.name);
+            utterance.lang = 'ar-SA'; // Arapça telaffuz motoru
+            utterance.rate = 0.8; // Daha sakin ve anlaşılır hız
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Tarayıcınız ses sentezleme özelliğini desteklemiyor.");
+        }
+    }
+
     // --- TEMA YÖNETİMİ ---
     const themeToggleBtn = document.getElementById('theme-toggle');
     
@@ -281,7 +483,7 @@
         updateThemeIcon();
     });
 
-    // --- GENEL DİL YÖNETİMİ (Ayarlar Sayfası Entegreli) ---
+    // --- GENEL DİL YÖNETİMİ ---
     const uiTranslations = {
         tr: {
             docTitle: "Esmaül Hüsna | Ayetin Vakti",
@@ -289,6 +491,8 @@
             pageDesc: "Allah'ın en güzel 99 ismi ve anlamları",
             footerText: "© Ayetin Vakti • ",
             footerSpan: "Huzur ve İbadet Rehberliğiniz",
+            listenText: "Dinle / Seslendir",
+            closeText: "Kapat",
             dir: "ltr"
         },
         en: {
@@ -297,6 +501,8 @@
             pageDesc: "The 99 most beautiful names of Allah and their meanings",
             footerText: "© Time of Ayah • ",
             footerSpan: "Your Guide to Peace and Worship",
+            listenText: "Listen / Pronounce",
+            closeText: "Close",
             dir: "ltr"
         },
         ar: {
@@ -305,24 +511,25 @@
             pageDesc: "أجمل 99 اسماً لله ومعانيها",
             footerText: "© وقت الآية • ",
             footerSpan: "دليلك للسلام والعبادة",
+            listenText: "استماع / نطق",
+            closeText: "إغلاق",
             dir: "rtl"
         }
     };
 
-    // Ayarlar sayfasında kaydedilen 'user_lang' değerini okuyoruz
     const currentLang = localStorage.getItem('user_lang') || 'tr';
 
     function applyGlobalLanguage(lang) {
         const t = uiTranslations[lang] || uiTranslations.tr;
         
-        // Temel Ayarlar ve Yön (RTL/LTR)
         document.documentElement.lang = lang;
         document.documentElement.dir = t.dir;
         document.title = t.docTitle;
 
-        // UI Metinlerini Değiştir
         document.getElementById('page-title').textContent = t.pageTitle;
         document.getElementById('page-desc').textContent = t.pageDesc;
+        document.getElementById('listen-text').textContent = t.listenText;
+        document.getElementById('close-text').textContent = t.closeText;
         
         const footer = document.getElementById('footer-text');
         if (footer) {
@@ -330,8 +537,11 @@
         }
     }
 
-    // Sayfa açılır açılmaz genel ayardaki dili uygula
-    applyGlobalLanguage(currentLang);
+    // Sayfa Yüklendiğinde Çalıştır
+    document.addEventListener('DOMContentLoaded', () => {
+        applyGlobalLanguage(currentLang);
+        renderEsmaList();
+    });
 </script>
 
 </body>
