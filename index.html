@@ -260,129 +260,127 @@
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
         html[dir="rtl"] .location-city { direction: rtl; }
-        /* --- Günün Hikmetleri Slider CSS --- */
-    .quotes-header-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        margin-bottom: 12px;
-    }
-    .quotes-slider {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        gap: 15px;
-        padding: 5px 20px 20px 20px; /* Gölgelerin kesilmemesi için alt padding */
         
-        /* Scrollbar'ı gizleme (Modern görünüm için) */
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    .quotes-slider::-webkit-scrollbar {
-        display: none;
-    }
-    
-    .quote-card {
-        flex: 0 0 82%; /* Ekranda bir kart tam görünürken, diğerinin ucu gözükecek */
-        min-height: 180px;
-        border-radius: 20px;
-        padding: 25px 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        scroll-snap-align: center;
-        position: relative;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        color: #ffffff;
-        overflow: hidden;
-    }
+        /* --- Günün Hikmetleri Slider CSS --- */
+        .quotes-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 12px;
+        }
+        .quotes-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 15px;
+            padding: 5px 20px 20px 20px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .quotes-slider::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quote-card {
+            flex: 0 0 82%;
+            min-height: 180px;
+            border-radius: 20px;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            scroll-snap-align: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            color: #ffffff;
+            overflow: hidden;
+        }
 
-    /* Arka plan renk geçişleri (Premium ambiyans) */
-    .card-emerald { background: linear-gradient(135deg, #134e5e 0%, #71b280 100%); }
-    .card-navy    { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
-    .card-desert  { background: linear-gradient(135deg, #936d55 0%, #c19b77 100%); }
-    .card-crimson { background: linear-gradient(135deg, #591b1b 0%, #9a3232 100%); }
+        .card-emerald { background: linear-gradient(135deg, #134e5e 0%, #71b280 100%); }
+        .card-navy    { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+        .card-desert  { background: linear-gradient(135deg, #936d55 0%, #c19b77 100%); }
+        .card-crimson { background: linear-gradient(135deg, #591b1b 0%, #9a3232 100%); }
 
-    /* Kartın üstüne hafif siyah bir karartma (Yazı okunsun diye) */
-    .quote-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.15);
-        border-radius: 20px;
-    }
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.15);
+            border-radius: 20px;
+        }
 
-    .quote-icon {
-        font-size: 40px;
-        line-height: 1;
-        opacity: 0.3;
-        position: absolute;
-        top: 10px;
-        left: 15px;
-        font-family: serif;
-    }
+        .quote-icon {
+            font-size: 40px;
+            line-height: 1;
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-family: serif;
+        }
 
-    .quote-text {
-        position: relative;
-        font-size: 1.05rem;
-        font-weight: 500;
-        line-height: 1.5;
-        text-align: center;
-        margin-top: 15px;
-        margin-bottom: 20px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
+        .quote-text {
+            position: relative;
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
 
-    .quote-author {
-        position: relative;
-        font-size: 0.85rem;
-        font-weight: 700;
-        text-align: right;
-        opacity: 0.9;
-    }
-    .quote-author span {
-        font-size: 0.7rem;
-        font-weight: 400;
-        opacity: 0.8;
-    }
-    /* Günün Bilgisi / Biliyor musunuz Kartı */
-    .info-card-container {
-        background-color: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 18px;
-        padding: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+        .quote-author {
+            position: relative;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: right;
+            opacity: 0.9;
+        }
+        .quote-author span {
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
 
-    .info-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+        /* Günün Bilgisi / Biliyor musunuz Kartı */
+        .info-card-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
 
-    .info-card-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--accent-color);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-    .info-card-body {
-        font-size: 0.88rem;
-        color: var(--text-color);
-        line-height: 1.5;
-        background: rgba(16, 185, 129, 0.05);
-        border-left: 3px solid var(--accent-color);
-        padding: 10px 12px;
-        border-radius: 0 12px 12px 0;
-    }
+        .info-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
+        .info-card-body {
+            font-size: 0.88rem;
+            color: var(--text-color);
+            line-height: 1.5;
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--accent-color);
+            padding: 10px 12px;
+            border-radius: 0 12px 12px 0;
+        }
     </style>
 </head>
 <body>
@@ -687,146 +685,149 @@
         </div>
     </div>
 
-<div class="countdown-card" style="padding: 15px 0;"> <div class="quotes-header-flex">
-        <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
-    </div>
-    
-    <div class="quotes-slider">
+    <!-- GÜNÜN HİKMETLERİ KARTI -->
+    <div class="countdown-card" style="padding: 15px 0;">
+        <div class="quotes-header-flex">
+            <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
+        </div>
+        
+        <div class="quotes-slider">
             <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">İki nimet vardır ki, insanların çoğu onun kıymetini bilmezler: Vücut sağlığı ve boş vakit.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, Rikâk, 1</span></div>
-        </div>
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">İki nimet vardır ki, insanların çoğu onun kıymetini bilmezler: Vücut sağlığı ve boş vakit.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, Rikâk, 1</span></div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Her kim Allah'ı gerçekten tanırsa, dili tutulur; O'nun azameti karşısında susar.</div>
-            <div class="quote-author">— İmam Gazzâlî (k.s)</div>
-        </div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Her kim Allah'ı gerçekten tanırsa, dili tutulur; O'nun azameti karşısında susar.</div>
+                <div class="quote-author">— İmam Gazzâlî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-desert">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Kalp, Allah'ın evidir. Oraya O'ndan (c.c) başkasını koyma.</div>
-            <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
-        </div>
+            <div class="quote-card card-desert">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Kalp, Allah'ın evidir. Oraya O'ndan (c.c) başkasını koyma.</div>
+                <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-crimson">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Gönülleriniz yorulduğunda, onlara hikmetli sözler bularak dinlendirin.</div>
-            <div class="quote-author">— Hz. Ali (r.a)</div>
-        </div>
+            <div class="quote-card card-crimson">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Gönülleriniz yorulduğunda, onlara hikmetli sözler bularak dinlendirin.</div>
+                <div class="quote-author">— Hz. Ali (r.a)</div>
+            </div>
 
-        <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Kolaylaştırınız, zorlaştırmayınız. Müjdeleyiniz, nefret ettirmeyiniz.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, İlim, 11</span></div>
-        </div>
+            <div class="quote-card card-emerald">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Kolaylaştırınız, zorlaştırmayınız. Müjdeleyiniz, nefret ettirmeyiniz.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, İlim, 11</span></div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">İnandığınız gibi yaşamazsanız, yaşadığınız gibi inanmaya başlarsınız.</div>
-            <div class="quote-author">— Hz. Ömer (r.a)</div>
-        </div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">İnandığınız gibi yaşamazsanız, yaşadığınız gibi inanmaya başlarsınız.</div>
+                <div class="quote-author">— Hz. Ömer (r.a)</div>
+            </div>
 
-        <div class="quote-card card-desert">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Ölüm bir köprüdür, dostu dosta kavuşturur.</div>
-            <div class="quote-author">— Hz. Ebû Bekir (r.a)</div>
-        </div>
+            <div class="quote-card card-desert">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Ölüm bir köprüdür, dostu dosta kavuşturur.</div>
+                <div class="quote-author">— Hz. Ebû Bekir (r.a)</div>
+            </div>
 
-        <div class="quote-card card-crimson">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Müslümanın, müslüman kardeşine karşı güler yüzlü olması sadakadır.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 36</span></div>
-        </div>
+            <div class="quote-card card-crimson">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Müslümanın, müslüman kardeşine karşı güler yüzlü olması sadakadır.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 36</span></div>
+            </div>
 
-        <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Kusur arıyorsan, tüm aynalar senin.</div>
-            <div class="quote-author">— Mevlânâ Celâleddîn-i Rûmî</div>
-        </div>
+            <div class="quote-card card-emerald">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Kusur arıyorsan, tüm aynalar senin.</div>
+                <div class="quote-author">— Mevlânâ Celâleddîn-i Rûmî</div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">İlim ilim bilmektir, ilim kendin bilmektir. Sen kendini bilmezsen, ya nice okumaktır!</div>
-            <div class="quote-author">— Yunus Emre (k.s)</div>
-        </div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">İlim ilim bilmektir, ilim kendin bilmektir. Sen kendini bilmezsen, ya nice okumaktır!</div>
+                <div class="quote-author">— Yunus Emre (k.s)</div>
+            </div>
 
-        <div class="quote-card card-desert">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Ey oğul! Dünyalık peşinde koşarken ahiretini unutma. İkisi de senin bineğindir.</div>
-            <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
-        </div>
+            <div class="quote-card card-desert">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Ey oğul! Dünyalık peşinde koşarken ahiretini unutma. İkisi de senin bineğindir.</div>
+                <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-crimson">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">İnsanların en acizi dua etmeyen, en cimrisi ise selam vermeyendir.</div>
-            <div class="quote-author">— Hz. Ali (r.a)</div>
-        </div>
+            <div class="quote-card card-crimson">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">İnsanların en acizi dua etmeyen, en cimrisi ise selam vermeyendir.</div>
+                <div class="quote-author">— Hz. Ali (r.a)</div>
+            </div>
 
-        <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Cahillerle tartışmaya girmeyin, zira ben onlara hiç galip gelemedim.</div>
-            <div class="quote-author">— İmam Gazzâlî (k.s)</div>
-        </div>
+            <div class="quote-card card-emerald">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Cahillerle tartışmaya girmeyin, zira ben onlara hiç galip gelemedim.</div>
+                <div class="quote-author">— İmam Gazzâlî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Nerede olursan ol Allah’tan kork. Kötülüğün peşinden hemen bir iyilik yap ki onu silsin.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 55</span></div>
-        </div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Nerede olursan ol Allah’tan kork. Kötülüğün peşinden hemen bir iyilik yap ki onu silsin.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 55</span></div>
+            </div>
 
-        <div class="quote-card card-desert">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Bizim yolumuz dikenlidir, ayağını seven gelmesin.</div>
-            <div class="quote-author">— Şâh-ı Nakşibend (k.s)</div>
-        </div>
+            <div class="quote-card card-desert">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Bizim yolumuz dikenlidir, ayağını seven gelmesin.</div>
+                <div class="quote-author">— Şâh-ı Nakşibend (k.s)</div>
+            </div>
 
-        <div class="quote-card card-crimson">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Sabır, boyun eğmek değil, mücadele etmektir.</div>
-            <div class="quote-author">— Hz. Ömer (r.a)</div>
-        </div>
+            <div class="quote-card card-crimson">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Sabır, boyun eğmek değil, mücadele etmektir.</div>
+                <div class="quote-author">— Hz. Ömer (r.a)</div>
+            </div>
 
-        <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Sizin en hayırlınız, Kur'an'ı öğrenen ve öğreteninizdir.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, Fezâilü'l-Kur'ân, 21</span></div>
-        </div>
+            <div class="quote-card card-emerald">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Sizin en hayırlınız, Kur'an'ı öğrenen ve öğreteninizdir.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Buhârî, Fezâilü'l-Kur'ân, 21</span></div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Kendi noksanını gören can, ne yüce bir candır!</div>
-            <div class="quote-author">— Muhyiddin İbnü'l-Arabî (k.s)</div>
-        </div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Kendi noksanını gören can, ne yüce bir candır!</div>
+                <div class="quote-author">— Muhyiddin İbnü'l-Arabî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-desert">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Dünya tasası kalbe karanlık, ahiret tasası ise kalbe nur verir.</div>
-            <div class="quote-author">— Hz. Osman (r.a)</div>
-        </div>
+            <div class="quote-card card-desert">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Dünya tasası kalbe karanlık, ahiret tasası ise kalbe nur verir.</div>
+                <div class="quote-author">— Hz. Osman (r.a)</div>
+            </div>
 
-        <div class="quote-card card-crimson">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Kıyamet gününde müminin terazisinde, güzel ahlaktan daha ağır gelecek bir şey yoktur.</div>
-            <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 62</span></div>
-        </div>
+            <div class="quote-card card-crimson">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Kıyamet gününde müminin terazisinde, güzel ahlaktan daha ağır gelecek bir şey yoktur.</div>
+                <div class="quote-author">— Hz. Muhammed (s.a.v)<br><span>Tirmizî, Birr, 62</span></div>
+            </div>
 
-        <div class="quote-card card-emerald">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">Nefsini yenen, dünyayı fetheder.</div>
-            <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
-        </div>
+            <div class="quote-card card-emerald">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">Nefsini yenen, dünyayı fetheder.</div>
+                <div class="quote-author">— Abdülkadir Geylânî (k.s)</div>
+            </div>
 
-        <div class="quote-card card-navy">
-            <div class="quote-icon">❝</div>
-            <div class="quote-text">İnsanın değeri, önem verdiği şeye göredir.</div>
-            <div class="quote-author">— İmam Gazzâlî (k.s)</div>
+            <div class="quote-card card-navy">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text">İnsanın değeri, önem verdiği şeye göredir.</div>
+                <div class="quote-author">— İmam Gazzâlî (k.s)</div>
+            </div>
         </div>
     </div>
-</div>
     
+    <!-- BİLİFYOR MUSUNUZ KARTI -->
     <div class="info-card-container">
         <div class="info-card-header">
             <div class="info-card-title">
@@ -837,13 +838,6 @@
             Kur'an-ı Kerim'de adı geçen 25 peygamber vardır ve bunların en çok zikredileni Hz. Musa'dır.
         </div>
     </div>
-
-</script>
-
-
-
-
-
 
     <!-- ESMAÜL HÜSNA KARTI -->
     <div class="content-card">
@@ -1154,7 +1148,6 @@
         currentLang = lang;
         localStorage.setItem('user_lang', lang);
         
-        // RTL ve Lang Attribute Ayarları
         if (lang === 'ar') {
             document.documentElement.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('lang', 'ar');
@@ -1170,7 +1163,7 @@
             }
         });
         
-        currentQuestionIndex = 0; // Dil değiştiğinde quizi başa sar
+        currentQuestionIndex = 0;
         loadSoloQuestion();
 
         if (lastFetchedData) {
@@ -1674,7 +1667,6 @@
 
             if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
 
-            /* YENİ KERAHAT HESAPLAMA SİSTEMİ */
             const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
             let gunesDate = new Date();
             gunesDate.setHours(gunesH, gunesM, 0, 0);
@@ -1777,14 +1769,14 @@
         randomEsma();
     });
 </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Ayetin Vakti: Service Worker başarıyla kaydedildi.', reg.scope))
-                    .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
-            });
-        }
-    </script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Ayetin Vakti: Service Worker başarıyla kaydedildi.', reg.scope))
+                .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
+        });
+    }
+</script>
 </body>
 </html>
