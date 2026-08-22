@@ -375,112 +375,110 @@
 </div>
 
 <script>
-    // --- 99 ESMA-ÜL HÜSNA LİSTESİ (Tek Kelimelik Net Telifsiz Ses Altyapısı) ---
-    // Not: Seslerin arka planda çalmaya devam etmesini önlemek ve tek isim okunmasını sağlamak için optimize edildi.
+    // --- 99 ESMA-ÜL HÜSNA LİSTESİ ---
     const esmaData = [
-        { id: 1, name: "Er-Rahmân", arabic: "ٱلرَّحْمَٰنُ", meaning: "Dünyada bütün mahlukata merhamet eden.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/01-ErRahman.mp3" },
-        { id: 2, name: "Er-Rahîm", arabic: "ٱلرَّحِيمُ", meaning: "Ahirette sadece müminlere ikram eden.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/02-ErRahim.mp3" },
-        { id: 3, name: "El-Melik", arabic: "ٱلْمَلِكُ", meaning: "Mülkün, kainatın sahibi ve mutlak hükümdarı.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/03-ElMelik.mp3" },
-        { id: 4, name: "El-Kuddûs", arabic: "ٱلْقُدُّوسُ", meaning: "Her türlü eksiklikten uzak, tertemiz.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/04-ElKuddus.mp3" },
-        { id: 5, name: "Es-Selâm", arabic: "ٱلسَّلَامُ", meaning: "Her türlü tehlikeden kurtaran, esenlik veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/05-EsSelam.mp3" },
-        { id: 6, name: "El-Mü'min", arabic: "ٱلْمُؤْمِنُ", meaning: "Güven veren, emin kılan, inanç veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/06-ElMumin.mp3" },
-        { id: 7, name: "El-Müheymin", arabic: "ٱلْمُهَيْمِنُ", meaning: "Gözeten, koruyan, her şeyi görüp yöneten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/07-ElMuheymin.mp3" },
-        { id: 8, name: "El-Azîz", arabic: "ٱلْعَزِيزُ", meaning: "İzzet sahibi, yegane üstün, mağlup edilemeyen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/08-ElAziz.mp3" },
-        { id: 9, name: "El-Cebbâr", arabic: "ٱلْجَبَّارُ", meaning: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/09-ElCebbar.mp3" },
-        { id: 10, name: "El-Mütekebbir", arabic: "ٱلْمُتَكَبِّرُ", meaning: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/10-ElMutekebbir.mp3" },
-        { id: 11, name: "El-Hâlık", arabic: "ٱلْخَالِقُ", meaning: "Yaratan, yoktan var eden, ölçüye göre şekil veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/11-ElHalik.mp3" },
-        { id: 12, name: "El-Bâri'", arabic: "ٱلْبَارِئُ", meaning: "Her şeyi kusursuz ve uyumlu yaratan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/12-ElBari.mp3" },
-        { id: 13, name: "El-Musavvir", arabic: "ٱلْمُصَوِّرُ", meaning: "Varlıklara şekil ve suret veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/13-ElMusavvir.mp3" },
-        { id: 14, name: "El-Gaffâr", arabic: "ٱلْغَفَّارُ", meaning: "Günahları örten ve çok bağışlayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/14-ElGaffar.mp3" },
-        { id: 15, name: "El-Kahhâr", arabic: "ٱلْقَهَّارُ", meaning: "Her şeye ve herkese galip gelen, mutlak güç sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/15-ElKahhar.mp3" },
-        { id: 16, name: "El-Vehhâb", arabic: "ٱلْوَهَّابُ", meaning: "Karşılıksız bol bol nimetler veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/16-ElVehhab.mp3" },
-        { id: 17, name: "Er-Rezzâk", arabic: "ٱلرَّزَّاقُ", meaning: "Bütün mahlukatın rızkını veren ve ihtiyacını karşılayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/17-ErRezzak.mp3" },
-        { id: 18, name: "El-Fettâh", arabic: "ٱلْفَتَّاحُ", meaning: "Her türlü sıkıntıları açan, kolaylık ve rahmet kapılarını aralayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/18-ElFettah.mp3" },
-        { id: 19, name: "El-Alîm", arabic: "ٱلْعَلِيمُ", meaning: "Her şeyi en ince detayına kadar bilen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/19-ElAlim.mp3" },
-        { id: 20, name: "El-Kâbıd", arabic: "ٱلْقَابِضُ", meaning: "Dilediğinin rızkını daraltan, ruhları alan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/20-ElKabid.mp3" },
-        { id: 21, name: "El-Bâsıt", arabic: "ٱلْبَاسِطُ", meaning: "Dilediğinin rızkını genişleten, ferahlık veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/21-ElBasit.mp3" },
-        { id: 22, name: "El-Hâfıd", arabic: "ٱلْخَافِضُ", meaning: "Kafirleri ve zalimleri alçaltan, dereceleri düşüren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/22-ElHafid.mp3" },
-        { id: 23, name: "Er-Râfi'", arabic: "ٱلرَّافِعُ", meaning: "Şeref veren, dereceleri yükselten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/23-ErRafi.mp3" },
-        { id: 24, name: "El-Muiz", arabic: "ٱلْمُعِزُّ", meaning: "Dilediğine izzet ve şeref veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/24-ElMuiz.mp3" },
-        { id: 25, name: "El-Muzil", arabic: "ٱلْمُذِلُّ", meaning: "Dilediğini zillete düşüren, hor ve hakir eden.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/25-ElMuzil.mp3" },
-        { id: 26, name: "Es-Semî'", arabic: "ٱلسَّمِيعُ", meaning: "Her şeyi en iyi işiten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/26-EsSemic.mp3" },
-        { id: 27, name: "El-Basîr", arabic: "ٱلْبَصِيرُ", meaning: "Her şeyi en iyi gören.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/27-ElBasir.mp3" },
-        { id: 28, name: "El-Hakem", arabic: "ٱلْحَكَمُ", meaning: "Mutlak hakim, hak ile batılı ayıran, hüküm veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/28-ElHakem.mp3" },
-        { id: 29, name: "El-Adl", arabic: "ٱلْعَدْلُ", meaning: "Mutlak adalet sahibi, çok adil.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/29-ElAdl.mp3" },
-        { id: 30, name: "El-Latîf", arabic: "ٱلْلَّطِيفُ", meaning: "Lütuf ve ihsan sahibi olan, kullarının işlerinin ince detaylarını bilen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/30-ElLatif.mp3" },
-        { id: 31, name: "El-Habîr", arabic: "ٱلْخَبِيرُ", meaning: "Her şeyin iç yüzünden ve gizli hallerinden haberdar olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/31-ElHabir.mp3" },
-        { id: 32, name: "El-Halîm", arabic: "ٱلْحَلِيمُ", meaning: "Cezada acele etmeyen, yumuşak davranan, hilaf sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/32-ElHalim.mp3" },
-        { id: 33, name: "El-Azîm", arabic: "ٱلْعَظِيمُ", meaning: "Pek yüce, büyüklükte benzeri olmayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/33-ElAzim.mp3" },
-        { id: 34, name: "El-Gafûr", arabic: "ٱلْغَفُورُ", meaning: "Affı ve bağışlaması bol olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/34-ElGafur.mp3" },
-        { id: 35, name: "Eş-Şekûr", arabic: "ٱلشَّكُورُ", meaning: "Az amele karşılık çok mükâfat veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/35-EsSekur.mp3" },
-        { id: 36, name: "El-Aliyy", arabic: "ٱلْعَلِيُّ", meaning: "Çok yüce, her şeyden üstün.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/36-ElAliyy.mp3" },
-        { id: 37, name: "El-Kebîr", arabic: "ٱلْكَبِيرُ", meaning: "Pek büyük, azamet sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/37-ElKebir.mp3" },
-        { id: 38, name: "El-Hafîz", arabic: "ٱلْحَفِيظُ", meaning: "Her şeyi koruyup gözeten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/38-ElHafiz.mp3" },
-        { id: 39, name: "El-Mukīt", arabic: "ٱلْمُقِيتُ", meaning: "Her yaratılmışın gıdasını ve rızkını veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/39-ElMukit.mp3" },
-        { id: 40, name: "El-Hasîb", arabic: "ٱلْحَسِيبُ", meaning: "Kulların hesabını en iyi gören.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/40-ElHasib.mp3" },
-        { id: 41, name: "El-Celîl", arabic: "ٱلْجَلِيلُ", meaning: "Celal ve azamet sahibi, yüce.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/41-ElCelil.mp3" },
-        { id: 42, name: "El-Kerîm", arabic: "ٱلْكَرِيمُ", meaning: "Keremi, cömertliği ve ihsanı bol olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/42-ElKerim.mp3" },
-        { id: 43, name: "Er-Rakîب", arabic: "ٱلرَّقِيبُ", meaning: "Bütün varlıkları her an gözetim altında tutan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/43-ErRakib.mp3" },
-        { id: 44, name: "El-Mücîb", arabic: "ٱلْمُجِيبُ", meaning: "Dualara ve isteklere karşılık veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/44-ElMucib.mp3" },
-        { id: 45, name: "El-Vâsi'", arabic: "ٱلْوَاسِعُ", meaning: "İlmi, rahmeti ve kudreti her şeyi kuşatan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/45-ElVasic.mp3" },
-        { id: 46, name: "El-Hakîm", arabic: "ٱلْحَكِيمُ", meaning: "Her işi hikmetli, her emri yerinde olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/46-ElHakim.mp3" },
-        { id: 47, name: "El-Vedûd", arabic: "ٱلْوَدُودُ", meaning: "Kullarını çok seven ve sevilmeye layık olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/47-ElVedud.mp3" },
-        { id: 48, name: "El-Mecîd", arabic: "ٱلْمَجِيدُ", meaning: "Şanı yüce ve şerefli olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/48-ElMecid.mp3" },
-        { id: 49, name: "El-Bâis", arabic: "ٱلْبَاعِثُ", meaning: "Ölüleri dirilten, peygamberler gönderen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/49-ElBais.mp3" },
-        { id: 50, name: "Eş-Şehîd", arabic: "ٱلشَّهِيدُ", meaning: "Her zaman hazır ve nazır olan, şahitlik eden.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/50-EsSehid.mp3" },
-        { id: 51, name: "El-Hakk", arabic: "ٱلْحَقُّ", meaning: "Varlığı hiç değişmeden duran, gerçek olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/51-ElHakk.mp3" },
-        { id: 52, name: "El-Vekîl", arabic: "ٱلْوَكِيلُ", meaning: "Kendisine tevekkül edilenlerin işlerini yöneten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/52-ElVekil.mp3" },
-        { id: 53, name: "El-Kaviyy", arabic: "ٱلْقَوِيُّ", meaning: "Çok güçlü, kudret sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/53-ElKaviyy.mp3" },
-        { id: 54, name: "El-Metîn", arabic: "ٱلْمَتِينُ", meaning: "Kudret ve kuvveti çok sağlam olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/54-ElMetin.mp3" },
-        { id: 55, name: "El-Velî", arabic: "ٱلْوَلِيُّ", meaning: "İnananların dostu ve yardımcısı.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/55-ElVelii.mp3" },
-        { id: 56, name: "El-Hamîd", arabic: "ٱلْحَمِيدُ", meaning: "Yalnız kendisi övülmeye layık olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/56-ElHamid.mp3" },
-        { id: 57, name: "El-Muhsî", arabic: "ٱلْمُحْصِي", meaning: "Her şeyin sayısını ve detayını bilen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/57-ElMuhsi.mp3" },
-        { id: 58, name: "El-Mubdi'", arabic: "ٱلْمُبْدِئُ", meaning: "Mahlukatı örneksiz yaratan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/58-ElMubdi.mp3" },
-        { id: 59, name: "El-Muîd", arabic: "ٱلْمُعِيدُ", meaning: "Yaratılmışları yok olduktan sonra tekrar dirilten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/59-ElMuid.mp3" },
-        { id: 60, name: "El-Muhyî", arabic: "ٱلْمُحْيِي", meaning: "Can veren, hayat bağışlayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/60-ElMuhyii.mp3" },
-        { id: 61, name: "El-Mümît", arabic: "ٱلْمُمِيتُ", meaning: "Canlıların ölümünü yaratan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/61-ElMumit.mp3" },
-        { id: 62, name: "El-Hayy", arabic: "ٱلْحَيُّ", meaning: "Diri, ebedi hayat sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/62-ElHayy.mp3" },
-        { id: 63, name: "El-Kayyûm", arabic: "ٱلْقَيُّومُ", meaning: "Kainatı ayakta tutan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/63-ElKayyum.mp3" },
-        { id: 64, name: "El-Vâcid", arabic: "ٱلْوَاجِدُ", meaning: "Hiçbir şeyi eksik olmayan, istediğini bulan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/64-ElVajid.mp3" },
-        { id: 65, name: "El-Mâcid", arabic: "ٱلْمَاجِدُ", meaning: "Kadr u şanı yüce, keremi bol.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/65-ElMajid.mp3" },
-        { id: 66, name: "El-Vâhid", arabic: "ٱلْوَاحِدُ", meaning: "Zatında ve sıfatlarında bir olan, tek.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/66-ElVahid.mp3" },
-        { id: 67, name: "Es-Samed", arabic: "ٱلصَّمَدُ", meaning: "Her şeyin kendisine muhtaç olduğu.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/67-EsSamed.mp3" },
-        { id: 68, name: "El-Kâdir", arabic: "ٱلْقَادِرُ", meaning: "Dilediğini yapmaya gücü yeten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/68-ElKadir.mp3" },
-        { id: 69, name: "El-Muktedir", arabic: "ٱلْمُقْتَدِرُ", meaning: "Mutlak kudret sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/69-ElMuktedir.mp3" },
-        { id: 70, name: "El-Mukaddim", arabic: "ٱلْمُقَدِّمُ", meaning: "Dilediğini öne alan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/70-ElMukaddim.mp3" },
-        { id: 71, name: "El-Muahhir", arabic: "ٱلْمُؤَخِّرُ", meaning: "Dilediğini arkaya bırakan, erteleyen.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/71-ElMuahhir.mp3" },
-        { id: 72, name: "El-Evvel", arabic: "ٱلْأَوَّلُ", meaning: "Her şeyden önce var olan, ilk.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/72-ElEvvel.mp3" },
-        { id: 73, name: "El-Âhir", arabic: "ٱلْآخِرُ", meaning: "Her şey yok olduktan sonra kalan, son.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/73-ElAhir.mp3" },
-        { id: 74, name: "El-Zâhir", arabic: "ٱلظَّاهِرُ", meaning: "Varlığı apaçık ortada olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/74-ElZahir.mp3" },
-        { id: 75, name: "El-Bâtın", arabic: "ٱلْبَاطِنُ", meaning: "Aklın idrak sınırlarının ötesinde gizli olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/75-ElBatin.mp3" },
-        { id: 76, name: "El-Vâlî", arabic: "ٱلْوَالِي", meaning: "Kainatı yöneten.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/76-ElVali.mp3" },
-        { id: 77, name: "El-Müteâlî", arabic: "ٱلْمُتَعَالِي", meaning: "Yücelikte en üstün olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/77-ElMuteali.mp3" },
-        { id: 78, name: "El-Berr", arabic: "ٱلْبَرُّ", meaning: "İyilik ve ihsanı bol olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/78-ElBerr.mp3" },
-        { id: 79, name: "Et-Tewwâb", arabic: "ٱلتَّوَّابُ", meaning: "Tövbeleri kabul eden.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/79-EtTevvab.mp3" },
-        { id: 80, name: "El-Müntekim", arabic: "ٱلْمُنْتَقِمُ", meaning: "Zalimlerin cezasını veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/80-ElMüntekim.mp3" },
-        { id: 81, name: "El-Afuvv", arabic: "ٱلْعَفُوُّ", meaning: "Affeden, günahları bağışlayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/81-ElAfuvv.mp3" },
-        { id: 82, name: "Er-Raûf", arabic: "ٱلرَّؤُوفُ", meaning: "Çok merhametli, şefkatli.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/82-ErRauf.mp3" },
-        { id: 83, name: "Mâlikü'l-Mülk", arabic: "مَالِكُ ٱلْمُلْكِ", meaning: "Mülkün ebedi sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/83-MalikulMulk.mp3" },
-        { id: 84, name: "Zü'l-Celâli ve'l-İkrâm", arabic: "ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ", meaning: "Celal ve büyük ikram sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/84-ZulCelali.mp3" },
-        { id: 85, name: "El-Muksit", arabic: "ٱلْمُقْسِطُ", meaning: "Bütün işlerini adaletle kılan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/85-ElMuksit.mp3" },
-        { id: 86, name: "El-Câmi'", arabic: "ٱلْجَامِعُ", meaning: "İstediğini istediği yerde toplayan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/86-ElCamic.mp3" },
-        { id: 87, name: "El-Ganiyy", arabic: "ٱلْغَنِيُّ", meaning: "Her türlü zenginlik sahibi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/87-ElGaniyy.mp3" },
-        { id: 88, name: "El-Muğnî", arabic: "ٱلْمُغْنِي", meaning: "Dilediğine bolluk veren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/88-ElMughni.mp3" },
-        { id: 89, name: "El-Mâni'", arabic: "ٱلْمَانِعُ", meaning: "İstediği şeyin gerçekleşmesine engel olan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/89-ElManic.mp3" },
-        { id: 90, name: "Ed-Dârr", arabic: "ٱلضَّارُّ", meaning: "Zararlı şeyleri yaratan (imtihan vesilesi).", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/90-EdDarr.mp3" },
-        { id: 91, name: "En-Nâfi'", arabic: "ٱلنَّافِعُ", meaning: "Faydalı şeyleri yaratan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/91-EnNafic.mp3" },
-        { id: 92, name: "En-Nûr", arabic: "ٱلنُُّورُ", meaning: "Alemleri nurlandıran.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/92-EnNur.mp3" },
-        { id: 93, name: "El-Hâdî", arabic: "ٱلْهَادِي", meaning: "Doğru yolu gösteren.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/93-ElHadi.mp3" },
-        { id: 94, name: "El-Bedî'", arabic: "ٱلْبَدِيعُ", meaning: "Eşsiz yaratan.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/94-ElBedic.mp3" },
-        { id: 95, name: "El-Bâkî", arabic: "ٱلْبَاقِي", meaning: "Varlığının sonu olmayan, ebedi.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/95-ElBaki.mp3" },
-        { id: 96, name: "El-Vâris", arabic: "ٱلْوَارِثُ", meaning: "Her şey yok olduğunda kalan hakiki varis.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/96-ElVaris.mp3" },
-        { id: 97, name: "Er-Reşîd", arabic: "ٱلرَّشِيدُ", meaning: "Doğru sonuca ulaştıran.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/97-ErResid.mp3" },
-        { id: 98, name: "Es-Sabûr", arabic: "ٱلصَّبُورُ", meaning: "Pek sabırlı.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/98-EsSabur.mp3" },
-        { id: 99, name: "Allah", arabic: "ٱللَّه", meaning: "Bütün ilahi isimleri kapsayan en yüce isim.", audio: "https://ia600304.us.archive.org/15/items/EsmaulHusna99/99-Allah.mp3" }
+        { id: 1, name: "Er-Rahmân", arabic: "ٱلرَّحْمَٰنُ", meaning: "Dünyada bütün mahlukata merhamet eden." },
+        { id: 2, name: "Er-Rahîm", arabic: "ٱلرَّحِيمُ", meaning: "Ahirette sadece müminlere ikram eden." },
+        { id: 3, name: "El-Melik", arabic: "ٱلْمَلِكُ", meaning: "Mülkün, kainatın sahibi ve mutlak hükümdarı." },
+        { id: 4, name: "El-Kuddûs", arabic: "ٱلْقُدُّوسُ", meaning: "Her türlü eksiklikten uzak, tertemiz." },
+        { id: 5, name: "Es-Selâm", arabic: "ٱلسَّلَامُ", meaning: "Her türlü tehlikeden kurtaran, esenlik veren." },
+        { id: 6, name: "El-Mü'min", arabic: "ٱلْمُؤْمِنُ", meaning: "Güven veren, emin kılan, inanç veren." },
+        { id: 7, name: "El-Müheymin", arabic: "ٱلْمُهَيْمِنُ", meaning: "Gözeten, koruyan, her şeyi görüp yöneten." },
+        { id: 8, name: "El-Azîz", arabic: "ٱلْعَزِيزُ", meaning: "İzzet sahibi, yegane üstün, mağlup edilemeyen." },
+        { id: 9, name: "El-Cebbâr", arabic: "ٱلْجَبَّارُ", meaning: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran." },
+        { id: 10, name: "El-Mütekebbir", arabic: "ٱلْمُتَكَبِّرُ", meaning: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren." },
+        { id: 11, name: "El-Hâlık", arabic: "ٱلْخَالِقُ", meaning: "Yaratan, yoktan var eden, ölçüye göre şekil veren." },
+        { id: 12, name: "El-Bâri'", arabic: "ٱلْبَارِئُ", meaning: "Her şeyi kusursuz ve uyumlu yaratan." },
+        { id: 13, name: "El-Musavvir", arabic: "ٱلْمُصَوِّرُ", meaning: "Varlıklara şekil ve suret veren." },
+        { id: 14, name: "El-Gaffâr", arabic: "ٱلْغَفَّارُ", meaning: "Günahları örten ve çok bağışlayan." },
+        { id: 15, name: "El-Kahhâr", arabic: "ٱلْقَهَّارُ", meaning: "Her şeye ve herkese galip gelen, mutlak güç sahibi." },
+        { id: 16, name: "El-Vehhâb", arabic: "ٱلْوَهَّابُ", meaning: "Karşılıksız bol bol nimetler veren." },
+        { id: 17, name: "Er-Rezzâk", arabic: "ٱلرَّزَّاقُ", meaning: "Bütün mahlukatın rızkını veren ve ihtiyacını karşılayan." },
+        { id: 18, name: "El-Fettâh", arabic: "ٱلْفَتَّاحُ", meaning: "Her türlü sıkıntıları açan, kolaylık ve rahmet kapılarını aralayan." },
+        { id: 19, name: "El-Alîm", arabic: "ٱلْعَلِيمُ", meaning: "Her şeyi en ince detayına kadar bilen." },
+        { id: 20, name: "El-Kâbıd", arabic: "ٱلْقَابِضُ", meaning: "Dilediğinin rızkını daraltan, ruhları alan." },
+        { id: 21, name: "El-Bâsıt", arabic: "ٱلْبَاسِطُ", meaning: "Dilediğinin rızkını genişleten, ferahlık veren." },
+        { id: 22, name: "El-Hâfıd", arabic: "ٱلْخَافِضُ", meaning: "Kafirleri ve zalimleri alçaltan, dereceleri düşüren." },
+        { id: 23, name: "Er-Râfi'", arabic: "ٱلرَّافِعُ", meaning: "Şeref veren, dereceleri yükselten." },
+        { id: 24, name: "El-Muiz", arabic: "ٱلْمُعِزُّ", meaning: "Dilediğine izzet ve şeref veren." },
+        { id: 25, name: "El-Muzil", arabic: "ٱلْمُذِلُّ", meaning: "Dilediğini zillete düşüren, hor ve hakir eden." },
+        { id: 26, name: "Es-Semî'", arabic: "ٱلسَّمِيعُ", meaning: "Her şeyi en iyi işiten." },
+        { id: 27, name: "El-Basîr", arabic: "ٱلْبَصِيرُ", meaning: "Her şeyi en iyi gören." },
+        { id: 28, name: "El-Hakem", arabic: "ٱلْحَكَمُ", meaning: "Mutlak hakim, hak ile batılı ayıran, hüküm veren." },
+        { id: 29, name: "El-Adl", arabic: "ٱلْعَدْلُ", meaning: "Mutlak adalet sahibi, çok adil." },
+        { id: 30, name: "El-Latîف", arabic: "ٱلْلَّطِيفُ", meaning: "Lütuf ve ihsan sahibi olan, kullarının işlerinin ince detaylarını bilen." },
+        { id: 31, name: "El-Habîr", arabic: "ٱلْخَبِيرُ", meaning: "Her şeyin iç yüzünden ve gizli hallerinden haberdar olan." },
+        { id: 32, name: "El-Halîm", arabic: "ٱلْحَلِيمُ", meaning: "Cezada acele etmeyen, yumuşak davranan, hilaf sahibi." },
+        { id: 33, name: "El-Azîm", arabic: "ٱلْعَظِيمُ", meaning: "Pek yüce, büyüklükte benzeri olmayan." },
+        { id: 34, name: "El-Gafûr", arabic: "ٱلْغَفُورُ", meaning: "Affı ve bağışlaması bol olan." },
+        { id: 35, name: "Eş-Şekûr", arabic: "ٱلشَّكُورُ", meaning: "Az amele karşılık çok mükâfat veren." },
+        { id: 36, name: "El-Aliyy", arabic: "ٱلْعَلِيُّ", meaning: "Çok yüce, her şeyden üstün." },
+        { id: 37, name: "El-Kebîr", arabic: "ٱلْكَبِيرُ", meaning: "Pek büyük, azamet sahibi." },
+        { id: 38, name: "El-Hafîz", arabic: "ٱلْحَفِيظُ", meaning: "Her şeyi koruyup gözeten." },
+        { id: 39, name: "El-Mukīt", arabic: "ٱلْمُقِيتُ", meaning: "Her yaratılmışın gıdasını ve rızkını veren." },
+        { id: 40, name: "El-Hasîb", arabic: "ٱلْحَسِيبُ", meaning: "Kulların hesabını en iyi gören." },
+        { id: 41, name: "El-Celîl", arabic: "ٱلْجَلِيلُ", meaning: "Celal ve azamet sahibi, yüce." },
+        { id: 42, name: "El-Kerîm", arabic: "ٱلْكَرِيمُ", meaning: "Keremi, cömertliği ve ihsanı bol olan." },
+        { id: 43, name: "Er-Rakîb", arabic: "ٱلرَّقِيبُ", meaning: "Bütün varlıkları her an gözetim altında tutan." },
+        { id: 44, name: "El-Mücîb", arabic: "ٱلْمُجِيبُ", meaning: "Dualara ve isteklere karşılık veren." },
+        { id: 45, name: "El-Vâsi'", arabic: "ٱلْوَاسِعُ", meaning: "İlmi, rahmeti ve kudreti her şeyi kuşatan." },
+        { id: 46, name: "El-Hakîm", arabic: "ٱلْحَكِيمُ", meaning: "Her işi hikmetli, her emri yerinde olan." },
+        { id: 47, name: "El-Vedûd", arabic: "ٱلْوَدُودُ", meaning: "Kullarını çok seven ve sevilmeye layık olan." },
+        { id: 48, name: "El-Mecîd", arabic: "ٱلْمَجِيدُ", meaning: "Şanı yüce ve şerefli olan." },
+        { id: 49, name: "El-Bâis", arabic: "ٱلْبَاعِثُ", meaning: "Ölüleri dirilten, peygamberler gönderen." },
+        { id: 50, name: "Eş-Şehîd", arabic: "ٱلشَّهِيدُ", meaning: "Her zaman hazır ve nazır olan, şahitlik eden." },
+        { id: 51, name: "El-Hakk", arabic: "ٱلْحَقُّ", meaning: "Varlığı hiç değişmeden duran, gerçek olan." },
+        { id: 52, name: "El-Vekîl", arabic: "ٱلْوَكِيلُ", meaning: "Kendisine tevekkül edilenlerin işlerini yöneten." },
+        { id: 53, name: "El-Kaviyy", arabic: "ٱلْقَوِيُّ", meaning: "Çok güçlü, kudret sahibi." },
+        { id: 54, name: "El-Metîn", arabic: "ٱلْمَتِينُ", meaning: "Kudret ve kuvveti çok sağlam olan." },
+        { id: 55, name: "El-Velî", arabic: "ٱلْوَلِيُّ", meaning: "İnananların dostu ve yardımcısı." },
+        { id: 56, name: "El-Hamîd", arabic: "ٱلْحَمِيدُ", meaning: "Yalnız kendisi övülmeye layık olan." },
+        { id: 57, name: "El-Muhsî", arabic: "ٱلْمُحْصِي", meaning: "Her şeyin sayısını ve detayını bilen." },
+        { id: 58, name: "El-Mubdi'", arabic: "ٱلْمُبْدِئُ", meaning: "Mahlukatı örneksiz yaratan." },
+        { id: 59, name: "El-Muîd", arabic: "ٱلْمُعِيدُ", meaning: "Yaratılmışları yok olduktan sonra tekrar dirilten." },
+        { id: 60, name: "El-Muhyî", arabic: "ٱلْمُحْيِي", meaning: "Can veren, hayat bağışlayan." },
+        { id: 61, name: "El-Mümît", arabic: "ٱلْمُمِيتُ", meaning: "Canlıların ölümünü yaratan." },
+        { id: 62, name: "El-Hayy", arabic: "ٱلْحَيُّ", meaning: "Diri, ebedi hayat sahibi." },
+        { id: 63, name: "El-Kayyûm", arabic: "ٱلْقَيُّومُ", meaning: "Kainatı ayakta tutan." },
+        { id: 64, name: "El-Vâcid", arabic: "ٱلْوَاجِدُ", meaning: "Hiçbir şeyi eksik olmayan, istediğini bulan." },
+        { id: 65, name: "El-Mâcid", arabic: "ٱلْمَاجِدُ", meaning: "Kadr u şanı yüce, keremi bol." },
+        { id: 66, name: "El-Vâhid", arabic: "ٱلْوَاحِدُ", meaning: "Zatında ve sıfatlarında bir olan, tek." },
+        { id: 67, name: "Es-Samed", arabic: "ٱلصَّمَدُ", meaning: "Her şeyin kendisine muhtaç olduğu." },
+        { id: 68, name: "El-Kâdir", arabic: "ٱلْقَادِرُ", meaning: "Dilediğini yapmaya gücü yeten." },
+        { id: 69, name: "El-Muktedir", arabic: "ٱلْمُقْتَدِرُ", meaning: "Mutlak kudret sahibi." },
+        { id: 70, name: "El-Mukaddim", arabic: "ٱلْمُقَدِّمُ", meaning: "Dilediğini öne alan." },
+        { id: 71, name: "El-Muahhir", arabic: "ٱلْمُؤَخِّرُ", meaning: "Dilediğini arkaya bırakan, erteleyen." },
+        { id: 72, name: "El-Evvel", arabic: "ٱلْأَوَّلُ", meaning: "Her şeyden önce var olan, ilk." },
+        { id: 73, name: "El-Âhir", arabic: "ٱلْآخِرُ", meaning: "Her şey yok olduktan sonra kalan, son." },
+        { id: 74, name: "El-Zâhir", arabic: "ٱلظَّاهِرُ", meaning: "Varlığı apaçık ortada olan." },
+        { id: 75, name: "El-Bâtın", arabic: "ٱلْبَاطِنُ", meaning: "Aklın idrak sınırlarının ötesinde gizli olan." },
+        { id: 76, name: "El-Vâlî", arabic: "ٱلْوَالِي", meaning: "Kainatı yöneten." },
+        { id: 77, name: "El-Müteâlî", arabic: "ٱلْمُتَعَالِي", meaning: "Yücelikte en üstün olan." },
+        { id: 78, name: "El-Berr", arabic: "ٱلْبَرُّ", meaning: "İyilik ve ihsanı bol olan." },
+        { id: 79, name: "Et-Tewwâb", arabic: "ٱلتَّوَّابُ", meaning: "Tövbeleri kabul eden." },
+        { id: 80, name: "El-Müntekim", arabic: "ٱلْمُنْتَقِمُ", meaning: "Zalimlerin cezasını veren." },
+        { id: 81, name: "El-Afuvv", arabic: "ٱلْعَفُوُّ", meaning: "Affeden, günahları bağışlayan." },
+        { id: 82, name: "Er-Raûf", arabic: "ٱلرَّؤُوفُ", meaning: "Çok merhametli, şefkatli." },
+        { id: 83, name: "Mâlikü'l-Mülk", arabic: "مَالِكُ ٱلْمُلْكِ", meaning: "Mülkün ebedi sahibi." },
+        { id: 84, name: "Zü'l-Celâli ve'l-İkrâm", arabic: "ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ", meaning: "Celal ve büyük ikram sahibi." },
+        { id: 85, name: "El-Muksit", arabic: "ٱلْمُقْسِطُ", meaning: "Bütün işlerini adaletle kılan." },
+        { id: 86, name: "El-Câmi'", arabic: "ٱلْجَامِعُ", meaning: "İstediğini istediği yerde toplayan." },
+        { id: 87, name: "El-Ganiyy", arabic: "ٱلْغَنِيُّ", meaning: "Her türlü zenginlik sahibi." },
+        { id: 88, name: "El-Muğnî", arabic: "ٱلْمُغْنِي", meaning: "Dilediğine bolluk veren." },
+        { id: 89, name: "El-Mâni'", arabic: "ٱلْمَانِعُ", meaning: "İstediği şeyin gerçekleşmesine engel olan." },
+        { id: 90, name: "Ed-Dârr", arabic: "ٱلضَّارُّ", meaning: "Zararlı şeyleri yaratan (imtihan vesilesi)." },
+        { id: 91, name: "En-Nâfi'", arabic: "ٱلنَّافِعُ", meaning: "Faydalı şeyleri yaratan." },
+        { id: 92, name: "En-Nûr", arabic: "ٱلنُُّورُ", meaning: "Alemleri nurlandıran." },
+        { id: 93, name: "El-Hâdî", arabic: "ٱلْهَادِي", meaning: "Doğru yolu gösteren." },
+        { id: 94, name: "El-Bedî'", arabic: "ٱلْبَدِيعُ", meaning: "Eşsiz yaratan." },
+        { id: 95, name: "El-Bâkî", arabic: "ٱلْبَاقِي", meaning: "Varlığının sonu olmayan, ebedi." },
+        { id: 96, name: "El-Vâris", arabic: "ٱلْوَارِثُ", meaning: "Her şey yok olduğunda kalan hakiki varis." },
+        { id: 97, name: "Er-Reşîd", arabic: "ٱلرَّشِيدُ", meaning: "Doğru sonuca ulaştıran." },
+        { id: 98, name: "Es-Sabûr", arabic: "ٱلصَّبُورُ", meaning: "Pek sabırlı." },
+        { id: 99, name: "Allah", arabic: "ٱللَّه", meaning: "Bütün ilahi isimleri kapsayan en yüce isim." }
     ];
 
     let currentSelectedEsma = null;
-    let currentAudio = null; // Aktif ses nesnesi (arkada çalmaya devam etmesini önlemek için)
 
     function renderEsmaList() {
         const listContainer = document.getElementById('esma-list');
@@ -527,31 +525,29 @@
         }
     }
 
-    // Sesi tamamen durduran yardımcı fonksiyon
+    // Sesi tamamen durduran fonksiyon (Web Speech API iptali)
     function stopAudio() {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-            currentAudio = null;
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
         }
     }
 
-    // Sadece tek ismi okuyan ve çakışma yapmayan insan sesi oynatıcı
+    // Doğrudan tarayıcının ses motoruyla tek ismi seslendirme
     function playHumanAudioPronunciation() {
-        if (!currentSelectedEsma || !currentSelectedEsma.audio) return;
+        if (!currentSelectedEsma) return;
         
-        stopAudio(); // Önceki çalan sesi kes
+        stopAudio(); // Önceki okumayı kes
 
-        currentAudio = new Audio(currentSelectedEsma.audio);
-        currentAudio.play().catch(error => {
-            console.error("Ses çalınamadı:", error);
-            alert("Ses dosyası oynatılamadı.");
-        });
-
-        // Ses bitince hafızayı temizle
-        currentAudio.onended = () => {
-            currentAudio = null;
-        };
+        if ('speechSynthesis' in window) {
+            // Sadece tıklanan ismin Türkçe okunuşunu net ve kısa söyletiyoruz
+            const utterance = new SpeechSynthesisUtterance(currentSelectedEsma.name);
+            utterance.lang = 'tr-TR';
+            utterance.rate = 0.9; // Biraz daha sakin ve yavaş tonlama için
+            
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Tarayıcınız sesli okuma özelliğini desteklemiyor.");
+        }
     }
 
     const themeToggleBtn = document.getElementById('theme-toggle');
