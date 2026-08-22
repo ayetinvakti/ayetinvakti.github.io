@@ -7,21 +7,18 @@
     
     <!-- Titremesiz Gelişmiş Tema, Renk Hafızası ve Genel Dil Entegrasyonu -->
     <script>
-        // 1. Genel Ayarlardaki Dil Tercihini Yükle (user_lang ile tam senkronize)
         const savedLang = localStorage.getItem('user_lang') || 'tr';
         document.documentElement.lang = savedLang;
         if (savedLang === 'ar') {
             document.documentElement.dir = 'rtl';
         }
 
-        // 2. Tema Ayarını Yükle
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
             document.documentElement.classList.add('light-mode');
         }
 
-        // 3. Özel Renk Paletini Yükle
         const customBg = localStorage.getItem('custom_bg');
         const customCard = localStorage.getItem('custom_card');
         const customText = localStorage.getItem('custom_text');
@@ -52,7 +49,6 @@
             --border-color: #e2e8f0;
         }
 
-        /* RTL (Arapça) Font Uyumluluğu */
         html[lang="ar"] {
             --font-family: 'Amiri', 'Traditional Arabic', serif;
         }
@@ -183,7 +179,6 @@
             font-size: 0.85rem;
             font-weight: bold;
             flex-shrink: 0;
-            transition: color 0.3s ease;
         }
 
         .esma-info h3 {
@@ -204,10 +199,9 @@
             font-weight: bold;
             color: var(--accent-color);
             text-align: right;
-            transition: color 0.3s ease;
         }
 
-        /* --- DETAY MODALI STİLLERİ --- */
+        /* MODAL STİLLERİ */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -298,16 +292,11 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: border-color 0.2s ease;
         }
 
         .action-btn.primary {
             background-color: var(--accent-color);
             color: #ffffff;
-            border-color: var(--accent-color);
-        }
-
-        .action-btn:hover {
             border-color: var(--accent-color);
         }
 
@@ -331,7 +320,6 @@
             font-weight: 600;
         }
 
-        /* RTL Ayarlamaları (Arapça için) */
         html[dir="rtl"] .esma-arabic-text {
             text-align: left;
         }
@@ -356,7 +344,7 @@
     </div>
 
     <div class="esma-grid" id="esma-list">
-        <!-- JavaScript ile dinamik ve tıklanabilir olarak doldurulacak -->
+        <!-- 99 Esma JavaScript ile dinamik basılacak -->
     </div>
 </div>
 
@@ -371,13 +359,12 @@
         <div style="text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--text-color);" id="modalName">Er-Rahmân</div>
         
         <div class="modal-body">
-            <div><strong>Anlamı:</strong> <span id="modalMeaning">Dünyada bütün mahlukata merhamet eden.</span></div>
-            <div><strong>Fazileti / Açıklama:</strong> <span id="modalDesc">Günde 298 defa zikredenin kalbi nurlanır, unutkanlığı gider.</span></div>
+            <div><strong>Anlamı:</strong> <span id="modalMeaning">Dünyada bütün mahlukata merhamet eden, bağışlayan.</span></div>
         </div>
 
         <div class="modal-actions">
             <button class="action-btn primary" onclick="playAudioPronunciation()">
-                🔊 <span id="listen-text">Dinle / Seslendir</span>
+                🔊 <span id="listen-text">Sesli Okunuş (Yavaş)</span>
             </button>
             <button class="action-btn" onclick="closeModal()" id="close-text">Kapat</button>
         </div>
@@ -389,23 +376,111 @@
 </div>
 
 <script>
-    // --- ESMA VERİ TABANI (Detay ve Faziletler Eklendi) ---
+    // --- 99 ESMA-ÜL HÜSNA LİSTESİ (Saf ve Doğru Anlamlar) ---
     const esmaData = [
-        { id: 1, name: "Er-Rahmân", arabic: "ٱلرَّحْمَٰنُ", meaning: "Dünyada bütün mahlukata merhamet eden.", desc: "Günde 298 defa zikredenin kalbi nurlanır, unutkanlığı gider." },
-        { id: 2, name: "Er-Rahîm", arabic: "ٱلرَّحِيمُ", meaning: "Ahirette sadece müminlere ikram eden.", desc: "Günde 100 defa zikreden maddi ve manevi belalardan korunur." },
-        { id: 3, name: "El-Melik", arabic: "ٱلْمَلِكُ", meaning: "Mülkün, kainatın sahibi ve mutlak hükümdarı.", desc: "Günde 121 defa okuyanın işleri kolaylaşır, rızkı genişler." },
-        { id: 4, name: "El-Kuddûs", arabic: "ٱلْقُدُّوسُ", meaning: "Her türlü eksiklikten uzak, tertemiz.", desc: "Günde 100 defa okuyanın kalbi vesveselerden temizlenir." },
-        { id: 5, name: "Es-Selâm", arabic: "ٱلسَّلَامُ", meaning: "Her türlü tehlikeden kurtaran, esenlik veren.", desc: "Korkulan şeylerden emin olmak ve şifa bulmak için okunur." },
-        { id: 6, name: "El-Mü'min", arabic: "ٱلْمُؤْمِنُ", meaning: "Güven veren, emin kılan, inanç veren.", desc: "Korkularından emin olmak için 131 defa zikredilir." },
-        { id: 7, name: "El-Müheymin", arabic: "ٱلْمُهَيْمِنُ", meaning: "Gözeten, koruyan, her şeyi görüp yöneten.", desc: "Gusledip 100 defa zikredenin kalbi ve yüzü nurlanır." },
-        { id: 8, name: "El-Azîz", arabic: "ٱلْعَزِيزُ", meaning: "İzzet sahibi, yegane üstün, mağlup edilemeyen.", desc: "Günde 40 defa okuyan kimse kimseye muhtaç olmaz." },
-        { id: 9, name: "El-Cebbâr", arabic: "ٱلْجَبَّارُ", meaning: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran.", desc: "Zalimlerin şerrinden korunmak için zikredilir." },
-        { id: 10, name: "El-Mütekebbir", arabic: "ٱلْمُتَكَبِّرُ", meaning: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren.", desc: "Makam ve itibar sahibi olmak için okunur." }
+        { id: 1, name: "Er-Rahmân", arabic: "ٱلرَّحْمَٰنُ", meaning: "Dünyada bütün mahlukata merhamet eden." },
+        { id: 2, name: "Er-Rahîm", arabic: "ٱلرَّحِيمُ", meaning: "Ahirette sadece müminlere ikram eden." },
+        { id: 3, name: "El-Melik", arabic: "ٱلْمَلِكُ", meaning: "Mülkün, kainatın sahibi ve mutlak hükümdarı." },
+        { id: 4, name: "El-Kuddûs", arabic: "ٱلْقُدُّوسُ", meaning: "Her türlü eksiklikten uzak, tertemiz." },
+        { id: 5, name: "Es-Selâm", arabic: "ٱلسَّلَامُ", meaning: "Her türlü tehlikeden kurtaran, esenlik veren." },
+        { id: 6, name: "El-Mü'min", arabic: "ٱلْمُؤْمِنُ", meaning: "Güven veren, emin kılan, inanç veren." },
+        { id: 7, name: "El-Müheymin", arabic: "ٱلْمُهَيْمِنُ", meaning: "Gözeten, koruyan, her şeyi görüp yöneten." },
+        { id: 8, name: "El-Azîz", arabic: "ٱلْعَزِيزُ", meaning: "İzzet sahibi, yegane üstün, mağlup edilemeyen." },
+        { id: 9, name: "El-Cebbâr", arabic: "ٱلْجَبَّارُ", meaning: "Dilediğini yapan, hükmüne karşı gelinemeyen, kırıkları onaran." },
+        { id: 10, name: "El-Mütekebbir", arabic: "ٱلْمُتَكَبِّرُ", meaning: "Büyüklükte eşi olmayan, her şeyde büyüklüğünü gösteren." },
+        { id: 11, name: "El-Hâlık", arabic: "ٱلْخَالِقُ", meaning: "Yaratan, yoktan var eden, ölçüye göre şekil veren." },
+        { id: 12, name: "El-Bâri'", arabic: "ٱلْبَارِئُ", meaning: "Her şeyi kusursuz ve uyumlu yaratan." },
+        { id: 13, name: "El-Musavvir", arabic: "ٱلْمُصَوِّرُ", meaning: "Varlıklara şekil ve suret veren." },
+        { id: 14, name: "El-Gaffâr", arabic: "ٱلْغَفَّارُ", meaning: "Günahları örten ve çok bağışlayan." },
+        { id: 15, name: "El-Kahhâr", arabic: "ٱلْقَهَّارُ", meaning: "Her şeye ve herkese galip gelen, mutlak güç sahibi." },
+        { id: 16, name: "El-Vehhâb", arabic: "ٱلْوَهَّابُ", meaning: "Karşılıksız bol bol nimetler veren." },
+        { id: 17, name: "Er-Rezzâk", arabic: "ٱلرَّزَّاقُ", meaning: "Bütün mahlukatın rızkını veren ve ihtiyacını karşılayan." },
+        { id: 18, name: "El-Fettâh", arabic: "ٱلْفَتَّاحُ", meaning: "Her türlü sıkıntıları açan, kolaylık ve rahmet kapılarını aralayan." },
+        { id: 19, name: "El-Alîm", arabic: "ٱلْعَلِيمُ", meaning: "Her şeyi en ince detayına kadar bilen." },
+        { id: 20, name: "El-Kâbıd", arabic: "ٱلْقَابِضُ", meaning: "Dilediğinin rızkını daraltan, ruhları alan." },
+        { id: 21, name: "El-Bâsıt", arabic: "ٱلْبَاسِطُ", meaning: "Dilediğinin rızkını genişleten, ferahlık veren." },
+        { id: 22, name: "El-Hâfıd", arabic: "ٱلْخَافِضُ", meaning: "Kafirleri ve zalimleri alçaltan, dereceleri düşüren." },
+        { id: 23, name: "Er-Râfi'", arabic: "ٱلرَّافِعُ", meaning: "Şeref veren, dereceleri yükselten." },
+        { id: 24, name: "El-Muiz", arabic: "ٱلْمُعِزُّ", meaning: "Dilediğine izzet ve şeref veren." },
+        { id: 25, name: "El-Muzil", arabic: "ٱلْمُذِلُّ", meaning: "Dilediğini zillete düşüren, hor ve hakir eden." },
+        { id: 26, name: "Es-Semî'", arabic: "ٱلسَّمِيعُ", meaning: "Her şeyi en iyi işiten." },
+        { id: 27, name: "El-Basîr", arabic: "ٱلْبَصِيرُ", meaning: "Her şeyi en iyi gören." },
+        { id: 28, name: "El-Hakem", arabic: "ٱلْحَكَمُ", meaning: "Mutlak hakim, hak ile batılı ayıran, hüküm veren." },
+        { id: 29, name: "El-Adl", arabic: "ٱلْعَدْلُ", meaning: "Mutlak adalet sahibi, çok adil." },
+        { id: 30, name: "El-Latîf", arabic: "ٱلْلَّطِيفُ", meaning: "Lütuf ve ihsan sahibi olan, kullarının işlerinin ince detaylarını bilen." },
+        { id: 31, name: "El-Habîr", arabic: "ٱلْخَبِيرُ", meaning: "Her şeyin iç yüzünden ve gizli hallerinden haberdar olan." },
+        { id: 32, name: "El-Halîm", arabic: "ٱلْحَلِيمُ", meaning: "Cezada acele etmeyen, yumuşak davranan, hilaf sahibi." },
+        { id: 33, name: "El-Azîm", arabic: "ٱلْعَظِيمُ", meaning: "Pek yüce, büyüklükte benzeri olmayan." },
+        { id: 34, name: "El-Gafûr", arabic: "ٱلْغَفُورُ", meaning: "Affı ve bağışlaması bol olan." },
+        { id: 35, name: "Eş-Şekûr", arabic: "ٱلشَّكُورُ", meaning: "Az amele karşılık çok mükâfat veren." },
+        { id: 36, name: "El-Aliyy", arabic: "ٱلْعَلِيُّ", meaning: "Çok yüce, her şeyden üstün." },
+        { id: 37, name: "El-Kebîr", arabic: "ٱلْكَبِيرُ", meaning: "Pek büyük, azamet sahibi." },
+        { id: 38, name: "El-Hafîz", arabic: "ٱلْحَفِيظُ", meaning: "Her şeyi koruyup gözeten." },
+        { id: 39, name: "El-Mukīt", arabic: "ٱلْمُقِيتُ", meaning: "Her yaratılmışın gıdasını ve rızkını veren." },
+        { id: 40, name: "El-Hasîb", arabic: "ٱلْحَسِيبُ", meaning: "Kulların hesabını en iyi gören, kafاية eden." },
+        { id: 41, name: "El-Celîl", arabic: "ٱلْجَلِيلُ", meaning: "Celal ve azamet sahibi, yüce." },
+        { id: 42, name: "El-Kerîm", arabic: "ٱلْكَرِيمُ", meaning: "Keremi, cömertliği ve ihsanı bol olan." },
+        { id: 43, name: "Er-Rakîb", arabic: "ٱلرَّقِيبُ", meaning: "Bütün varlıkları ve işleri her an gözetim altında tutan." },
+        { id: 44, name: "El-Mücîb", arabic: "ٱلْمُجِيبُ", meaning: "Dualara ve isteklere karşılık veren, icabet eden." },
+        { id: 45, name: "El-Vâsi'", arabic: "ٱلْوَاسِعُ", meaning: "İlmi, rahmeti ve kudreti her şeyi kuşatan." },
+        { id: 46, name: "El-Hakîm", arabic: "ٱلْحَكِيمُ", meaning: "Her işi hikmetli, her emri yerinde olan." },
+        { id: 47, name: "El-Vedûd", arabic: "ٱلْوَدُودُ", meaning: "Kullarını çok seven ve sevilmeye layık olan." },
+        { id: 48, name: "El-Mecîd", arabic: "ٱلْمَجِيدُ", meaning: "Şanı yüce ve şerefli olan." },
+        { id: 49, name: "El-Bâis", arabic: "ٱلْبَاعِثُ", meaning: "Ölüleri dirilten, peygamberler gönderen." },
+        { id: 50, name: "Eş-Şehîd", arabic: "ٱلشَّهِيدُ", meaning: "Her zaman ve her yerde hazır ve nazır olan, şahitlik eden." },
+        { id: 51, name: "El-Hakk", arabic: "ٱلْحَقُّ", meaning: "Varlığı hiç değişmeden duran, gerçek olan." },
+        { id: 52, name: "El-Vekîl", arabic: "ٱلْوَكِيلُ", meaning: "Kendisine tevekkül edenlerin işlerini en iyi yöneten, güvenilen." },
+        { id: 53, name: "El-Kaviyy", arabic: "ٱلْقَوِيُّ", meaning: "Çok güçlü, kudret sahibi." },
+        { id: 54, name: "El-Metîn", arabic: "ٱلْمَتِينُ", meaning: "Kudret ve kuvveti çok sağlam olan." },
+        { id: 55, name: "El-Velî", arabic: "ٱلْوَلِيُّ", meaning: "İnananların dostu, yardımcısı ve yöneticisi." },
+        { id: 56, name: "El-Hamîd", arabic: "ٱلْحَمِيدُ", meaning: "Yalnız kendisi övülmeye layık olan." },
+        { id: 57, name: "El-Muhsî", arabic: "ٱلْمُحْصِي", meaning: "Her şeyin sayısını ve detayını bilen." },
+        { id: 58, name: "El-Mubdi'", arabic: "ٱلْمُبْدِئُ", meaning: "Mahlukatı örneksiz ve defaten yaratan." },
+        { id: 59, name: "El-Muîd", arabic: "ٱلْمُعِيدُ", meaning: "Yaratılmışları yok olduktan sonra tekrar dirilten." },
+        { id: 60, name: "El-Muhyî", arabic: "ٱلْمُحْيِي", meaning: "Can veren, hayat bağışlayan." },
+        { id: 61, name: "El-Mümît", arabic: "ٱلْمُمِيتُ", meaning: "Canlıların ölümünü yaratan." },
+        { id: 62, name: "El-Hayy", arabic: "ٱلْحَيُّ", meaning: "Diri, ebedi hayat sahibi." },
+        { id: 63, name: "El-Kayyûm", arabic: "ٱلْقَيُّومُ", meaning: "Kainatı ayakta tutan, varlıkları idare eden." },
+        { id: 64, name: "El-Vâcid", arabic: "ٱلْوَاجِدُ", meaning: "Hiçbir şeyi eksik olmayan, istediğini bulan." },
+        { id: 65, name: "El-Mâcid", arabic: "ٱلْمَاجِدُ", meaning: "Kadr u şanı yüce, kerem ve cömertliği bol." },
+        { id: 66, name: "El-Vâhid", arabic: "ٱلْوَاحِدُ", meaning: "Zatında, sıfatlarında ve fiillerinde bir olan, tek." },
+        { id: 67, name: "Es-Samed", arabic: "ٱلصَّمَدُ", meaning: "Her şeyin kendisine muhtaç olduğu, fakat kendisi hiçbir şeye muhtaç olmayan." },
+        { id: 68, name: "El-Kâdir", arabic: "ٱلْقَادِرُ", meaning: "Dilediğini yapmaya gücü yeten." },
+        { id: 69, name: "El-Muktedir", arabic: "ٱلْمُقْتَدِرُ", meaning: "Her şeye gücü yeten, mutlak kudret sahibi." },
+        { id: 70, name: "El-Mukaddim", arabic: "ٱلْمُقَدِّمُ", meaning: "Dilediğini öne alan, öne geçiren." },
+        { id: 71, name: "El-Muahhir", arabic: "ٱلْمُؤَخِّرُ", meaning: "Dilediğini arkaya bırakan, erteleyen." },
+        { id: 72, name: "El-Evvel", arabic: "ٱلْأَوَّلُ", meaning: "Her şeyden önce var olan, ilk." },
+        { id: 73, name: "El-Âhir", arabic: "ٱلْآخِرُ", meaning: "Her şey yok olduktan sonra kalan, son." },
+        { id: 74, name: "El-Zâhir", arabic: "ٱلظَّاهِرُ", meaning: "Varlığı apaçık ortada olan, delilleriyle bilinen." },
+        { id: 75, name: "El-Bâtın", arabic: "ٱلْبَاطِنُ", meaning: "Aklın idrak sınırlarının ötesinde gizli olan, duyularla idrak edilemeyen." },
+        { id: 76, name: "El-Vâlî", arabic: "ٱلْوَالِي", meaning: "Kainatı ve her an olup bitenleri yöneten." },
+        { id: 77, name: "El-Müteâlî", arabic: "ٱلْمُتَعَالِي", meaning: "Akılların eremeyeceği yücelikte olan." },
+        { id: 78, name: "El-Berr", arabic: "ٱلْبَرُّ", meaning: "İyilik ve ihsanı bol olan." },
+        { id: 79, name: "Et-Tewwâb", arabic: "ٱلتَّوَّابُ", meaning: "Tövbeleri kabul eden ve günahları bağışlayan." },
+        { id: 80, name: "El-Müntekim", arabic: "ٱلْمُنْتَقِمُ", meaning: "Zalimlerin cezasını veren, intikam alan." },
+        { id: 81, name: "El-Afuvv", arabic: "ٱلْعَفُوُّ", meaning: "Affeden, günahları suç olmaktan çıkaran." },
+        { id: 82, name: "Er-Raûf", arabic: "ٱلرَّؤُوفُ", meaning: "Çok merhametli, şefkatli." },
+        { id: 83, name: "Mâlikü'l-Mülk", arabic: "مَالِكُ ٱلْمُلْكِ", meaning: "Mülkün ve kainatın ebedi sahibi." },
+        { id: 84, name: "Zü'l-Celâli ve'l-İkrâm", arabic: "ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ", meaning: "Celal, azamet ve büyük ikram sahibi." },
+        { id: 85, name: "El-Muksit", arabic: "ٱلْمُقْسِطُ", meaning: "Bütün işlerini adalete ve dengeli kılan." },
+        { id: 86, name: "El-Câmi'", arabic: "ٱلْجَامِعُ", meaning: "İstediğini istediği gün ve yerde toplayan." },
+        { id: 87, name: "El-Ganiyy", arabic: "ٱلْغَنِيُّ", meaning: "Her türlü zenginlik sahibi, kimseye muhtaç olmayan." },
+        { id: 88, name: "El-Muğnî", arabic: "ٱلْمُغْنِي", meaning: "Dilediğine zenginlik ve bolluk veren." },
+        { id: 89, name: "El-Mâni'", arabic: "ٱلْمَانِعُ", meaning: "İstediği şeyin gerçekleşmesine engel olan." },
+        { id: 90, name: "Ed-Dârr", arabic: "ٱلضَّارُّ", meaning: "Zararlı şeyleri yaratan (imtihan vesilesi kılan)." },
+        { id: 91, name: "En-Nâfi'", arabic: "ٱلنَّافِعُ", meaning: "Faydalı ve hayırlı şeyleri yaratan." },
+        { id: 92, name: "En-Nûr", arabic: "ٱلنُُّورُ", meaning: "Alemleri nurlandıran, aydınlatan." },
+        { id: 93, name: "El-Hâdî", arabic: "ٱلْهَادِي", meaning: "Hidayet veren, doğru yolu gösteren." },
+        { id: 94, name: "El-Bedî'", arabic: "ٱلْبَدِيعُ", meaning: "Örneksiz ve eşsiz yaratan." },
+        { id: 95, name: "El-Bâkî", arabic: "ٱلْبَاقِي", meaning: "Varlığının sonu olmayan, ebedi olan." },
+        { id: 96, name: "El-Vâris", arabic: "ٱلْوَارِثُ", meaning: "Her şeyin hakiki varisçisi, her şey yok olduğunda kalan." },
+        { id: 97, name: "Er-Reşîd", arabic: "ٱلرَّشِيدُ", meaning: "Bütün işleri hikmete uygun ve doğru sonuca ulaştıran." },
+        { id: 98, name: "Es-Sabûr", arabic: "ٱلصَّبُورُ", meaning: "Cezada acele etmeyen, pek sabırlı." },
+        { id: 99, name: "Allah", arabic: "ٱللَّه", meaning: "Bütün ilahi isimleri ve sıfatları kapsayan, en yüce özel isim." }
     ];
 
     let currentSelectedEsma = null;
 
-    // --- LİSTEYİ RENDER ETME ---
     function renderEsmaList() {
         const listContainer = document.getElementById('esma-list');
         listContainer.innerHTML = '';
@@ -429,14 +504,12 @@
         });
     }
 
-    // --- MODAL İŞLEMLERİ ---
     function openModal(esma) {
         currentSelectedEsma = esma;
         document.getElementById('modalNumber').textContent = `${esma.id}`;
         document.getElementById('modalArabic').textContent = esma.arabic;
         document.getElementById('modalName').textContent = esma.name;
         document.getElementById('modalMeaning').textContent = esma.meaning;
-        document.getElementById('modalDesc').textContent = esma.desc;
 
         document.getElementById('esmaModal').classList.add('active');
     }
@@ -451,20 +524,21 @@
         }
     }
 
-    // --- SESLİ OKUMA (Web Speech API) ---
+    // Doğal/Yavaş Telaffuz Ayarı (Robotikliği azaltmak için hız düşürüldü)
     function playAudioPronunciation() {
         if (!currentSelectedEsma) return;
         if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Önceki sesleri temizle
             const utterance = new SpeechSynthesisUtterance(currentSelectedEsma.name);
-            utterance.lang = 'ar-SA'; // Arapça telaffuz motoru
-            utterance.rate = 0.8; // Daha sakin ve anlaşılır hız
+            utterance.lang = 'ar-SA';
+            utterance.rate = 0.75; // Daha akıcı ve yumuşak hız
+            utterance.pitch = 1.0;
             window.speechSynthesis.speak(utterance);
         } else {
             alert("Tarayıcınız ses sentezleme özelliğini desteklemiyor.");
         }
     }
 
-    // --- TEMA YÖNETİMİ ---
     const themeToggleBtn = document.getElementById('theme-toggle');
     
     function updateThemeIcon() {
@@ -483,7 +557,6 @@
         updateThemeIcon();
     });
 
-    // --- GENEL DİL YÖNETİMİ ---
     const uiTranslations = {
         tr: {
             docTitle: "Esmaül Hüsna | Ayetin Vakti",
@@ -491,7 +564,7 @@
             pageDesc: "Allah'ın en güzel 99 ismi ve anlamları",
             footerText: "© Ayetin Vakti • ",
             footerSpan: "Huzur ve İbadet Rehberliğiniz",
-            listenText: "Dinle / Seslendir",
+            listenText: "Sesli Okunuş",
             closeText: "Kapat",
             dir: "ltr"
         },
@@ -501,7 +574,7 @@
             pageDesc: "The 99 most beautiful names of Allah and their meanings",
             footerText: "© Time of Ayah • ",
             footerSpan: "Your Guide to Peace and Worship",
-            listenText: "Listen / Pronounce",
+            listenText: "Pronunciation",
             closeText: "Close",
             dir: "ltr"
         },
@@ -511,7 +584,7 @@
             pageDesc: "أجمل 99 اسماً لله ومعانيها",
             footerText: "© وقت الآية • ",
             footerSpan: "دليلك للسلام والعبادة",
-            listenText: "استماع / نطق",
+            listenText: "النطق الصوتي",
             closeText: "إغلاق",
             dir: "rtl"
         }
@@ -537,7 +610,6 @@
         }
     }
 
-    // Sayfa Yüklendiğinde Çalıştır
     document.addEventListener('DOMContentLoaded', () => {
         applyGlobalLanguage(currentLang);
         renderEsmaList();
