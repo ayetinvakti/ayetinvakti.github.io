@@ -1933,6 +1933,23 @@
                 .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
         });
     }
+    document.addEventListener("DOMContentLoaded", function() {
+    const slider = document.querySelector('.quotes-slider');
+    if (!slider) return;
+
+    // Tüm kartları diziye al
+    const cards = Array.from(slider.querySelectorAll('.quote-card'));
+    
+    // Kartları rastgele karıştır (Fisher-Yates shuffle)
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    // Karıştırılan kartları slider'a tekrar ekle (DOM içinde yerleri değişir)
+    cards.forEach(card => slider.appendChild(card));
+});
+
 </script>
 </body>
 </html>
