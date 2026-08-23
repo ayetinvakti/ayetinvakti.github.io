@@ -689,7 +689,7 @@
             <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
         </div>
         
-        <div class="quotes-slider">
+        <div class="quotes-slider" id="quotesSliderContainer">
             <div class="quote-card card-emerald">
                 <div class="quote-icon">❝</div>
                 <div class="quote-text">İki nimet vardır ki, insanların çoğu onun kıymetini bilmezler: Vücut sağlığı ve boş vakit.</div>
@@ -876,6 +876,23 @@
     }
     const rdb = firebase.database();
 
+    // --- GÜNÜN HİKMETLERİ KARTLARINI RASTGELE SIRALAMA FONKSİYONU ---
+    function randomizeQuotes() {
+        const slider = document.getElementById('quotesSliderContainer');
+        if (!slider) return;
+        const cards = Array.from(slider.children);
+        // Kartları rastgele karıştır (Fisher-Yates algoritması)
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            slider.appendChild(cards[j]); // DOM elemanlarını sırayla yeniden ekleyerek yerlerini değiştirir
+        }
+    }
+
+    // Sayfa açıldığında hikmetleri rastgele diz
+    document.addEventListener("DOMContentLoaded", () => {
+        randomizeQuotes();
+    });
+
     const esmaList = [
         { ar: "ٱللَّهُ", tr: "Allah", desc: "Var olan her şeyin gerçek sahibi." },
         { ar: "ٱلرَّحْمَٰنُ", tr: "Er-Rahmân", desc: "Dünyada tüm mahlukata merhamet eden." },
@@ -910,7 +927,7 @@
         { ar: "ٱللَّطِيفُ", tr: "El-Latîf", desc: "Lütuf sahibi, kullarının işlerinin inceliklerini bilen." },
         { ar: "ٱلْخَبِيرُ", tr: "El-Habîr", desc: "Her şeyin iç yüzünden, gizlisinden haberdar olan." },
         { ar: "ٱلْحَلِيمُ", tr: "El-Halîm", desc: "Cezada acele etmeyen, yumuşak davranan." },
-        { ar: "ٱلْعَظِيمُ", tr: "El-Azîm", desc: "Peygamberler ve akıllarca azameti kavranamayacak kadar ulu." },
+        { ar: "ٱلْعَظِيمُ", tr: "El-Azîz", desc: "Peygamberler ve akıllarca azameti kavranamayacak kadar ulu." },
         { ar: "ٱلْغَفُورُ", tr: "El-Gafûr", desc: "Günahları tamamen örten ve bağışlayandır." }
     ];
 
@@ -1319,7 +1336,7 @@
         
         currentQuestionIndex = 0;
         loadSoloQuestion();
-        loadRandomInfo(); // Dil değiştiğinde de rastgele bilgiyi yeni dile göre güncelle
+        loadRandomInfo();
 
         if (lastFetchedData) {
             updateDateUI(lastFetchedData);
@@ -1680,258 +1697,6 @@
         document.getElementById('duel-setup-view').style.display = 'block';
         document.getElementById('duel-game-view').style.display = 'none';
         document.getElementById('roomCodeInput').value = '';
-    }
-
-    async function fetchPrayerTimes(city) {
-        const tuneParam = "10,0,0,0,0,0"; 
-        const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13&tune=${tuneParam}`;
-        
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error("API hatası");
-            const data = await response.json();
-            const times = data.data.timings;
-
-            document.getElementById('val-imsak').innerText = times.Imsak;
-            document.getElementById('val-gunes').innerText = times.Sunrise;
-            document.getElementById('val-ogle').innerText = times.Dhuhr;
-            document.getElementById('val-ikindi').innerText = times.Asr;
-            document.getElementById('val-aksam').innerText = times.Maghrib;
-            document.getElementById('val-yatsi').innerText = times.Isha;
-
-            lastFetchedData = data.data;
-            updateDateUI(lastFetchedData);
-        } catch (error) {
-            console.error("Vakitler alınamadı:", error);
-            document.getElementById('current-date-text').innerText = "Vakitler yüklenemedi";
-        }
-    }
-
-    function updateDateUI(apiData) {
-        if (!apiData) return;
-        const greg = apiData.date.gregorian;
-        const hijri = apiData.date.hijri;
-
-        let gMonthName = greg.month.en;
-        if (currentLang === 'tr' && gregorianMonthsTr[gMonthName]) {
-            gMonthName = gregorianMonthsTr[gMonthName];
-        }
-        document.getElementById('current-date-text').innerText = `${greg.day} ${gMonthName} ${greg.year}`;
-
-        let hijriMonthName = hijri.month.en;
-        if (currentLang === 'tr' && hijriMonthsTr[hijriMonthName]) {
-            hijriMonthName = hijriMonthsTr[hijriMonthName];
-        }
-        document.getElementById('hicri-date-text').innerText = `${hijri.day} ${hijriMonthName} ${hijri.year}`;
-    }
-
-    function toggleDrawer() {
-        document.getElementById('appDrawer').classList.toggle('active');
-        document.getElementById('drawerOverlay').classList.toggle('active');
-    }
-
-    function toggleLocationModal() {
-        document.getElementById('locationModal').classList.toggle('active');
-    }
-
-    function toggleTheme() {
-        const isLight = document.documentElement.classList.toggle('light-mode');
-        document.body.classList.toggle('light-mode', isLight);
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        updateThemeUI(isLight);
-    }
-
-    function updateThemeUI(isLight) {
-        const icon = document.getElementById('theme-icon');
-        if (icon) icon.innerText = isLight ? '☀️' : '🌙';
-    }
-
-    function saveSelectedCity() {
-        const selectBox = document.getElementById('citySelectBox');
-        const chosenCity = selectBox.value;
-        localStorage.setItem('user_city', chosenCity);
-        document.getElementById('selected-city-name').innerText = chosenCity;
-        toggleLocationModal();
-        fetchPrayerTimes(chosenCity);
-    }
-
-    function requestNotificationPermission() {
-        if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-            Notification.requestPermission();
-        }
-    }
-
-    function startCountdown() {
-        const timerElement = document.getElementById('countdown-timer');
-        const titleElement = document.getElementById('next-prayer-title');
-        const timeBoxes = document.querySelectorAll('.times-grid .time-box');
-        
-        const kerahatTimerEl = document.getElementById('kerahat-timer');
-        const kerahatTitleEl = document.getElementById('kerahat-title-text');
-
-        setInterval(() => {
-            const now = new Date();
-            const prayers = [
-                { name: "İmsak", time: document.getElementById('val-imsak').innerText },
-                { name: "Güneş", time: document.getElementById('val-gunes').innerText },
-                { name: "Öğle", time: document.getElementById('val-ogle').innerText },
-                { name: "İkindi", time: document.getElementById('val-ikindi').innerText },
-                { name: "Akşam", time: document.getElementById('val-aksam').innerText },
-                { name: "Yatsı", time: document.getElementById('val-yatsi').innerText }
-            ];
-
-            if (prayers[0].time === '--:--') return;
-
-            let targetPrayer = null;
-            let targetDate = null;
-
-            for (let i = 0; i < prayers.length; i++) {
-                const [h, m] = prayers[i].time.split(':').map(Number);
-                let pDate = new Date();
-                pDate.setHours(h, m, 0, 0);
-                if (pDate > now) {
-                    targetPrayer = prayers[i];
-                    targetDate = pDate;
-                    break;
-                }
-            }
-
-            if (!targetPrayer) {
-                targetPrayer = prayers[0];
-                let pDate = new Date();
-                pDate.setDate(pDate.getDate() + 1);
-                const [hh, mm] = targetPrayer.time.split(':').map(Number);
-                pDate.setHours(hh, mm, 0, 0);
-                targetDate = pDate;
-            }
-
-            timeBoxes.forEach(box => {
-                const name = box.getAttribute('data-name');
-                box.classList.toggle('active', name === targetPrayer.name);
-            });
-
-            if (titleElement) {
-                titleElement.innerText = currentLang === 'ar' ? `الوقت المتبقي لـ ${targetPrayer.name}` : (currentLang === 'en' ? `${targetPrayer.name} time remaining` : `${targetPrayer.name} vaktine kalan süre`);
-            }
-
-            let diff = targetDate - now;
-            let totalSeconds = Math.floor(diff / 1000);
-            let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-            let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-            let s = (totalSeconds % 60).toString().padStart(2, '0');
-
-            if (timerElement) timerElement.innerText = `${h}:${m}:${s}`;
-
-            const [gunesH, gunesM] = prayers[1].time.split(':').map(Number);
-            let gunesDate = new Date();
-            gunesDate.setHours(gunesH, gunesM, 0, 0);
-            let gunesKerahatEnd = new Date(gunesDate.getTime() + 45 * 60000);
-
-            const [ogleH, ogleM] = prayers[2].time.split(':').map(Number);
-            let ogleDate = new Date();
-            ogleDate.setHours(ogleH, ogleM, 0, 0);
-            let ogleKerahatStart = new Date(ogleDate.getTime() - 45 * 60000);
-
-            const [aksamH, aksamM] = prayers[4].time.split(':').map(Number);
-            let aksamDate = new Date();
-            aksamDate.setHours(aksamH, aksamM, 0, 0);
-            let aksamKerahatStart = new Date(aksamDate.getTime() - 45 * 60000);
-
-            let kTitle = "";
-            let kTimer = "";
-            let nextKerahatTarget = null;
-
-            let langMin = currentLang === 'ar' ? 'د' : (currentLang === 'en' ? 'min.' : 'dk.');
-            let langSec = currentLang === 'ar' ? 'ث' : (currentLang === 'en' ? 'sec.' : 'sn.');
-            let langHour = currentLang === 'ar' ? 'س' : (currentLang === 'en' ? 'hr.' : 'sa.');
-
-            if (now >= gunesDate && now <= gunesKerahatEnd) {
-                kTitle = currentLang === 'ar' ? "الخروج من كراهة (الشمس)" : (currentLang === 'en' ? "Time until Makruh ends (Sunrise)" : "Kerahatin Çıkmasına (Güneş)");
-                let kDiff = gunesKerahatEnd - now;
-                let kSec = Math.floor(kDiff / 1000);
-                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
-                let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
-            } else if (now >= ogleKerahatStart && now <= ogleDate) {
-                kTitle = currentLang === 'ar' ? "الخروج من كراهة (الظهر)" : (currentLang === 'en' ? "Time until Makruh ends (Dhuhr)" : "Kerahatin Çıkmasına (Öğle)");
-                let kDiff = ogleDate - now;
-                let kSec = Math.floor(kDiff / 1000);
-                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
-                let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
-            } else if (now >= aksamKerahatStart && now <= aksamDate) {
-                kTitle = currentLang === 'ar' ? "الخروج من كراهة (المغرب)" : (currentLang === 'en' ? "Time until Makruh ends (Maghrib)" : "Kerahatin Çıkmasına (Akşam)");
-                let kDiff = aksamDate - now;
-                let kSec = Math.floor(kDiff / 1000);
-                let km = Math.floor(kSec / 60).toString().padStart(2, '0');
-                let ks = (kSec % 60).toString().padStart(2, '0');
-                kTimer = `${km} ${langMin} ${ks} ${langSec}`;
-            } else {
-                if (now < gunesDate) {
-                    nextKerahatTarget = gunesDate;
-                } else if (now < ogleKerahatStart) {
-                    nextKerahatTarget = ogleKerahatStart;
-                } else if (now < aksamKerahatStart) {
-                    nextKerahatTarget = aksamKerahatStart;
-                } else {
-                    let tomorrowGunes = new Date(gunesDate);
-                    tomorrowGunes.setDate(tomorrowGunes.getDate() + 1);
-                    nextKerahatTarget = tomorrowGunes;
-                }
-
-                kTitle = currentLang === 'ar' ? "الوقت المتبقي للكراهة القادمة" : (currentLang === 'en' ? "Time until next Makruh" : "Gelecek Kerahate Kalan");
-                let kDiff = nextKerahatTarget - now;
-                let kSec = Math.floor(kDiff / 1000);
-                let kh = Math.floor(kSec / 3600);
-                let km = Math.floor((kSec % 3600) / 60);
-                let ks = kSec % 60;
-                
-                if (kh > 0) {
-                    kTimer = `${kh} ${langHour} ${km} ${langMin}`;
-                } else {
-                    kTimer = `${km} ${langMin} ${ks} ${langSec}`;
-                }
-            }
-
-            if (kerahatTitleEl) kerahatTitleEl.innerText = kTitle;
-            if (kerahatTimerEl) kerahatTimerEl.innerText = kTimer;
-
-        }, 1000);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('user_lang') || 'tr';
-        setLanguage(savedLang);
-
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        let isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
-        
-        if (isLight) {
-            document.documentElement.classList.add('light-mode');
-            document.body.classList.add('light-mode');
-        }
-        updateThemeUI(isLight);
-
-        const savedCity = localStorage.getItem('user_city') || 'Erzincan';
-        document.getElementById('selected-city-name').innerText = savedCity;
-        document.getElementById('citySelectBox').value = savedCity;
-        
-        fetchPrayerTimes(savedCity);
-        requestNotificationPermission();
-        startCountdown();
-        
-        randomEsma();
-        loadRandomInfo(); // Sayfa yüklendiğinde rastgele bir bilgi getir
-    });
-</script>
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(reg => console.log('Ayetin Vakti: Service Worker başarıyla kaydedildi.', reg.scope))
-                .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
-        });
     }
 </script>
 </body>
