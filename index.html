@@ -549,7 +549,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" id="mainContentContainer">
     <header class="navbar">
         <div class="nav-left">
             <button class="menu-btn" onclick="toggleDrawer()">☰</button>
@@ -1950,6 +1950,59 @@
     cards.forEach(card => slider.appendChild(card));
 });
 
+<!-- Ana Sayfa Dinamik Kart Yerleşim Scripti -->
+<script>
+    // Varsayılan Ana Sayfa Blokları
+    const defaultHomeBlocks = [
+        { id: 'block-prayer', name: 'Günün Duası / Ayeti', visible: true },
+        { id: 'block-location', name: 'Konum ve Tarih Bandı', visible: true },
+        { id: 'block-quiz', name: 'İslam Dini ve Kültürü Bilgi Testi', visible: true },
+        { id: 'block-quotes', name: 'Günün Hikmetleri', visible: true },
+        { id: 'block-didyouknow', name: 'Biliyor musunuz?', visible: true },
+        { id: 'block-esma', name: 'Esmaül Hüsna', visible: true }
+    ];
+
+    // Sayfa Yüklendiğinde Kullanıcının Ayarladığı Düzeni Uygula
+    document.addEventListener('DOMContentLoaded', () => {
+        applyUserHomeLayout();
+    });
+
+    function applyUserHomeLayout() {
+        // localStorage'dan kayıtlı düzeni al, yoksa varsayılanı kullan
+        let savedLayout = JSON.parse(localStorage.getItem('home_layout')) || defaultHomeBlocks;
+        
+        // Ana sayfadaki kartların kapsayıcısı (container veya ana wrapper elementin id/class'ı)
+        // Not: Kendi ana sayfa yapına göre bu seçiciyi güncelleyebilirsin.
+        const container = document.getElementById('mainContentContainer'); 
+        if (!container) return;
+
+        // Mevcut kart elementlerini ID'lerine göre haritalandır
+        const existingCards = {};
+        Array.from(container.children).forEach(child => {
+            if (child.id) existingCards[child.id] = child;
+        });
+
+        // Konteynerı temizle ve ayarlara göre sırayla yeniden diz
+        container.innerHTML = '';
+
+        savedLayout.forEach(block => {
+            // Eğer kullanıcı bu kartı gizlediyse (visible: false) atla
+            if (block.visible === false) return;
+
+            if (block.isStoryWidget && block.url) {
+                // Ayarlar sayfasından sonradan eklenen özel hikaye/widget butonları
+                const widgetEl = document.createElement('a');
+                widgetEl.href = block.url;
+                widgetEl.className = 'story-widget-card'; // Kendi stil sınıfın
+                widgetEl.style.cssText = "display:inline-flex; align-items:center; gap:8px; padding:12px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:14px; text-decoration:none; color:var(--text-color); margin:4px 0; width:100%; font-weight:600;";
+                widgetEl.innerHTML = `<span>${block.name}</span>`;
+                container.appendChild(widgetEl);
+            } else if (existingCards[block.id]) {
+                // Mevcut ana sayfa kartı sıraya göre eklenir
+                container.appendChild(existingCards[block.id]);
+            }
+        });
+    }
 </script>
 </body>
 </html>
