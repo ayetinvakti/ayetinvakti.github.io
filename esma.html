@@ -1,51 +1,66 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Esmaül Hüsna | Ayetin Vakti</title>
+    <meta name="theme-color" content="#10b981">
     
     <script>
+        // Tema ve Dil Kontrolü (Sayfa yüklenmeden önce çalışır, titremeyi önler)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+
+        const savedAccent = localStorage.getItem('custom_accent');
+        const savedText = localStorage.getItem('custom_text');
+
+        if (savedAccent) document.documentElement.style.setProperty('--accent-color', savedAccent);
+        if (savedText) document.documentElement.style.setProperty('--text-color', savedText);
+
+        const savedBg = localStorage.getItem('custom_bg');
+        if (savedBg && savedTheme !== 'light') {
+            document.documentElement.style.setProperty('--bg-color', savedBg);
+            document.documentElement.style.setProperty('--card-bg', savedBg);
+        }
+
         const savedLang = localStorage.getItem('user_lang') || 'tr';
         document.documentElement.lang = savedLang;
         if (savedLang === 'ar') {
             document.documentElement.dir = 'rtl';
+        } else {
+            document.documentElement.dir = 'ltr';
         }
-
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
-            document.documentElement.classList.add('light-mode');
-        }
-
-        const customBg = localStorage.getItem('custom_bg');
-        const customCard = localStorage.getItem('custom_card');
-        const customText = localStorage.getItem('custom_text');
-        const customAccent = localStorage.getItem('custom_accent');
-
-        if (customBg) document.documentElement.style.setProperty('--bg-color', customBg);
-        if (customCard) document.documentElement.style.setProperty('--card-bg', customCard);
-        if (customText) document.documentElement.style.setProperty('--text-color', customText);
-        if (customAccent) document.documentElement.style.setProperty('--accent-color', customAccent);
     </script>
 
     <style>
+        /* Gece Teması (Varsayılan Koyu Mode) */
         :root {
-            --bg-color: #0b1120;
+            --bg-color: #0f172a;
             --card-bg: #1e293b;
             --accent-color: #10b981;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        html.light-mode {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+        /* Gündüz Teması (Açık Mode - Kesin Geçiş) */
+        [data-theme="light"] {
+            --bg-color: #f1f5f9 !important;
+            --card-bg: #ffffff !important;
+            --accent-color: #059669 !important;
+            --text-color: #0f172a !important;
+            --text-muted: #64748b !important;
+            --border-color: #cbd5e1 !important;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
         }
 
         html[lang="ar"] {
@@ -68,7 +83,7 @@
             flex-direction: column;
             align-items: center;
             padding: 16px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         .container {
@@ -84,8 +99,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            margin-bottom: 4px;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .nav-controls {
@@ -106,13 +125,12 @@
             font-size: 1.2rem;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+            transition: 0.2s;
         }
 
         .nav-btn:hover {
             border-color: var(--accent-color);
-            transform: scale(1.05);
+            color: var(--accent-color);
         }
 
         .page-header {
@@ -121,7 +139,7 @@
             padding: 24px;
             text-align: center;
             color: #ffffff;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+            box-shadow: var(--shadow);
             transition: background 0.3s ease;
         }
 
@@ -150,7 +168,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease;
         }
@@ -234,7 +252,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
             transform: scale(0.95);
             transition: transform 0.3s ease;
         }
@@ -283,7 +301,7 @@
             padding: 12px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
+            background-color: var(--card-bg);
             color: var(--text-color);
             font-weight: 600;
             cursor: pointer;
@@ -291,6 +309,11 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-color);
         }
 
         .action-btn.primary {
@@ -333,7 +356,7 @@
     <header class="navbar">
         <a href="index.html" class="nav-btn" id="back-btn" title="Geri Dön">←</a>
         <div class="nav-controls">
-            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir">🌙</button>
+            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
@@ -406,7 +429,7 @@
         { id: 27, name: "El-Basîr", arabic: "ٱلْبَصِيرُ", meaning: "Her şeyi en iyi gören." },
         { id: 28, name: "El-Hakem", arabic: "ٱلْحَكَمُ", meaning: "Mutlak hakim, hak ile batılı ayıran, hüküm veren." },
         { id: 29, name: "El-Adl", arabic: "ٱلْعَدْلُ", meaning: "Mutlak adalet sahibi, çok adil." },
-        { id: 30, name: "El-Latîف", arabic: "ٱلْلَّطِيفُ", meaning: "Lütuf ve ihsan sahibi olan, kullarının işlerinin ince detaylarını bilen." },
+        { id: 30, name: "El-Latîf", arabic: "ٱلْلَّطِيفُ", meaning: "Lütuf ve ihsan sahibi olan, kullarının işlerinin ince detaylarını bilen." },
         { id: 31, name: "El-Habîr", arabic: "ٱلْخَبِيرُ", meaning: "Her şeyin iç yüzünden ve gizli hallerinden haberdar olan." },
         { id: 32, name: "El-Halîm", arabic: "ٱلْحَلِيمُ", meaning: "Cezada acele etmeyen, yumuşak davranan, hilaf sahibi." },
         { id: 33, name: "El-Azîm", arabic: "ٱلْعَظِيمُ", meaning: "Pek yüce, büyüklükte benzeri olmayan." },
@@ -416,7 +439,7 @@
         { id: 37, name: "El-Kebîr", arabic: "ٱلْكَبِيرُ", meaning: "Pek büyük, azamet sahibi." },
         { id: 38, name: "El-Hafîz", arabic: "ٱلْحَفِيظُ", meaning: "Her şeyi koruyup gözeten." },
         { id: 39, name: "El-Mukīt", arabic: "ٱلْمُقِيتُ", meaning: "Her yaratılmışın gıdasını ve rızkını veren." },
-        { id: 40, name: "El-Hasîb", arabic: "ٱلْحَسِيبُ", meaning: "Kulların hesabını en iyi gören." },
+        { id: 40, name: "El-Hasîب", arabic: "ٱلْحَسِيبُ", meaning: "Kulların hesabını en iyi gören." },
         { id: 41, name: "El-Celîl", arabic: "ٱلْجَلِيلُ", meaning: "Celal ve azamet sahibi, yüce." },
         { id: 42, name: "El-Kerîm", arabic: "ٱلْكَرِيمُ", meaning: "Keremi, cömertliği ve ihsanı bol olan." },
         { id: 43, name: "Er-Rakîb", arabic: "ٱلرَّقِيبُ", meaning: "Bütün varlıkları her an gözetim altında tutan." },
@@ -504,7 +527,7 @@
     }
 
     function openModal(esma) {
-        stopAudio(); // Yeni modal açılırken varsa önceki sesi sustur
+        stopAudio();
         currentSelectedEsma = esma;
         document.getElementById('modalNumber').textContent = `${esma.id}`;
         document.getElementById('modalArabic').textContent = esma.arabic;
@@ -515,7 +538,7 @@
     }
 
     function closeModal() {
-        stopAudio(); // Modal kapatıldığı an sesi anında durdur
+        stopAudio();
         document.getElementById('esmaModal').classList.remove('active');
     }
 
@@ -525,48 +548,49 @@
         }
     }
 
-    // Sesi tamamen durduran fonksiyon (Web Speech API iptali)
     function stopAudio() {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
         }
     }
 
-    // Doğrudan tarayıcının ses motoruyla tek ismi seslendirme
     function playHumanAudioPronunciation() {
         if (!currentSelectedEsma) return;
-        
-        stopAudio(); // Önceki okumayı kes
-
+        stopAudio();
         if ('speechSynthesis' in window) {
-            // Sadece tıklanan ismin Türkçe okunuşunu net ve kısa söyletiyoruz
             const utterance = new SpeechSynthesisUtterance(currentSelectedEsma.name);
             utterance.lang = 'tr-TR';
-            utterance.rate = 0.9; // Biraz daha sakin ve yavaş tonlama için
-            
+            utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         } else {
             alert("Tarayıcınız sesli okuma özelliğini desteklemiyor.");
         }
     }
 
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    
-    function updateThemeIcon() {
-        if (document.documentElement.classList.contains('light-mode')) {
-            themeToggleBtn.textContent = '☀️';
+    // --- TEMA YÖNETİMİ ---
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+    }
+
+    function toggleTheme() {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const newTheme = isLight ? 'dark' : 'light';
+        applyTheme(newTheme);
+    }
+
+    function applyTheme(theme) {
+        const btn = document.getElementById('theme-toggle');
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            if (btn) btn.innerHTML = '☀️';
+            localStorage.setItem('theme', 'light');
         } else {
-            themeToggleBtn.textContent = '🌙';
+            document.documentElement.removeAttribute('data-theme');
+            if (btn) btn.innerHTML = '🌙';
+            localStorage.setItem('theme', 'dark');
         }
     }
-    updateThemeIcon();
-
-    themeToggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('light-mode');
-        const isLight = document.documentElement.classList.contains('light-mode');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        updateThemeIcon();
-    });
 
     const uiTranslations = {
         tr: {
@@ -605,7 +629,6 @@
 
     function applyGlobalLanguage(lang) {
         const t = uiTranslations[lang] || uiTranslations.tr;
-        
         document.documentElement.lang = lang;
         document.documentElement.dir = t.dir;
         document.title = t.docTitle;
@@ -621,10 +644,11 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    window.onload = () => {
+        initTheme();
         applyGlobalLanguage(currentLang);
         renderEsmaList();
-    });
+    };
 </script>
 
 </body>
