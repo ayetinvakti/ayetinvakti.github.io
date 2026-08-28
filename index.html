@@ -378,37 +378,37 @@
             border-right: 3px solid var(--accent-color);
             border-radius: 12px 0 0 12px;
         }
-        /* Sohbet butonunun hemen üstü (Sohbet butonun bottom: 20px ise bu 85px civarı olur) */
-/* Butonun metin seçimini ve mavi arka planı engellemesi için */
+/* --- Hızlı Erişim (AssistiveTouch) Butonu ve Menü Stilleri --- */
 .floating-quick-btn {
     position: fixed;
-    bottom: 82px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
+    bottom: 90px; /* Alttaki asistan butonunun yüksekliği ve boşluğu ile tam uyumlu */
+    right: 24px;  /* Alttaki asistan butonuyla yüzde yüz aynı sağ hizada */
+    width: 56px;  /* Genişlik alttaki butonla birebir aynı */
+    height: 56px; /* Yükseklik alttaki butonla birebir aynı */
     background-color: #00bcd4;
     color: #121824;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 999;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none; /* iOS'te basılı tutunca çıkan menüyü engeller */
+    transition: transform 0.2s;
 }
 
 .floating-quick-btn:active {
     transform: scale(0.90);
 }
 
-/* Menünün düzgün durması ve metin seçiminin kapanması için */
+/* Menünün düzgün durması, hizalanması ve metin seçiminin kapanması için */
 .assistive-menu-container {
     position: fixed;
-    bottom: 142px;
-    right: 20px;
+    bottom: 156px; /* Butonun hemen üstünde şık bir boşlukla açılır */
+    right: 24px;   /* Butonlarla aynı sağ hizada açılır */
     background: #1a2232;
     border: 1px solid #00bcd4;
     border-radius: 16px;
