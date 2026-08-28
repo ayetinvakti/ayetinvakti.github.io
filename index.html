@@ -379,13 +379,14 @@
             border-radius: 12px 0 0 12px;
         }
         /* Sohbet butonunun hemen üstü (Sohbet butonun bottom: 20px ise bu 85px civarı olur) */
+/* Butonun metin seçimini ve mavi arka planı engellemesi için */
 .floating-quick-btn {
     position: fixed;
     bottom: 85px;
     right: 20px;
     width: 50px;
     height: 50px;
-    background-color: #00bcd4; /* Uygulama turkuaz rengi */
+    background-color: #00bcd4;
     color: #121824;
     border-radius: 50%;
     display: flex;
@@ -394,15 +395,16 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 999;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
-    transition: transform 0.2s;
+    -webkit-touch-callout: none; /* iOS'te basılı tutunca çıkan menüyü engeller */
 }
 
 .floating-quick-btn:active {
     transform: scale(0.90);
 }
 
-/* AssistiveTouch Menü Kutusu */
+/* Menünün düzgün durması ve metin seçiminin kapanması için */
 .assistive-menu-container {
     position: fixed;
     bottom: 145px;
@@ -410,13 +412,15 @@
     background: #1a2232;
     border: 1px solid #00bcd4;
     border-radius: 16px;
-    padding: 10px;
+    padding: 8px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    width: 180px;
+    gap: 6px;
+    width: 170px;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .assistive-menu-container.hidden {
@@ -426,11 +430,14 @@
 .menu-item {
     padding: 10px 12px;
     color: #00bcd4;
-    font-size: 14px;
+    font-size: 13px;
     border-radius: 8px;
     background: #121824;
     text-align: left;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .menu-item.active {
