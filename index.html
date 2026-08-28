@@ -2037,39 +2037,39 @@ const assistiveMenu = document.getElementById('assistive-menu');
 let pressTimer = null;
 let isMenuVisible = false;
 
-// Basılı tutmayı başlat (Mobil için touchstart, masaüstü için mousedown)
 function startPress(e) {
+    // Sayfanın normal basılı tutma / kaydırma davranışını engelle
     pressTimer = setTimeout(() => {
         isMenuVisible = true;
         assistiveMenu.classList.remove('hidden');
-        if (navigator.vibrate) navigator.vibrate(50); // Hafif titreşim
-    }, 400); // 400 milisaniye basılı tutunca açılır
+        if (navigator.vibrate) navigator.vibrate(50);
+    }, 300);
 }
 
-// Parmağı hareket ettirirken (Kaydırma / Sürükleme)
 function movePress(e) {
     if (!isMenuVisible) return;
     
-    // Dokunulan koordinatı al
+    // ÖNEMLİ: Menü açıkken parmağı sürüklerken sayfanın kaymasını engeller
+    e.preventDefault(); 
+
     const touch = e.touches ? e.touches[0] : e;
     const target = document.elementFromPoint(touch.clientX, touch.clientY);
     
-    // Menü elemanlarının üzerinde mi geziyor kontrol et
     document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
     if (target && target.classList.contains('menu-item')) {
         target.classList.add('active');
     }
 }
 
-// Parmağı kaldırınca
 function endPress(e) {
     clearTimeout(pressTimer);
     
     if (isMenuVisible) {
+        e.preventDefault();
         const activeItem = document.querySelector('.menu-item.active');
         if (activeItem) {
             const url = activeItem.getAttribute('data-url');
-            window.location.href = url; // Seçilen sayfaya yönlendir
+            window.location.href = url;
         }
         assistiveMenu.classList.add('hidden');
         document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
@@ -2077,12 +2077,11 @@ function endPress(e) {
     }
 }
 
-// Olayları bağlama (Mobil dokunma ve fare destekli)
-quickBtn.addEventListener('touchstart', startPress);
-quickBtn.addEventListener('touchmove', movePress);
-quickBtn.addEventListener('touchend', endPress);
+// Mobil tarayıcılarda scroll çakışmasını önlemek için { passive: false } ekliyoruz
+quickBtn.addEventListener('touchstart', startPress, { passive: false });
+window.addEventListener('touchmove', movePress, { passive: false });
+window.addEventListener('touchend', endPress);
 
-// Bilgisayardan test etmek için mouse desteği de ekleyelim
 quickBtn.addEventListener('mousedown', startPress);
 window.addEventListener('mousemove', movePress);
 window.addEventListener('mouseup', endPress);
