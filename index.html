@@ -385,8 +385,8 @@
     right: 24px;
     width: 56px;
     height: 56px;
-    background-color: #00bcd4;
-    color: #121824;
+    background-color: var(--accent-color, #00bcd4);
+    color: var(--btn-text-color, #121824);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -397,44 +397,45 @@
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background-color 0.3s;
 }
 
 .floating-quick-btn:active {
     transform: scale(0.90);
 }
 
+/* Temaya uyum sağlaması için değişkenler atandı */
 .assistive-menu-container {
     position: fixed;
     bottom: 156px;
     right: 24px;
-    background: #1a2232 !important;
-    border: 1px solid #00bcd4 !important;
+    background: var(--card-bg, #1a2232) !important;
+    border: 1px solid var(--accent-color, #00bcd4) !important;
     border-radius: 14px !important;
     padding: 6px !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    width: 170px;
+    width: 180px;
     -webkit-user-select: none;
     user-select: none;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .assistive-menu-container.hidden {
     display: none !important;
 }
 
-/* Class ismi JavaScript ile tamamen uyumlu hale getirildi */
 .assistive-menu-item {
     padding: 8px 10px !important;
-    color: #00bcd4 !important;
+    color: var(--text-color, #00bcd4) !important;
     font-family: 'Georgia', 'Times New Roman', serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
     border-radius: 8px !important;
-    background: #121824 !important;
+    background: var(--bg-color, #121824) !important;
     text-align: left !important;
     cursor: pointer !important;
     white-space: nowrap !important;
@@ -443,10 +444,10 @@
     transition: background 0.15s, color 0.15s;
 }
 
-/* Sürükleme sırasında parmağın altındaki öğeyi tetikleyecek active sınıfı */
+/* Parmağın altındayken veya seçildiğinde tema rengini alır */
 .assistive-menu-item.active {
-    background: #00bcd4 !important;
-    color: #121824 !important;
+    background: var(--accent-color, #00bcd4) !important;
+    color: var(--btn-text-color, #121824) !important;
     font-weight: bold !important;
 }
 
@@ -2122,17 +2123,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // Ayarlardaki ID'ler ile dosya yolları eşleştirmesi
+    // 404 hatasını önlemek için doğru URL uzantılarıyla güncellenen harita
     const menuDataMap = {
         'diniGunler': { name: '📅 Dini Günler', url: 'dini-gunler' },
-        'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'esmaul-husna' },
+        'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'EsmaulHusna/' }, // veya doğru klasör/dosya adın neyse
         'gununAyeti': { name: '✨ Günün Ayeti', url: 'gunun-ayeti' },
         'kazaNamaz': { name: '⏳ Kaza Namazı', url: 'kaza-namazi' },
         'kiblePusulasi': { name: '🧭 Kıble Pusulası', url: 'kible-pusulasi' },
         'kuranOku': { name: '📖 Kur\'an-ı Kerim', url: 'kuran-oku' },
         'namazOgretmeni': { name: '📖 Namaz Öğretmeni', url: 'namaz-ogretmeni' },
-        'namazVakitleri': { name: '🕌 Namaz Vakitleri', url: 'namaz-vakitleri' },
-        'besBesNamaz': { name: '🤲 5-5 Namaz', url: 'bes-bes-namaz' },
+        'namazVakitleri': { name: '🕌 Namaz Vakitleri', url: 'NamazVakitleri/' }, // Güncellendi
+        'besBesNamaz': { name: '🤲 5-5 Namaz', url: 'BesBesNamaz/' }, // Güncellendi
         'zakatHesap': { name: '💰 Zekat Hesaplama', url: 'zekat-hesaplama' },
         'zikirmatiks': { name: '📿 Zikirmatik', url: 'Zikirmatik/' }
     };
@@ -2141,7 +2142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let savedItems = localStorage.getItem('custom_menu_items');
     let activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
 
-    // Menüyü oluştur (Class ismi CSS ile birebir aynı: 'assistive-menu-item')
+    // Menüyü oluştur
     assistiveMenu.innerHTML = '';
     activeItemIds.forEach(id => {
         if (menuDataMap[id]) {
