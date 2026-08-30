@@ -381,10 +381,10 @@
 /* --- Hızlı Erişim (AssistiveTouch) Butonu ve Menü Stilleri --- */
 .floating-quick-btn {
     position: fixed;
-    bottom: 90px; /* Alttaki asistan butonunun yüksekliği ve boşluğu ile tam uyumlu */
-    right: 24px;  /* Alttaki asistan butonuyla yüzde yüz aynı sağ hizada */
-    width: 56px;  /* Genişlik alttaki butonla birebir aynı */
-    height: 56px; /* Yükseklik alttaki butonla birebir aynı */
+    bottom: 90px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
     background-color: #00bcd4;
     color: #121824;
     border-radius: 50%;
@@ -396,7 +396,7 @@
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
-    -webkit-touch-callout: none; /* iOS'te basılı tutunca çıkan menüyü engeller */
+    -webkit-touch-callout: none;
     transition: transform 0.2s;
 }
 
@@ -404,16 +404,15 @@
     transform: scale(0.90);
 }
 
-/* Menünün düzgün durması, hizalanması ve metin seçiminin kapanması için */
 .assistive-menu-container {
     position: fixed;
-    bottom: 156px; /* Butonun hemen üstünde şık bir boşlukla açılır */
-    right: 24px;   /* Butonlarla aynı sağ hizada açılır */
-    background: #1a2232;
-    border: 1px solid #00bcd4;
-    border-radius: 14px;
-    padding: 6px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    bottom: 156px;
+    right: 24px;
+    background: #1a2232 !important;
+    border: 1px solid #00bcd4 !important;
+    border-radius: 14px !important;
+    padding: 6px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -424,30 +423,31 @@
 }
 
 .assistive-menu-container.hidden {
-    display: none;
+    display: none !important;
 }
 
-.menu-item {
-    padding: 8px 10px;
-    color: #00bcd4;
-    /* İstediğin kibar, serif/cınzel tarzı yazı tipi ve boyut ayarı */
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 8px;
-    background: #121824;
-    text-align: left;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Class ismi JavaScript ile tamamen uyumlu hale getirildi */
+.assistive-menu-item {
+    padding: 8px 10px !important;
+    color: #00bcd4 !important;
+    font-family: 'Georgia', 'Times New Roman', serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    background: #121824 !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     transition: background 0.15s, color 0.15s;
 }
 
-.menu-item.active {
-    background: #00bcd4;
-    color: #121824;
-    font-weight: bold;
+/* Sürükleme sırasında parmağın altındaki öğeyi tetikleyecek active sınıfı */
+.assistive-menu-item.active {
+    background: #00bcd4 !important;
+    color: #121824 !important;
+    font-weight: bold !important;
 }
 
     </style>
