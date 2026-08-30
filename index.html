@@ -2104,64 +2104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-    <!-- Ana sayfanın diğer içerikleri ve mevcut scriptlerin -->
-
-    <script>
-        // 1. Kullanıcının seçtiği modül ID'leri
-        const defaultModules = [
-            'diniGunler', 'esmaulHusna', 'gununAyeti', 'kazaNamaz', 
-            'kiblePusulasi', 'kuranOku', 'namazOgretmeni', 'namazVakitleri', 
-            'besBesNamaz', 'zakatHesap', 'zikirmatiks'
-        ];
-        const activeMenuIds = JSON.parse(localStorage.getItem('custom_menu_items')) || defaultModules;
-
-        // 2. Mini menü yapılandırması
-        const menuItemsConfig = {
-            diniGunler: { name: 'Dini Günler', icon: '📅', link: 'dini-gunler.html' },
-            esmaulHusna: { name: 'Esmaül Hüsna', icon: '🌙', link: 'esmaul-husna.html' },
-            gununAyeti: { name: 'Günün Ayeti', icon: '✨', link: 'gunun-ayeti.html' },
-            kazaNamaz: { name: 'Kaza Namazı', icon: '⏳', link: 'kaza-namazi.html' },
-            kiblePusulasi: { name: 'Kıble Pusulası', icon: '🧭', link: 'kible.html' },
-            kuranOku: { name: 'Kur\'an Oku', icon: '📖', link: 'kuran.html' },
-            namazOgretmeni: { name: 'Namaz Öğretmeni', icon: '📖', link: 'namaz-ogretmeni.html' },
-            namazVakitleri: { name: 'Namaz Vakitleri', icon: '🕌', link: 'namaz-vakitleri.html' },
-            besBesNamaz: { name: '5-5 Namaz', icon: '🤲', link: 'bes-bes-namaz.html' },
-            zakatHesap: { name: 'Zekat Hesaplama', icon: '💰', link: 'zekat.html' },
-            zikirmatiks: { name: 'Zikirmatik', icon: '📿', link: 'zikirmatik.html' }
-        };
-
-        // 3. Menüyü ekrana basan fonksiyon
-        function renderAssistiveMenu() {
-            const miniMenuContainer = document.getElementById('assistiveMiniMenu'); 
-            if (!miniMenuContainer) return;
-
-            miniMenuContainer.innerHTML = '';
-
-            activeMenuIds.forEach(id => {
-                const item = menuItemsConfig[id];
-                if (item) {
-                    miniMenuContainer.innerHTML += `
-                        <a href="${item.link}" class="mini-menu-item">
-                            <span>${item.icon}</span>
-                            <span>${item.name}</span>
-                        </a>
-                    `;
-                }
-            });
-        }
-
-        // 4. Sayfa geri yüklendiğinde güncel tutma
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted || performance.getEntriesByType("navigation")[0].type === "navigate") {
-                renderAssistiveMenu();
-            }
-        });
-
-        // 5. İlk açılışta çalıştır
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAssistiveMenu();
-        });
-
 </script>
 </body>
 </html>
