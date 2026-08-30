@@ -2105,10 +2105,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const quickBtn = document.getElementById('quick-touch-btn');
     const assistiveMenu = document.getElementById('assistive-menu');
-    if (!assistiveMenu) return;
+    
+    if (!quickBtn || !assistiveMenu) return;
 
-    // Ayarlardaki ID'ler ile ana sayfa dosya yollarını eşleştiren harita
+    // Ayarlardan gelen "Hızlı Erişim Menü İkonu" Tercihini Kontrol Et
+    const assistiveEnabled = localStorage.getItem('assistive_touch_enabled');
+    if (assistiveEnabled === 'false') {
+        quickBtn.classList.add('hidden-by-setting');
+        assistiveMenu.classList.add('hidden');
+        return; 
+    }
+
+    // Ayarlardaki ID'ler ile dosya yolları eşleştirmesi
     const menuDataMap = {
         'diniGunler': { name: '📅 Dini Günler', url: 'dini-gunler' },
         'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'esmaul-husna' },
@@ -2123,11 +2133,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'zikirmatiks': { name: '📿 Zikirmatik', url: 'Zikirmatik/' }
     };
 
-    // Kullanıcının ayarlardan seçtiği öğeleri doğrudan oku (Varsayılan olarak ilk 3 tanesi)
-    const savedItems = localStorage.getItem('custom_menu_items');
-    const activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
+    // Ayarlardan seçilen öğeleri oku (Varsayılan ilk 3 tanesi)
+    let savedItems = localStorage.getItem('custom_menu_items');
+    let activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
 
-    // Menüyü dinamik olarak doldur
+    // Menüyü oluştur
     assistiveMenu.innerHTML = '';
     activeItemIds.forEach(id => {
         if (menuDataMap[id]) {
@@ -2135,11 +2145,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'assistive-menu-item';
             div.innerText = item.name;
+            
+            // Seçim yapılabilmesi için doğrudan tıklama (click) olayı
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
                 window.location.href = item.url;
             });
+            
             assistiveMenu.appendChild(div);
+        }
+    });
+
+    // Ana butona tıklandığında menüyü aç/kapat (Mobil ve masaüstü uyumlu)
+    quickBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        assistiveMenu.classList.toggle('hidden');
+    });
+
+    // Sayfada boş bir yere tıklandığında menüyü kapat
+    document.addEventListener('click', (e) => {
+        if (!quickBtn.contains(e.target) && !assistiveMenu.contains(e.target)) {
+            assistiveMenu.classList.add('hidden');
         }
     });
 });
