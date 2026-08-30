@@ -2104,6 +2104,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const assistiveMenu = document.getElementById('assistive-menu');
+    if (!assistiveMenu) return;
+
+    // Ayarlardaki ID'ler ile ana sayfa dosya yollarını eşleştiren harita
+    const menuDataMap = {
+        'diniGunler': { name: '📅 Dini Günler', url: 'dini-gunler' },
+        'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'esmaul-husna' },
+        'gununAyeti': { name: '✨ Günün Ayeti', url: 'gunun-ayeti' },
+        'kazaNamaz': { name: '⏳ Kaza Namazı', url: 'kaza-namazi' },
+        'kiblePusulasi': { name: '🧭 Kıble Pusulası', url: 'kible-pusulasi' },
+        'kuranOku': { name: '📖 Kur\'an-ı Kerim', url: 'kuran-oku' },
+        'namazOgretmeni': { name: '📖 Namaz Öğretmeni', url: 'namaz-ogretmeni' },
+        'namazVakitleri': { name: '🕌 Namaz Vakitleri', url: 'namaz-vakitleri' },
+        'besBesNamaz': { name: '🤲 5-5 Namaz', url: 'bes-bes-namaz' },
+        'zakatHesap': { name: '💰 Zekat Hesaplama', url: 'zekat-hesaplama' },
+        'zikirmatiks': { name: '📿 Zikirmatik', url: 'Zikirmatik/' }
+    };
+
+    // Kullanıcının ayarlardan seçtiği öğeleri doğrudan oku (Varsayılan olarak ilk 3 tanesi)
+    const savedItems = localStorage.getItem('custom_menu_items');
+    const activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
+
+    // Menüyü dinamik olarak doldur
+    assistiveMenu.innerHTML = '';
+    activeItemIds.forEach(id => {
+        if (menuDataMap[id]) {
+            const item = menuDataMap[id];
+            const div = document.createElement('div');
+            div.className = 'assistive-menu-item';
+            div.innerText = item.name;
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.location.href = item.url;
+            });
+            assistiveMenu.appendChild(div);
+        }
+    });
+});
+
 </script>
 </body>
 </html>
