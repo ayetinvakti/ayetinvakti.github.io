@@ -2091,6 +2091,19 @@ quickBtn.addEventListener('mousedown', startPress);
 window.addEventListener('mousemove', movePress);
 window.addEventListener('mouseup', endPress);
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Ayarlardan kaydedilen tercihi al (varsayılan olarak açıktır: 'true')
+    const assistiveEnabled = localStorage.getItem('assistive_touch_enabled');
+    const quickBtn = document.getElementById('quick-touch-btn');
+    const assistiveMenu = document.getElementById('assistive-menu');
+
+    // Eğer kapalı olarak seçildiyse hem butonu hem de menüyü gizle
+    if (assistiveEnabled === 'false') {
+        if (quickBtn) quickBtn.style.display = 'none';
+        if (assistiveMenu) assistiveMenu.style.display = 'none';
+    }
+});
+
 </script>
 </body>
 </html>
