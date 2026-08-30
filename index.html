@@ -2145,27 +2145,95 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'assistive-menu-item';
             div.innerText = item.name;
-            
-            // Seçim yapılabilmesi için doğrudan tıklama (click) olayı
-            div.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = item.url;
-            });
-            
+            div.dataset.url = item.url; // Sürükleyip bırakınca yönlendirmek için
             assistiveMenu.appendChild(div);
         }
     });
 
-    // Ana butona tıklandığında menüyü aç/kapat (Mobil ve masaüstü uyumlu)
-    quickBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        assistiveMenu.classList.toggle('hidden');
+    let isPressing = false;
+    let activeTarget = null;
+
+    // Basılı tutmaya başlandığında (AssistiveTouch menüsü açılır)
+    function handleTouchStart(e) {
+        isPressing = true;
+        assistiveMenu.classList.remove('hidden');
+        e.preventDefault();
+    }
+
+    // Parmağı sürüklerken hangi öğenin üzerindeyse onu tespit etme
+    function handleTouchMove(e) {
+        if (!isPressing) return;
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        // Önceki aktif olanların vurgusunu kaldır
+        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
+        menuItems.forEach(item => item.classList.remove('active-hover'));
+
+        // Eğer parmak menü öğelerinden birinin üzerindeyse
+        if (elementUnderFinger && elementUnderFinger.classList.contains('assistive-menu-item')) {
+            activeTarget = elementUnderFinger;
+            activeTarget.classList.add('active-hover');
+        } else {
+            activeTarget = null;
+        }
+    }
+
+    // Parmağı kaldırınca (Seçim yapıldıysa sayfaya git)
+    function handleTouchEnd(e) {
+        if (!isPressing) return;
+        isPressing = false;
+        
+        assistiveMenu.classList.add('hidden');
+
+        // Vurgulanan bir öğe varsa oraya yönlendir
+        if (activeTarget && activeTarget.dataset.url) {
+            const targetUrl = activeTarget.dataset.url;
+            activeTarget = null;
+            window.location.href = targetUrl;
+        }
+
+        // Vurguları temizle
+        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
+        menuItems.forEach(item => item.classList.remove('active-hover'));
+    }
+
+    // Olay dinleyicilerini ekle (Mobil ve masaüstü touch/mouse desteği)
+    quickBtn.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
+
+    // Bilgisayardan test etmek isteyenler için mouse desteği
+    quickBtn.addEventListener('mousedown', (e) => {
+        isPressing = true;
+        assistiveMenu.classList.remove('hidden');
     });
 
-    // Sayfada boş bir yere tıklandığında menüyü kapat
-    document.addEventListener('click', (e) => {
-        if (!quickBtn.contains(e.target) && !assistiveMenu.contains(e.target)) {
-            assistiveMenu.classList.add('hidden');
+    window.addEventListener('mousemove', (e) => {
+        if (!isPressing) return;
+        const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
+        menuItems.forEach(item => item.classList.remove('active-hover'));
+
+        if (elementUnderMouse && elementUnderMouse.classList.contains('assistive-menu-item')) {
+            activeTarget = elementUnderMouse;
+            activeTarget.classList.add('active-hover');
+        } else {
+            activeTarget = null;
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (!isPressing) return;
+        isPressing = false;
+        assistiveMenu.classList.add('hidden');
+
+        if (activeTarget && activeTarget.dataset.url) {
+            const targetUrl = activeTarget.dataset.url;
+            activeTarget = null;
+            window.location.href = targetUrl;
         }
     });
 });
