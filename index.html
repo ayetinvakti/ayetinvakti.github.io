@@ -2141,7 +2141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let savedItems = localStorage.getItem('custom_menu_items');
     let activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
 
-    // Menüyü oluştur
+    // Menüyü oluştur (Class ismi CSS ile birebir aynı: 'assistive-menu-item')
     assistiveMenu.innerHTML = '';
     activeItemIds.forEach(id => {
         if (menuDataMap[id]) {
@@ -2149,7 +2149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'assistive-menu-item';
             div.innerText = item.name;
-            div.dataset.url = item.url; // Sürükleyip bırakınca yönlendirmek için
+            div.dataset.url = item.url;
             assistiveMenu.appendChild(div);
         }
     });
@@ -2157,14 +2157,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPressing = false;
     let activeTarget = null;
 
-    // Basılı tutmaya başlandığında (AssistiveTouch menüsü açılır)
     function handleTouchStart(e) {
         isPressing = true;
         assistiveMenu.classList.remove('hidden');
         e.preventDefault();
     }
 
-    // Parmağı sürüklerken hangi öğenin üzerindeyse onu tespit etme
     function handleTouchMove(e) {
         if (!isPressing) return;
         e.preventDefault();
@@ -2172,44 +2170,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const touch = e.touches[0];
         const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
         
-        // Önceki aktif olanların vurgusunu kaldır
         const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active-hover'));
+        menuItems.forEach(item => item.classList.remove('active'));
 
-        // Eğer parmak menü öğelerinden birinin üzerindeyse
         if (elementUnderFinger && elementUnderFinger.classList.contains('assistive-menu-item')) {
             activeTarget = elementUnderFinger;
-            activeTarget.classList.add('active-hover');
+            activeTarget.classList.add('active');
         } else {
             activeTarget = null;
         }
     }
 
-    // Parmağı kaldırınca (Seçim yapıldıysa sayfaya git)
     function handleTouchEnd(e) {
         if (!isPressing) return;
         isPressing = false;
         
         assistiveMenu.classList.add('hidden');
 
-        // Vurgulanan bir öğe varsa oraya yönlendir
         if (activeTarget && activeTarget.dataset.url) {
             const targetUrl = activeTarget.dataset.url;
             activeTarget = null;
             window.location.href = targetUrl;
         }
 
-        // Vurguları temizle
         const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active-hover'));
+        menuItems.forEach(item => item.classList.remove('active'));
     }
 
-    // Olay dinleyicilerini ekle (Mobil ve masaüstü touch/mouse desteği)
     quickBtn.addEventListener('touchstart', handleTouchStart, { passive: false });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchend', handleTouchEnd);
 
-    // Bilgisayardan test etmek isteyenler için mouse desteği
+    // Bilgisayar testi için mouse destekleri
     quickBtn.addEventListener('mousedown', (e) => {
         isPressing = true;
         assistiveMenu.classList.remove('hidden');
@@ -2219,11 +2211,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isPressing) return;
         const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
         const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active-hover'));
+        menuItems.forEach(item => item.classList.remove('active'));
 
         if (elementUnderMouse && elementUnderMouse.classList.contains('assistive-menu-item')) {
             activeTarget = elementUnderMouse;
-            activeTarget.classList.add('active-hover');
+            activeTarget.classList.add('active');
         } else {
             activeTarget = null;
         }
