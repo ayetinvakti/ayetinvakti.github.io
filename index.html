@@ -54,7 +54,8 @@
             --border-color: rgba(255, 255, 255, 0.05);
         }
 
-        body.light-mode {
+        /* DÜZELTME: Tema sınıfı <html> üzerinde olduğu için seçici html.light-mode yapıldı */
+        html.light-mode {
             --bg-color: #f8fafc;
             --drawer-bg: #ffffff;
             --card-bg: #ffffff;
@@ -196,7 +197,7 @@
         .modal-save-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
-        body.light-mode .drawer-item { background: rgba(0,0,0,0.01); }
+        html.light-mode .drawer-item { background: rgba(0,0,0,0.01); }
 
         /* --- Asistan Yüzen Buton --- */
         .ai-float-btn {
@@ -366,7 +367,7 @@
 
         .info-card-body {
             font-size: 0.88rem;
-            color: var(--text-color);
+            color: var(--text-main);
             line-height: 1.5;
             background: rgba(16, 185, 129, 0.05);
             border-left: 3px solid var(--accent-color);
@@ -378,89 +379,87 @@
             border-right: 3px solid var(--accent-color);
             border-radius: 12px 0 0 12px;
         }
-/* --- Hızlı Erişim (AssistiveTouch) Butonu ve Menü Stilleri --- */
-.floating-quick-btn {
-    position: fixed;
-    bottom: 90px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    background-color: var(--accent-color, #00bcd4);
-    color: var(--btn-text-color, #121824);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 999;
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    transition: transform 0.2s, background-color 0.3s;
-}
 
-.floating-quick-btn:active {
-    transform: scale(0.90);
-}
+        /* --- Hızlı Erişim (AssistiveTouch) Butonu ve Menü Stilleri --- */
+        .floating-quick-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent-color, #00bcd4);
+            color: var(--btn-text-color, #121824);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            transition: transform 0.2s, background-color 0.3s;
+        }
 
-/* Temaya uyum sağlaması için değişkenler atandı */
-.assistive-menu-container {
-    position: fixed;
-    bottom: 156px;
-    right: 24px;
-    background: var(--card-bg, #1a2232) !important;
-    border: 1px solid var(--accent-color, #00bcd4) !important;
-    border-radius: 14px !important;
-    padding: 6px !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 180px;
-    -webkit-user-select: none;
-    user-select: none;
-    transition: background 0.3s, border-color 0.3s;
-}
+        .floating-quick-btn:active {
+            transform: scale(0.90);
+        }
 
-.assistive-menu-container.hidden {
-    display: none !important;
-}
+        .assistive-menu-container {
+            position: fixed;
+            bottom: 156px;
+            right: 24px;
+            background: var(--card-bg, #1a2232) !important;
+            border: 1px solid var(--accent-color, #00bcd4) !important;
+            border-radius: 14px !important;
+            padding: 6px !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 180px;
+            -webkit-user-select: none;
+            user-select: none;
+            transition: background 0.3s, border-color 0.3s;
+        }
 
-.assistive-menu-item {
-    padding: 8px 10px !important;
-    color: var(--text-color, #00bcd4) !important;
-    font-family: 'Georgia', 'Times New Roman', serif !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    border-radius: 8px !important;
-    background: var(--bg-color, #121824) !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    transition: background 0.15s, color 0.15s;
-}
+        .assistive-menu-container.hidden {
+            display: none !important;
+        }
 
-/* Parmağın altındayken veya seçildiğinde tema rengini alır */
-.assistive-menu-item.active {
-    background: var(--accent-color, #00bcd4) !important;
-    color: var(--btn-text-color, #121824) !important;
-    font-weight: bold !important;
-}
+        .assistive-menu-item {
+            padding: 8px 10px !important;
+            color: var(--text-main, #00bcd4) !important;
+            font-family: 'Georgia', 'Times New Roman', serif !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            border-radius: 8px !important;
+            background: var(--bg-color, #121824) !important;
+            text-align: left !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            transition: background 0.15s, color 0.15s;
+        }
 
-.drawer-category-title {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #94a3b8; /* Tasarımına uygun soluk/zarif bir renk */
-    padding: 12px 16px 6px 16px;
-    margin-top: 4px;
-}
+        .assistive-menu-item.active {
+            background: var(--accent-color, #00bcd4) !important;
+            color: var(--btn-text-color, #121824) !important;
+            font-weight: bold !important;
+        }
 
+        .drawer-category-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            padding: 12px 16px 6px 16px;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -574,14 +573,8 @@
     </svg>
 </div>
 
-<!-- AssistiveTouch Mini Menü (Başlangıçta gizli) -->
-<div id="assistive-menu" class="assistive-menu-container hidden">
-<div class="menu-item" data-url="kible-pusulasi">🧭 Kıble Pusulası</div>
-<div class="menu-item" data-url="Zikirmatik/">📿 Zikirmatik</div>
-<div class="menu-item" data-url="dini-gunler">📅 Dini Günler</div>
-<div class="menu-item" data-url="kuran-oku">📖 Kur'an-ı Kerim</div>
-</div>
-
+<!-- AssistiveTouch Mini Menü (Başlangıçta gizli, öğeler script ile doldurulur) -->
+<div id="assistive-menu" class="assistive-menu-container hidden"></div>
 
 <!-- Asistan Seçim ve İşlem Modalı -->
 <div class="modal-overlay" id="assistantModal">
@@ -649,8 +642,8 @@
         <a href="https://ayetinvakti.github.io/kuran-oku/" class="drawer-item"><div class="drawer-icon-box">📖</div><span data-i18n="menu_quran">Kur'an-ı Kerim Oku</span></a>
         <a href="https://ayetinvakti.github.io/gunun-ayeti/" class="drawer-item"><div class="drawer-icon-box">✨</div><span data-i18n="menu_verse">Günün Ayeti</span></a>
         <a href="esma.html" class="drawer-item"><div class="drawer-icon-box">🌙</div><span data-i18n="menu_esma">Esmaül Hüsna</span></a>
-        <a href="https://ayetinvakti.github.io/Ilmihal/" class="drawer-item"><div class="drawer-icon-box">📚</div><span dara-i18n="menu_catechism">İlmihal</span></a>
-        <a href="https://ayetinvakti.github.io/gunluk-dualar/" class="drawer-item"><div class="drawer-icon-box">🤲</div><span data-i18n= "menu_prayers">Günlük Dualar</span></a>
+        <a href="https://ayetinvakti.github.io/Ilmihal/" class="drawer-item"><div class="drawer-icon-box">📚</div><span data-i18n="menu_catechism">İlmihal</span></a>
+        <a href="https://ayetinvakti.github.io/gunluk-dualar/" class="drawer-item"><div class="drawer-icon-box">🤲</div><span data-i18n="menu_prayers">Günlük Dualar</span></a>
         <a href="https://ayetinvakti.github.io/dini-gunler/" class="drawer-item"><div class="drawer-icon-box">📅</div><span data-i18n="menu_days">Dini Günler</span></a>
         <a href="https://ayetinvakti.github.io/Haftanin-Hutbesi/" class="drawer-item"><div class="drawer-icon-box">📜</div><span data-i18n="menu_sermon">Haftanın Hutbesi</span></a>
         <a href="https://ayetinvakti.github.io/namaz-ogretmeni/" class="drawer-item"><div class="drawer-icon-box">📖</div><span>Namaz Öğretmeni</span></a>
@@ -659,7 +652,7 @@
         <!-- Alt Kısım Ayırıcı -->
         <div class="drawer-divider"></div>
 
-        <!--<!-- Sabit Bağlantılar -->
+        <!-- Sabit Bağlantılar -->
         <a href="https://ayetinvakti.github.io/Islami-Tabu/" class="drawer-item">
             <div class="drawer-icon-box" style="background: rgba(234, 179, 8, 0.1);">🤫</div>
             <span data-i18n="menu_taboo">İslami Tabu</span>
@@ -813,7 +806,7 @@
     <!-- GÜNÜN HİKMETLERİ KARTI -->
     <div class="countdown-card" style="padding: 15px 0;">
         <div class="quotes-header-flex">
-            <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
+            <div style="font-weight: 700; color: var(--text-main); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
             <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
         </div>
         
@@ -949,10 +942,11 @@
                 <div class="quote-text">İnsanın değeri, önem verdiği şeye göredir.</div>
                 <div class="quote-author">— İmam Gazzâlî (k.s)</div>
             </div>
+
         </div>
     </div>
     
-    <!-- BİLİFYOR MUSUNUZ KARTI -->
+    <!-- BİLİYOR MUSUNUZ KARTI -->
     <div class="info-card-container">
         <div class="info-card-header">
             <div class="info-card-title">
@@ -1064,7 +1058,7 @@
             "Mescid-i Nebevi, Hz. Muhammed (s.a.v.) tarafından Medine'de inşa ettirilmiştir.",
             "İslam'ın ilk yıllarında ilk kıble Mescid-i Aksa idi, daha sonra Kabe'ye çevrildi.",
             "Kur'an'da adı geçen tek sahabe, Ahzab Suresi'nde geçen Hz. Zeyd bin Harise'dir.",
-            "Zemzem suyu yüzyıllardır tükenmeyen ve yapay olarak üretilemeyen özel bir sudur.",
+            "Zemzem suyu yüzyıllardır tükenmeyen, mübarek kabul edilen özel bir sudur.",
             "İslam takvimine (Hicri Takvim) göre yılbaşı Muharrem ayı ile başlar.",
             "Peygamber Efendimiz'in kabr-i şerifi Mescid-i Nebevi içerisinde 'Ravza-i Mutahhara'da yer alır.",
             "Meryem Suresi, Kur'an'da bir kadın ismiyle anılan tek suredir.",
@@ -1072,7 +1066,7 @@
             "İslam'da ilk şehit olan kadın Hz. Sümeyye'dir.",
             "Ashab-ı Kehf (Mağara Arkadaşları) hikayesi Kehf Suresi'nde anlatılmaktadır.",
             "Sevr Mağarası, hicret sırasında Hz. Muhammed (s.a.v.) ve Hz. Ebû Bekir'in saklandığı mağaradır.",
-            "Kudüs'teki Mescid-i Aksa, Müslümanların ilk kıblesi ve üçüncü harremidir.",
+            "Kudüs'teki Mescid-i Aksa, Müslümanların ilk kıblesi ve üçüncü haremidir.",
             "İslam'da ilk camii Kuba Mescidi'dir; hicret esnasında Medine yakınlarında inşa edilmiştir.",
             "Kur'an-ı Kerim'in inmeye başladığı gece Kadir Gecesi olarak adlandırılır.",
             "Ayetel Kürsi, Bakara Suresi'nin 255. ayetidir ve Allah'ın azametini anlatır.",
@@ -1111,7 +1105,7 @@
             "Al-Masjid an-Nabawi was built by Prophet Muhammad (PBUH) in Medina.",
             "In the early days of Islam, Al-Aqsa Mosque was the first Qibla before it was changed to the Kaaba.",
             "Zayd ibn Haritha is the only companion whose name is explicitly mentioned in the Quran (Surah Al-Ahzab).",
-            "Zamzam water is a miraculous water source that has never dried up for centuries.",
+            "Zamzam water is a blessed water source that has never dried up for centuries.",
             "The Islamic calendar (Hijri Calendar) begins the year with the month of Muharram.",
             "The blessed tomb of the Prophet is located inside Al-Masjid an-Nabawi in Rawdah ash-Sharifah.",
             "Surah Maryam is the only chapter in the Quran named after a woman.",
@@ -1157,8 +1151,8 @@
             "غار حراء يقع على جبل النور قرب مكة المكرمة.",
             "المسجد النبوي الشريف بناه النبي محمد صلى الله عليه وسلم في المدينة المنورة.",
             "في بداية الإسلام، كان المسجد الأقصى هو القبلة الأولى للمسلمين قبل أن تُحول إلى الكعبة.",
-            "زيد بنارثة هو الصحابي الوحيد الذي ذُكر اسمه صراحة في القرآن الكريم في سورة الأحزاب.",
-            "ماء زمزم هو مصدر مائي مبارك لم ينضب منذ آلاف السنين ولا يمكن تصنعه صناعياً.",
+            "زيد بن حارثة هو الصحابي الوحيد الذي ذُكر اسمه صراحة في القرآن الكريم في سورة الأحزاب.",
+            "ماء زمزم هو مصدر مائي مبارك لم ينضب منذ آلاف السنين.",
             "يبدأ التقويم الهجري الإسلامي بشهر محرم.",
             "يقع الروضة الشريفة وقبر النبي صلى الله عليه وسلم داخل المسجد النبوي.",
             "سورة مريم هي السورة الوحيدة في القرآن التي سميت باسم امرأة.",
@@ -1174,7 +1168,7 @@
             "قبل البعثة النبوية، اشتهر النبي محمد صلى الله عليه وسلم بلقب 'الأمين'.",
             "مكانة الأم العظيمة في الإسلام تتجلى في مقولة 'الجنة تحت أقدام الأمهات'.",
             "أركان الإيمان ستة وأركان الإسلام خمسة.",
-            "شريعة الأضحية تعود إلى قصة ابتداء نبي الله إراهيم بذبح ابنه إسماعيل.",
+            "شريعة الأضحية تعود إلى قصة ابتلاء نبي الله إبراهيم بذبح ابنه إسماعيل.",
             "فريضة الحج تؤدى حصرياً في أيام معدودات من شهر ذي الحجة.",
             "شهر رمضان هو الشهر الذي أُنزل فيه القرآن وفُرض فيه الصيام.",
             "الزكاة هي ركن مالي عظيم يهدف إلى دعم المحتاجين وتحقيق التكافل.",
@@ -1183,7 +1177,7 @@
             "ليلة الإسراء والمعراج هي الليلة المباركة التي فرضت فيها الصلوات الخمس.",
             "ليلة البراءة (نصف شعبان) هي ليلة مباركة تسبق شهر رمضان وتكثر فيها المغفرة.",
             "ذكرى المولد النبوي الشريف تحيي ذكرى مولد خاتم الأنبياء.",
-            "رغائب تمثل بداية الأشهر الحرم المباركة في التقويم الإسلامي.",
+            "ليلة الرغائب تمثل بداية الأشهر الثلاثة المباركة في التقويم الإسلامي.",
             "طلب العلم فريضة على كل مسلم ومسلمة.",
             "معركة أحد علمت المسلمين أهمية طاعة الأوامر عندما ترك الرماة مواقعهم.",
             "معركة بدر الكبرى هي أول نصر عسكري وسياسي حاسم للإسلام.",
@@ -1193,7 +1187,7 @@
             "السعي هو الهرولة المشروعة بين الصفا والمروة أثناء الحج والعمرة.",
             "الحجر الأسود هو حجر مبارك موضوع في ركن الكعبة ويُعتقد أنه من الجنة.",
             "التيمم هو طهارة ترابية بديلة للوضوء أو الغسل عند عدم وجود الماء.",
-            "الصلاة تعتبر عماد الدين وركنه الأكين بعد الشهادتين."
+            "الصلاة تعتبر عماد الدين وركنه الأمتن بعد الشهادتين."
         ]
     };
 
@@ -1216,7 +1210,12 @@
             menu_quran: "Kur'an-ı Kerim Oku",
             menu_verse: "Günün Ayeti",
             menu_esma: "Esmaül Hüsna",
+            menu_catechism: "İlmihal",
+            menu_prayers: "Günlük Dualar",
             menu_days: "Dini Günler",
+            menu_sermon: "Haftanın Hutbesi",
+            menu_biography_of_the_Prophet: "Siyer-i Nebi",
+            menu_taboo: "İslami Tabu",
             menu_youtube: "YouTube Kanalı",
             menu_settings: "Ayarlar",
             hijri_calendar_title: "Hicri Takvim",
@@ -1248,13 +1247,18 @@
         en: {
             menu_prayer: "Prayer Times",
             menu_qibla: "Qibla Compass",
-            menu_dhikr: "Dhikrmatic",
+            menu_dhikr: "Tasbih Counter",
             menu_kaza: "Missed Prayers",
             menu_zekat: "Zakat Calculator",
             menu_quran: "Read Holy Quran",
             menu_verse: "Verse of the Day",
             menu_esma: "Asmaul Husna",
+            menu_catechism: "Ilmihal (Islamic Catechism)",
+            menu_prayers: "Daily Supplications",
             menu_days: "Religious Days",
+            menu_sermon: "Weekly Sermon",
+            menu_biography_of_the_Prophet: "Life of the Prophet",
+            menu_taboo: "Islamic Taboo",
             menu_youtube: "YouTube Channel",
             menu_settings: "Settings",
             hijri_calendar_title: "Hijri Calendar",
@@ -1268,7 +1272,7 @@
             time_isha: "Isha",
             grid_qibla: "Find Qibla",
             grid_prayer: "Prayer Time",
-            grid_dhikr: "Dhikrmatic",
+            grid_dhikr: "Tasbih Counter",
             grid_kaza: "Missed Prayers",
             grid_verse: "Verse of Day",
             grid_quran: "Read Quran",
@@ -1292,7 +1296,12 @@
             menu_quran: "قراءة القرآن الكريم",
             menu_verse: "آية اليوم",
             menu_esma: "أسماء الله الحسنى",
+            menu_catechism: "الفقه الميسر (العلمحال)",
+            menu_prayers: "الأدعية اليومية",
             menu_days: "الأيام الدينية",
+            menu_sermon: "خطبة الأسبوع",
+            menu_biography_of_the_Prophet: "السيرة النبوية",
+            menu_taboo: "تابو إسلامي",
             menu_youtube: "قناة يوتيوب",
             menu_settings: "الإعدادات",
             hijri_calendar_title: "التقويم الهجري",
@@ -1343,7 +1352,7 @@
             { question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?", options: ["Medine", "Kudüs", "Taif", "Mekke"], answer: 3 },
             { question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?", options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"], answer: 0 },
             { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 },
-            { question: "6. İlk haccı, Hz. İbrahim ile birlikte inşa eden peygamber oğlu kimdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
+            { question: "6. Hz. İbrahim ile birlikte Kâbe'yi inşa eden oğlu hangi peygamberdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
             { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
             { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
             { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
@@ -1355,7 +1364,7 @@
             { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
             { question: "4. In which month is Hajj performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharram", "Shawwal"], answer: 0 },
             { question: "5. What is a 20-page section of the Quran called?", options: ["Surah", "Ayah", "Juz", "Meal"], answer: 2 },
-            { question: "6. Which prophet son helped Prophet Ibrahim build the Kaaba?", options: ["Prophet Ishaq", "Prophet Ismail", "Prophet Yaqub", "Prophet Yusuf"], answer: 1 },
+            { question: "6. Which prophet, the son of Prophet Ibrahim, helped him build the Kaaba?", options: ["Prophet Ishaq", "Prophet Ismail", "Prophet Yaqub", "Prophet Yusuf"], answer: 1 },
             { question: "7. Surah Al-Fil narrates the invasion of which city?", options: ["Mecca", "Medina", "Taif", "Damascus"], answer: 0 },
             { question: "8. Who is the head of angels (angel of revelation)?", options: ["Azrael", "Israfil", "Mikael", "Jibreel"], answer: 3 },
             { question: "9. What is the first word of the Shahada?", options: ["Ashhadu (I bear witness)", "La ilaha (There is no god)", "Muhammadan", "Rasuluhu"], answer: 0 },
@@ -1367,7 +1376,7 @@
             { question: "3. في أي مدينة ولد النبي محمد (صلى الله عليه وسلم)؟", options: ["المدينة المنورة", "القدس", "الطائف", "مكة المكرمة"], answer: 3 },
             { question: "4. في أي شهر يتم أداء فريضة الحج؟", options: ["ذو الحجة", "رمضان", "محرم", "شوال"], answer: 0 },
             { question: "5. ماذا يسمى الجزء المكون من 20 صفحة في القرآن؟", options: ["سورة", "آية", "جزء", "معنى"], answer: 2 },
-            { question: "6. من هو ابن النبي الذي ساعد النبي إبراهيم في بناء الكعبة؟", options: ["النبي إسحاق", "النبي إسماعيل", "النبي يعقوب", "النبي يوسف"], answer: 1 },
+            { question: "6. من هو النبي الذي بنى الكعبة مع والده النبي إبراهيم؟", options: ["النبي إسحاق", "النبي إسماعيل", "النبي يعقوب", "النبي يوسف"], answer: 1 },
             { question: "7. سورة الفيل تروي غزو أي مدينة؟", options: ["مكة المكرمة", "المدينة المنورة", "الطائف", "دمشق"], answer: 0 },
             { question: "8. من هو رئيس الملائكة (ملك الوحي)؟", options: ["عزرائيل", "إسرافيل", "ميكائيل", "جبريل"], answer: 3 },
             { question: "9. ما هي الكلمة الأولى من الشهادة؟", options: ["أشهد", "لا إله", "محمداً", "رسوله"], answer: 0 },
@@ -1384,6 +1393,7 @@
     let activeRoomRef = null;
     let connectionRef = null;
     let lastFetchedData = null;
+    let lastFetchDay = new Date().getDate(); // Gece yarısı vakitleri yenilemek için
 
     function toggleAssistantModal() {
         const modal = document.getElementById('assistantModal');
@@ -1552,39 +1562,55 @@
         loadSoloQuestion();
     }
 
-    function createDuelRoom() {
+    // DÜZELTME: Oda kodu çakışmasını önlemek için kod boşsa kullanılır, doluysa yeniden denenir
+    function createDuelRoom(attempt) {
+        attempt = attempt || 0;
         if (!window.firebase || !firebase.database) {
             alert("Firebase kütüphanesi yüklenemedi!");
+            return;
+        }
+        if (attempt > 5) {
+            alert("Oda kurulamadı, lütfen tekrar deneyin.");
             return;
         }
 
         if (activeRoomRef) activeRoomRef.off();
         if (connectionRef) connectionRef.off();
 
-        activeRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
-        playerRole = 'p1';
+        const candidateCode = Math.floor(1000 + Math.random() * 9000).toString();
+        const candidateRef = rdb.ref('rooms/' + candidateCode);
 
-        activeRoomRef = rdb.ref('rooms/' + activeRoomCode);
+        candidateRef.once('value').then(snap => {
+            if (snap.exists()) {
+                createDuelRoom(attempt + 1); // Kod dolu, yeni kod dene
+                return;
+            }
 
-        activeRoomRef.set({
-            p1Score: 0,
-            p2Score: 0,
-            currentQ: 0,
-            p1Ready: false,
-            p2Ready: false,
-            status: 'waiting',
-            p1Online: true,
-            p2Online: false
-        }).then(() => {
-            setupDisconnectionHandler();
-            document.getElementById('duel-setup-view').style.display = 'none';
-            document.getElementById('duel-game-view').style.display = 'block';
-            document.getElementById('duel-active-content').style.display = 'block';
-            document.getElementById('duel-result-view').style.display = 'none';
-            document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Bekleniyor...)`;
-            document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
+            activeRoomCode = candidateCode;
+            playerRole = 'p1';
+            activeRoomRef = candidateRef;
 
-            listenRoomUpdates();
+            return activeRoomRef.set({
+                p1Score: 0,
+                p2Score: 0,
+                currentQ: 0,
+                p1Ready: false,
+                p2Ready: false,
+                status: 'waiting',
+                p1Online: true,
+                p2Online: false,
+                createdAt: Date.now()
+            }).then(() => {
+                setupDisconnectionHandler();
+                document.getElementById('duel-setup-view').style.display = 'none';
+                document.getElementById('duel-game-view').style.display = 'block';
+                document.getElementById('duel-active-content').style.display = 'block';
+                document.getElementById('duel-result-view').style.display = 'none';
+                document.getElementById('duel-room-badge').innerText = `Oda Kodu: ${activeRoomCode} (Bekleniyor...)`;
+                document.getElementById('duel-question-text').innerText = "Rakibin odaya katılması bekleniyor...";
+
+                listenRoomUpdates();
+            });
         }).catch(err => {
             alert("Oda kurulamadı: " + err.message);
         });
@@ -1644,30 +1670,31 @@
 
             const rivalOnline = (playerRole === 'p1') ? data.p2Online : data.p1Online;
 
-            if (data.status === 'started' && rivalOnline === false) {
-                showDuelResultScreen(data, true);
-                return;
-            }
-
             let myScore = (playerRole === 'p1') ? (data.p1Score || 0) : (data.p2Score || 0);
             let rivalScore = (playerRole === 'p1') ? (data.p2Score || 0) : (data.p1Score || 0);
 
             document.getElementById('score-p1').innerText = `Sen: ${myScore}`;
             document.getElementById('score-p2').innerText = `Rakip: ${rivalScore}`;
 
+            const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+            const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
+
+            // DÜZELTME: Oyun normal bittiyse önce bu kontrol edilir (hükmen galibiyet hatası giderildi)
+            if (targetQ >= qList.length) {
+                showDuelResultScreen(data, false);
+                return;
+            }
+
+            if (data.status === 'started' && rivalOnline === false) {
+                showDuelResultScreen(data, true);
+                return;
+            }
+
             if (playerRole === 'p1' && data.status === 'started') {
                 const badge = document.getElementById('duel-room-badge');
                 if (badge.innerText.includes("Bekleniyor")) {
                     badge.innerText = `Oda: ${activeRoomCode}`;
                 }
-            }
-
-            const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
-            const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
-
-            if (targetQ >= qList.length) {
-                showDuelResultScreen(data, false);
-                return;
             }
 
             const currentDisplayedQ = window.activeDuelQIndex !== undefined ? window.activeDuelQIndex : -1;
@@ -1800,7 +1827,14 @@
     }
 
     function resetDuelLobby() {
-        if (activeRoomRef) activeRoomRef.off();
+        if (activeRoomRef) {
+            activeRoomRef.off();
+            // DÜZELTME: Odayı kuran kişi çıkarken odayı siler (eski odalar birikmesin)
+            if (playerRole === 'p1') {
+                activeRoomRef.remove().catch(() => {});
+            }
+        }
+        activeRoomRef = null;
         activeRoomCode = null;
         playerRole = null;
         window.activeDuelQIndex = undefined;
@@ -1828,6 +1862,7 @@
             document.getElementById('val-yatsi').innerText = times.Isha;
 
             lastFetchedData = data.data;
+            lastFetchDay = new Date().getDate();
             updateDateUI(lastFetchedData);
         } catch (error) {
             console.error("Vakitler alınamadı:", error);
@@ -1883,11 +1918,11 @@
         fetchPrayerTimes(chosenCity);
     }
 
-    function requestNotificationPermission() {
-        if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-            Notification.requestPermission();
-        }
-    }
+    // Vakit isimlerini seçili dile çevirmek için anahtar eşlemesi
+    const prayerNameKeys = {
+        "İmsak": "time_imsak", "Güneş": "time_sunrise", "Öğle": "time_dhuhr",
+        "İkindi": "time_asr", "Akşam": "time_maghrib", "Yatsı": "time_isha"
+    };
 
     function startCountdown() {
         const timerElement = document.getElementById('countdown-timer');
@@ -1899,6 +1934,13 @@
 
         setInterval(() => {
             const now = new Date();
+
+            // DÜZELTME: Gece yarısı geçince vakitleri ve tarihi otomatik yenile
+            if (now.getDate() !== lastFetchDay) {
+                lastFetchDay = now.getDate();
+                fetchPrayerTimes(localStorage.getItem('user_city') || 'Erzincan');
+            }
+
             const prayers = [
                 { name: "İmsak", time: document.getElementById('val-imsak').innerText },
                 { name: "Güneş", time: document.getElementById('val-gunes').innerText },
@@ -1938,8 +1980,11 @@
                 box.classList.toggle('active', name === targetPrayer.name);
             });
 
+            // DÜZELTME: Vakit adı seçili dilde gösterilir
+            const dispName = (translations[currentLang] && translations[currentLang][prayerNameKeys[targetPrayer.name]]) || targetPrayer.name;
+
             if (titleElement) {
-                titleElement.innerText = currentLang === 'ar' ? `الوقت المتبقي لـ ${targetPrayer.name}` : (currentLang === 'en' ? `${targetPrayer.name} time remaining` : `${targetPrayer.name} vaktine kalan süre`);
+                titleElement.innerText = currentLang === 'ar' ? `الوقت المتبقي لـ ${dispName}` : (currentLang === 'en' ? `${dispName} time remaining` : `${dispName} vaktine kalan süre`);
             }
 
             let diff = targetDate - now;
@@ -2046,7 +2091,6 @@
         document.getElementById('citySelectBox').value = savedCity;
         
         fetchPrayerTimes(savedCity);
-        requestNotificationPermission();
         startCountdown();
         
         randomEsma();
@@ -2061,222 +2105,136 @@
                 .catch(err => console.log('Ayetin Vakti: Service Worker kaydı başarısız.', err));
         });
     }
+
+    // Hikmet kartlarını rastgele karıştır (Fisher-Yates shuffle)
     document.addEventListener("DOMContentLoaded", function() {
-    const slider = document.querySelector('.quotes-slider');
-    if (!slider) return;
+        const slider = document.querySelector('.quotes-slider');
+        if (!slider) return;
 
-    // Tüm kartları diziye al
-    const cards = Array.from(slider.querySelectorAll('.quote-card'));
-    
-    // Kartları rastgele karıştır (Fisher-Yates shuffle)
-    for (let i = cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-
-    // Karıştırılan kartları slider'a tekrar ekle (DOM içinde yerleri değişir)
-    cards.forEach(card => slider.appendChild(card));
-});
-const quickBtn = document.getElementById('quick-touch-btn');
-const assistiveMenu = document.getElementById('assistive-menu');
-let pressTimer = null;
-let isMenuVisible = false;
-
-function startPress(e) {
-    // Sayfanın normal basılı tutma / kaydırma davranışını engelle
-    pressTimer = setTimeout(() => {
-        isMenuVisible = true;
-        assistiveMenu.classList.remove('hidden');
-        if (navigator.vibrate) navigator.vibrate(50);
-    }, 300);
-}
-
-function movePress(e) {
-    if (!isMenuVisible) return;
-    
-    // ÖNEMLİ: Menü açıkken parmağı sürüklerken sayfanın kaymasını engeller
-    e.preventDefault(); 
-
-    const touch = e.touches ? e.touches[0] : e;
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-    
-    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-    if (target && target.classList.contains('menu-item')) {
-        target.classList.add('active');
-    }
-}
-
-function endPress(e) {
-    clearTimeout(pressTimer);
-    
-    if (isMenuVisible) {
-        e.preventDefault();
-        const activeItem = document.querySelector('.menu-item.active');
-        if (activeItem) {
-            const url = activeItem.getAttribute('data-url');
-            window.location.href = url;
+        const cards = Array.from(slider.querySelectorAll('.quote-card'));
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
         }
-        assistiveMenu.classList.add('hidden');
-        document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-        isMenuVisible = false;
-    }
-}
-
-// Mobil tarayıcılarda scroll çakışmasını önlemek için { passive: false } ekliyoruz
-quickBtn.addEventListener('touchstart', startPress, { passive: false });
-window.addEventListener('touchmove', movePress, { passive: false });
-window.addEventListener('touchend', endPress);
-
-quickBtn.addEventListener('mousedown', startPress);
-window.addEventListener('mousemove', movePress);
-window.addEventListener('mouseup', endPress);
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Ayarlardan kaydedilen tercihi al (varsayılan olarak açıktır: 'true')
-    const assistiveEnabled = localStorage.getItem('assistive_touch_enabled');
-    const quickBtn = document.getElementById('quick-touch-btn');
-    const assistiveMenu = document.getElementById('assistive-menu');
-
-    // Eğer kapalı olarak seçildiyse hem butonu hem de menüyü gizle
-    if (assistiveEnabled === 'false') {
-        if (quickBtn) quickBtn.style.display = 'none';
-        if (assistiveMenu) assistiveMenu.style.display = 'none';
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const quickBtn = document.getElementById('quick-touch-btn');
-    const assistiveMenu = document.getElementById('assistive-menu');
-    
-    if (!quickBtn || !assistiveMenu) return;
-
-    // Ayarlardan gelen "Hızlı Erişim Menü İkonu" Tercihini Kontrol Et
-    const assistiveEnabled = localStorage.getItem('assistive_touch_enabled');
-    if (assistiveEnabled === 'false') {
-        quickBtn.classList.add('hidden-by-setting');
-        assistiveMenu.classList.add('hidden');
-        return; 
-    }
-
-    // 404 hatasını önlemek için doğru URL uzantılarıyla güncellenen harita
-    const menuDataMap = {
-        'diniGunler': { name: '📅 Dini Günler', url: 'dini-gunler' },
-        'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'esma.html' }, // veya doğru klasör/dosya adın neyse
-        'gunlukDualar': { name: '🤲🏻 Günlük Dualar', url: 'gunluk-dualar' },
-        'gununAyeti': { name: '✨ Günün Ayeti', url: 'gunun-ayeti' },
-        'haftaninHutbesi': { name: '📜 Haftanın Hutbesi', url: 'Haftanin-Hutbesi' },
-        'ilmihal': { name: '📚 İlmihal', url: 'Ilmihal' },
-        'islamiTabu': { name: '🤫 İslami Tabu', url: 'Islami-Tabu' },
-        'kazaNamaz': { name: '⏳ Kaza Namazı', url: 'kaza-namazi' },
-        'kiblePusulasi': { name: '🧭 Kıble Pusulası', url: 'kible-pusulasi' },
-        'kuranOku': { name: '📖 Kur\'an-ı Kerim', url: 'kuran-oku' },
-        'namazOgretmeni': { name: '📖 Namaz Öğretmeni', url: 'namaz-ogretmeni' },
-        'namazVakitleri': { name: '🕌 Namaz Vakitleri', url: 'Namaz-vakitleri/' }, // Güncellendi
-        'besBesNamaz': { name: '🤲 5-5 Namaz', url: '5-5-namaz/' }, // Güncellendi
-        'ramazanİmsakiyesi': { name: '🌙 Ramazan İmsakiyesi', url: 'Ramazan-ozel-imsakiye' },
-        'siyeriNebi': { name: '📗 Siyer-i Nebi', url: 'Siyer-i-Nebi' },
-        'yakindakiCamiler': { name: '🕌 Yakındaki Camiler', url: 'Yakindaki-Camiler/' },
-        'zakatHesap': { name: '💰 Zekat Hesaplama', url: 'zekat-hesaplama' },
-        'zikirmatiks': { name: '📿 Zikirmatik', url: 'Zikirmatik/' }
-    };
-
-    // Ayarlardan seçilen öğeleri oku (Varsayılan ilk 3 tanesi)
-    let savedItems = localStorage.getItem('custom_menu_items');
-    let activeItemIds = savedItems ? JSON.parse(savedItems) : ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
-
-    // Menüyü oluştur
-    assistiveMenu.innerHTML = '';
-    activeItemIds.forEach(id => {
-        if (menuDataMap[id]) {
-            const item = menuDataMap[id];
-            const div = document.createElement('div');
-            div.className = 'assistive-menu-item';
-            div.innerText = item.name;
-            div.dataset.url = item.url;
-            assistiveMenu.appendChild(div);
-        }
+        cards.forEach(card => slider.appendChild(card));
     });
 
-    let isPressing = false;
-    let activeTarget = null;
-
-    function handleTouchStart(e) {
-        isPressing = true;
-        assistiveMenu.classList.remove('hidden');
-        e.preventDefault();
-    }
-
-    function handleTouchMove(e) {
-        if (!isPressing) return;
-        e.preventDefault();
-
-        const touch = e.touches[0];
-        const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+    // DÜZELTME: Hızlı Erişim (AssistiveTouch) kodu tek bir bloğa indirildi (eski yinelenen blok silindi)
+    document.addEventListener('DOMContentLoaded', () => {
+        const quickBtn = document.getElementById('quick-touch-btn');
+        const assistiveMenu = document.getElementById('assistive-menu');
         
-        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active'));
+        if (!quickBtn || !assistiveMenu) return;
 
-        if (elementUnderFinger && elementUnderFinger.classList.contains('assistive-menu-item')) {
-            activeTarget = elementUnderFinger;
-            activeTarget.classList.add('active');
-        } else {
-            activeTarget = null;
-        }
-    }
-
-    function handleTouchEnd(e) {
-        if (!isPressing) return;
-        isPressing = false;
-        
-        assistiveMenu.classList.add('hidden');
-
-        if (activeTarget && activeTarget.dataset.url) {
-            const targetUrl = activeTarget.dataset.url;
-            activeTarget = null;
-            window.location.href = targetUrl;
+        // Ayarlardan gelen "Hızlı Erişim Menü İkonu" tercihini kontrol et
+        const assistiveEnabled = localStorage.getItem('assistive_touch_enabled');
+        if (assistiveEnabled === 'false') {
+            quickBtn.style.display = 'none';
+            assistiveMenu.style.display = 'none';
+            return; 
         }
 
-        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active'));
-    }
+        const menuDataMap = {
+            'diniGunler': { name: '📅 Dini Günler', url: 'dini-gunler' },
+            'esmaulHusna': { name: '🌙 Esmaül Hüsna', url: 'esma.html' },
+            'gunlukDualar': { name: '🤲🏻 Günlük Dualar', url: 'gunluk-dualar' },
+            'gununAyeti': { name: '✨ Günün Ayeti', url: 'gunun-ayeti' },
+            'haftaninHutbesi': { name: '📜 Haftanın Hutbesi', url: 'Haftanin-Hutbesi' },
+            'ilmihal': { name: '📚 İlmihal', url: 'Ilmihal' },
+            'islamiTabu': { name: '🤫 İslami Tabu', url: 'Islami-Tabu' },
+            'kazaNamaz': { name: '⏳ Kaza Namazı', url: 'kaza-namazi' },
+            'kiblePusulasi': { name: '🧭 Kıble Pusulası', url: 'kible-pusulasi' },
+            'kuranOku': { name: '📖 Kur\'an-ı Kerim', url: 'kuran-oku' },
+            'namazOgretmeni': { name: '📖 Namaz Öğretmeni', url: 'namaz-ogretmeni' },
+            'namazVakitleri': { name: '🕌 Namaz Vakitleri', url: 'Namaz-vakitleri/' },
+            'besBesNamaz': { name: '🤲 5-5 Namaz', url: '5-5-namaz/' },
+            'ramazanİmsakiyesi': { name: '🌙 Ramazan İmsakiyesi', url: 'Ramazan-ozel-imsakiye' },
+            'siyeriNebi': { name: '📗 Siyer-i Nebi', url: 'Siyer-i-Nebi' },
+            'yakindakiCamiler': { name: '🕌 Yakındaki Camiler', url: 'Yakindaki-Camiler/' },
+            'zakatHesap': { name: '💰 Zekat Hesaplama', url: 'zekat-hesaplama' },
+            'zikirmatiks': { name: '📿 Zikirmatik', url: 'Zikirmatik/' }
+        };
 
-    quickBtn.addEventListener('touchstart', handleTouchStart, { passive: false });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd);
+        // Ayarlardan seçilen öğeleri oku (varsayılan ilk 3 tanesi)
+        let activeItemIds = ['diniGunler', 'kiblePusulasi', 'zikirmatiks'];
+        try {
+            const savedItems = localStorage.getItem('custom_menu_items');
+            if (savedItems) {
+                const parsed = JSON.parse(savedItems);
+                if (Array.isArray(parsed)) activeItemIds = parsed;
+            }
+        } catch (e) {
+            console.log('Menü tercihi okunamadı, varsayılan kullanılıyor.', e);
+        }
 
-    // Bilgisayar testi için mouse destekleri
-    quickBtn.addEventListener('mousedown', (e) => {
-        isPressing = true;
-        assistiveMenu.classList.remove('hidden');
+        // Menüyü oluştur
+        assistiveMenu.innerHTML = '';
+        activeItemIds.forEach(id => {
+            if (menuDataMap[id]) {
+                const item = menuDataMap[id];
+                const div = document.createElement('div');
+                div.className = 'assistive-menu-item';
+                div.innerText = item.name;
+                div.dataset.url = item.url;
+                assistiveMenu.appendChild(div);
+            }
+        });
+
+        let isPressing = false;
+        let activeTarget = null;
+
+        function highlightAt(x, y) {
+            const el = document.elementFromPoint(x, y);
+            assistiveMenu.querySelectorAll('.assistive-menu-item').forEach(item => item.classList.remove('active'));
+            if (el && el.classList.contains('assistive-menu-item')) {
+                activeTarget = el;
+                activeTarget.classList.add('active');
+            } else {
+                activeTarget = null;
+            }
+        }
+
+        function finishPress() {
+            if (!isPressing) return;
+            isPressing = false;
+            assistiveMenu.classList.add('hidden');
+
+            if (activeTarget && activeTarget.dataset.url) {
+                const targetUrl = activeTarget.dataset.url;
+                activeTarget = null;
+                window.location.href = targetUrl;
+            }
+            assistiveMenu.querySelectorAll('.assistive-menu-item').forEach(item => item.classList.remove('active'));
+        }
+
+        function handleTouchStart(e) {
+            isPressing = true;
+            assistiveMenu.classList.remove('hidden');
+            e.preventDefault();
+        }
+
+        function handleTouchMove(e) {
+            if (!isPressing) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            highlightAt(touch.clientX, touch.clientY);
+        }
+
+        quickBtn.addEventListener('touchstart', handleTouchStart, { passive: false });
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        window.addEventListener('touchend', finishPress);
+
+        // Bilgisayar testi için mouse desteği
+        quickBtn.addEventListener('mousedown', () => {
+            isPressing = true;
+            assistiveMenu.classList.remove('hidden');
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isPressing) return;
+            highlightAt(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseup', finishPress);
     });
-
-    window.addEventListener('mousemove', (e) => {
-        if (!isPressing) return;
-        const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
-        const menuItems = assistiveMenu.querySelectorAll('.assistive-menu-item');
-        menuItems.forEach(item => item.classList.remove('active'));
-
-        if (elementUnderMouse && elementUnderMouse.classList.contains('assistive-menu-item')) {
-            activeTarget = elementUnderMouse;
-            activeTarget.classList.add('active');
-        } else {
-            activeTarget = null;
-        }
-    });
-
-    window.addEventListener('mouseup', () => {
-        if (!isPressing) return;
-        isPressing = false;
-        assistiveMenu.classList.add('hidden');
-
-        if (activeTarget && activeTarget.dataset.url) {
-            const targetUrl = activeTarget.dataset.url;
-            activeTarget = null;
-            window.location.href = targetUrl;
-        }
-    });
-});
-
 </script>
 </body>
 </html>
