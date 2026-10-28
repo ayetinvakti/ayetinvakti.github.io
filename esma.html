@@ -5,42 +5,53 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Esmaül Hüsna | Ayetin Vakti</title>
-    <meta name="theme-color" content="#10b981">
+    <meta name="theme-color" content="#0f172a">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <script>
-        // Tema ve Dil Kontrolü (Sayfa yüklenmeden önce çalışır, titremeyi önler)
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
+        // Tema, özel renk paleti ve dil (titremeyi önlemek için en başta çalışır)
+        (function () {
+            const d = document.documentElement;
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isLight = savedTheme === 'light' || (!savedTheme && !systemPrefersDark);
+            if (isLight) d.classList.add('light-mode');
+            const a = localStorage.getItem('custom_accent');
+            const t = localStorage.getItem('custom_text');
+            const b = localStorage.getItem('custom_bg');
+            if (a) d.style.setProperty('--accent-color', a);
+            if (t) d.style.setProperty('--text-color', t);
+            if (b) {
+                d.style.setProperty('--bg-color', b);
+                d.style.setProperty('--card-bg', b);
+            }
+            // Özel arka plan var, yazı rengi seçilmemişse okunabilir renkleri zeminin açıklığına göre seç
+            if (b && !t) {
+                const m = /^#([0-9a-f]{6})$/i.exec(b.trim());
+                if (m) {
+                    const n = parseInt(m[1], 16);
+                    const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+                    const L = 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+                    const bgIsLight = L > 0.18;
+                    d.style.setProperty('--text-color', bgIsLight ? '#0f172a' : '#f8fafc');
+                    d.style.setProperty('--text-muted', bgIsLight ? '#475569' : '#cbd5e1');
+                    d.style.setProperty('--border-color', bgIsLight ? 'rgba(15,23,42,0.18)' : 'rgba(248,250,252,0.22)');
+                }
+            }
+            // Safari üst/alt çubuğu sayfa zemin rengine uysun
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', b || (isLight ? '#f1f5f9' : '#0f172a'));
 
-        const savedAccent = localStorage.getItem('custom_accent');
-        const savedText = localStorage.getItem('custom_text');
-
-        if (savedAccent) document.documentElement.style.setProperty('--accent-color', savedAccent);
-        if (savedText) document.documentElement.style.setProperty('--text-color', savedText);
-
-        const savedBg = localStorage.getItem('custom_bg');
-        if (savedBg && savedTheme !== 'light') {
-            document.documentElement.style.setProperty('--bg-color', savedBg);
-            document.documentElement.style.setProperty('--card-bg', savedBg);
-        }
-
-        const savedLang = localStorage.getItem('user_lang') || 'tr';
-        document.documentElement.lang = savedLang;
-        if (savedLang === 'ar') {
-            document.documentElement.dir = 'rtl';
-        } else {
-            document.documentElement.dir = 'ltr';
-        }
+            // Dil
+            const savedLang = localStorage.getItem('user_lang') || 'tr';
+            d.lang = savedLang;
+            d.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+        })();
     </script>
 
     <style>
@@ -54,18 +65,23 @@
             --border-color: #334155;
             --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color-scheme: dark;
         }
 
-        /* Gündüz Teması (Açık Mode - Kesin Geçiş) */
-        [data-theme="light"] {
-            --bg-color: #f1f5f9 !important;
-            --card-bg: #ffffff !important;
-            --accent-color: #059669 !important;
-            --text-color: #0f172a !important;
-            --text-muted: #64748b !important;
-            --border-color: #cbd5e1 !important;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        /* Gündüz Teması (Açık Mod) */
+        html.light-mode {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --accent-color: #059669;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            color-scheme: light;
         }
+
+        /* Tuşlara ard arda basınca sayfa yakınlaşmasın */
+        html, body, button, a, select, input, label, [onclick] { touch-action: manipulation; }
 
         html[lang="ar"] {
             --font-family: 'Amiri', 'Traditional Arabic', serif;
@@ -132,13 +148,15 @@
             transition: 0.2s;
         }
 
-        .nav-btn:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
+        @media (hover: hover) {
+            .nav-btn:hover {
+                border-color: var(--accent-color);
+                color: var(--accent-color);
+            }
         }
 
         .page-header {
-            background: linear-gradient(135deg, var(--accent-color) 0%, rgba(16, 185, 129, 0.7) 100%);
+            background: linear-gradient(135deg, var(--accent-color) 0%, color-mix(in srgb, var(--accent-color) 70%, transparent) 100%);
             border-radius: 18px;
             padding: 24px;
             text-align: center;
@@ -177,9 +195,11 @@
             transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease;
         }
 
-        .esma-card:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            .esma-card:hover {
+                border-color: var(--accent-color);
+                transform: translateY(-2px);
+            }
         }
 
         .esma-left {
@@ -191,7 +211,7 @@
         .esma-number {
             width: 32px;
             height: 32px;
-            background: rgba(16, 185, 129, 0.15);
+            background: color-mix(in srgb, var(--accent-color) 15%, transparent);
             color: var(--accent-color);
             border-radius: 50%;
             display: flex;
@@ -316,8 +336,10 @@
             transition: 0.2s;
         }
 
-        .action-btn:hover {
-            border-color: var(--accent-color);
+        @media (hover: hover) {
+            .action-btn:hover {
+                border-color: var(--accent-color);
+            }
         }
 
         .action-btn.primary {
@@ -602,28 +624,29 @@
     }
 
     // --- TEMA YÖNETİMİ ---
+    function updateThemeIcon() {
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.textContent = document.documentElement.classList.contains('light-mode') ? '☀️' : '🌙';
+    }
+
+    // Safari üst/alt çubuğu sayfa zemin rengine uysun
+    function updateThemeColor() {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta) return;
+        const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
+        if (bg) meta.setAttribute('content', bg);
+    }
+
     function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        applyTheme(savedTheme);
+        updateThemeIcon();
+        updateThemeColor();
     }
 
     function toggleTheme() {
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-        const newTheme = isLight ? 'dark' : 'light';
-        applyTheme(newTheme);
-    }
-
-    function applyTheme(theme) {
-        const btn = document.getElementById('theme-toggle');
-        if (theme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            if (btn) btn.innerHTML = '☀️';
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-            if (btn) btn.innerHTML = '🌙';
-            localStorage.setItem('theme', 'dark');
-        }
+        const isLight = document.documentElement.classList.toggle('light-mode');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        updateThemeIcon();
+        updateThemeColor();
     }
 
     const uiTranslations = {
