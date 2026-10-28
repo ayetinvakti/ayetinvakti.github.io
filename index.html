@@ -6,37 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti</title>
     
-    <!-- Titremesiz Gelişmiş Tema, Renk Paleti ve Dil Entegrasyonu (Anti-Flicker Script) -->
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Titremesiz Tema, Özel Renk Paleti ve Dil (sayfa çizilmeden önce çalışır) -->
     <script>
-        (function() {
+        (function () {
+            const d = document.documentElement;
+
             // Dil ve RTL ayarı
-            var userLang = localStorage.getItem('user_lang') || 'tr';
-            if (userLang === 'ar') {
-                document.documentElement.setAttribute('dir', 'rtl');
-                document.documentElement.setAttribute('lang', 'ar');
-            } else if (userLang === 'en') {
-                document.documentElement.setAttribute('lang', 'en');
-            } else {
-                document.documentElement.setAttribute('lang', 'tr');
-            }
+            const userLang = localStorage.getItem('user_lang') || 'tr';
+            d.setAttribute('lang', userLang === 'ar' ? 'ar' : (userLang === 'en' ? 'en' : 'tr'));
+            if (userLang === 'ar') d.setAttribute('dir', 'rtl');
 
-            // Tema ayarı
-            var savedTheme = localStorage.getItem('theme');
-            var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            var isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
-            
-            if (isLight) {
-                document.documentElement.classList.add('light-mode');
-            }
+            // Tema: kayıt yoksa sistem teması
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isLight = savedTheme === 'light' || (!savedTheme && !systemPrefersDark);
+            if (isLight) d.classList.add('light-mode');
 
-            // Özel Renk Paleti (custom_bg, custom_text, custom_accent)
-            var customBg = localStorage.getItem('custom_bg');
-            var customText = localStorage.getItem('custom_text');
-            var customAccent = localStorage.getItem('custom_accent');
-            
-            if (customBg) document.documentElement.style.setProperty('--bg-color', customBg);
-            if (customText) document.documentElement.style.setProperty('--text-main', customText);
-            if (customAccent) document.documentElement.style.setProperty('--accent-color', customAccent);
+            // Özel renk paleti
+            const a = localStorage.getItem('custom_accent');
+            const t = localStorage.getItem('custom_text');
+            const b = localStorage.getItem('custom_bg');
+            if (a) d.style.setProperty('--accent-color', a);
+            if (t) d.style.setProperty('--text-color', t);
+            if (b) {
+                d.style.setProperty('--bg-color', b);
+                d.style.setProperty('--card-bg', b);
+                d.style.setProperty('--drawer-bg', b);
+            }
+            // Özel arka plan var, yazı rengi seçilmemişse okunabilir renkleri zeminin açıklığına göre seç
+            if (b && !t) {
+                const m = /^#([0-9a-f]{6})$/i.exec(b.trim());
+                if (m) {
+                    const n = parseInt(m[1], 16);
+                    const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+                    const L = 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+                    const bgIsLight = L > 0.18;
+                    d.style.setProperty('--text-color', bgIsLight ? '#0f172a' : '#f8fafc');
+                    d.style.setProperty('--text-muted', bgIsLight ? '#475569' : '#cbd5e1');
+                    d.style.setProperty('--border-color', bgIsLight ? 'rgba(15,23,42,0.18)' : 'rgba(248,250,252,0.22)');
+                }
+            }
+            // Safari üst/alt çubuğu sayfa zemin rengine uysun
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', b || (isLight ? '#f8fafc' : '#0f172a'));
         })();
     </script>
 
@@ -48,33 +62,38 @@
             --bg-color: #0f172a;
             --drawer-bg: #1e293b;
             --card-bg: #1e293b;
-            --text-main: #f8fafc;
+            --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --accent-color: #10b981;
             --border-color: rgba(255, 255, 255, 0.05);
+            color-scheme: dark;
         }
 
-        /* DÜZELTME: Tema sınıfı <html> üzerinde olduğu için seçici html.light-mode yapıldı */
         html.light-mode {
             --bg-color: #f8fafc;
             --drawer-bg: #ffffff;
             --card-bg: #ffffff;
-            --text-main: #0f172a;
+            --accent-color: #059669;
+            --text-color: #0f172a;
             --text-muted: #64748b;
             --border-color: rgba(0, 0, 0, 0.05);
+            color-scheme: light;
         }
 
+        /* Tuşlara ard arda basınca sayfa yakınlaşmasın */
+        html, body, button, a, select, input, label, [onclick] { touch-action: manipulation; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
 
         .container { max-width: 480px; width: 100%; margin: 0 auto; padding: 16px; flex: 1; }
 
         /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .nav-left { display: flex; align-items: center; gap: 12px; }
-        .menu-btn, .icon-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: transform 0.1s; }
+        .menu-btn, .icon-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: transform 0.1s; }
         .menu-btn:active, .icon-btn:active, .quiz-option-btn:active, .duel-action-btn:active, .quiz-next-btn:active, .modal-save-btn:active { transform: scale(0.96); }
-        .app-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); text-decoration: none; }
+        .app-title { font-size: 1.25rem; font-weight: 700; color: var(--text-color); text-decoration: none; }
 
         /* --- Ayetin Vakti Altı Dua Alanı Stili --- */
         .app-subtitle-dua {
@@ -119,7 +138,7 @@
 
         .times-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 14px; }
         .time-box { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 2px; text-align: center; }
-        .time-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.05); }
+        .time-box.active { border-color: var(--accent-color); background: color-mix(in srgb, var(--accent-color) 5%, transparent); }
         .time-name { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 2px; }
         .time-val { font-size: 0.8rem; font-weight: 600; display: block; }
 
@@ -132,8 +151,10 @@
 
         .quiz-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
         .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-        .quiz-option-btn { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 14px; border-radius: 10px; text-align: left; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .quiz-option-btn:hover { background: rgba(16, 185, 129, 0.05); }
+        .quiz-option-btn { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 14px; border-radius: 10px; text-align: left; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        @media (hover: hover) {
+            .quiz-option-btn:hover { background: color-mix(in srgb, var(--accent-color) 5%, transparent); }
+        }
         .quiz-option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
         .quiz-option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
         .quiz-footer { display: flex; justify-content: space-between; align-items: center; }
@@ -141,7 +162,7 @@
 
         /* Online Düello Kontrolleri */
         .dueling-lobby { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .duel-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 0.9rem; }
+        .duel-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 0.9rem; }
         .duel-action-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
         .duel-scoreboard { display: flex; justify-content: space-around; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 10px; margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; }
 
@@ -158,7 +179,7 @@
         .esma-link { font-size: 0.75rem; color: var(--accent-color); font-weight: 600; }
         
         .esma-refresh-btn {
-            background: rgba(16, 185, 129, 0.1);
+            background: color-mix(in srgb, var(--accent-color) 10%, transparent);
             border: 1px solid var(--border-color);
             color: var(--accent-color);
             width: 32px;
@@ -171,9 +192,11 @@
             font-size: 0.9rem;
             transition: transform 0.2s, background 0.2s;
         }
-        .esma-refresh-btn:hover {
-            background: rgba(16, 185, 129, 0.2);
-            transform: rotate(90deg);
+        @media (hover: hover) {
+            .esma-refresh-btn:hover {
+                background: color-mix(in srgb, var(--accent-color) 20%, transparent);
+                transform: rotate(90deg);
+            }
         }
 
         /* Drawer & Modal */
@@ -183,17 +206,19 @@
         .drawer.active { left: 0; }
         .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .drawer-title { font-size: 1.1rem; font-weight: 700; }
-        .drawer-close, .modal-close { background: none; border: none; color: var(--text-main); font-size: 1.2rem; cursor: pointer; }
+        .drawer-close, .modal-close { background: none; border: none; color: var(--text-color); font-size: 1.2rem; cursor: pointer; }
         .drawer-links { display: flex; flex-direction: column; gap: 8px; }
-        .drawer-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 500; }
-        .drawer-item:hover { background: rgba(16, 185, 129, 0.05); color: var(--accent-color); }
-        .drawer-icon-box { width: 32px; height: 32px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; }
+        .drawer-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--text-color); font-size: 0.9rem; font-weight: 500; }
+        @media (hover: hover) {
+            .drawer-item:hover { background: color-mix(in srgb, var(--accent-color) 5%, transparent); color: var(--accent-color); }
+        }
+        .drawer-icon-box { width: 32px; height: 32px; border-radius: 8px; background: color-mix(in srgb, var(--accent-color) 10%, transparent); display: flex; align-items: center; justify-content: center; }
         .drawer-divider { height: 1px; background: var(--border-color); margin: 10px 0; }
 
         .modal-card { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: var(--card-bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; z-index: 1001; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.active .modal-card { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .city-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); margin: 12px 0; font-size: 0.9rem; }
+        .city-select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); margin: 12px 0; font-size: 0.9rem; }
         .modal-save-btn { width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
@@ -220,18 +245,22 @@
             border: none;
             transition: transform 0.2s, background-color 0.2s;
         }
-        .ai-float-btn:hover {
-            transform: scale(1.05);
-            background-color: #059669;
+        @media (hover: hover) {
+            .ai-float-btn:hover {
+                transform: scale(1.05);
+                background-color: color-mix(in srgb, var(--accent-color) 85%, #000);
+            }
         }
         .ai-float-btn:active {
             transform: scale(0.9);
         }
 
         .assistant-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-        .assistant-option-btn { background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 14px; border-radius: 12px; text-align: left; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
-        .assistant-option-btn:hover { background: rgba(16, 185, 129, 0.05); border-color: var(--accent-color); }
-        .feedback-textarea { width: 100%; height: 100px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 0.9rem; margin: 10px 0; resize: none; }
+        .assistant-option-btn { background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); color: var(--text-color); padding: 12px 14px; border-radius: 12px; text-align: left; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
+        @media (hover: hover) {
+            .assistant-option-btn:hover { background: color-mix(in srgb, var(--accent-color) 5%, transparent); border-color: var(--accent-color); }
+        }
+        .feedback-textarea { width: 100%; height: 100px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 0.9rem; margin: 10px 0; resize: none; }
 
         /* --- RTL UYUMLULUK KODLARI (Arapça vs. için) --- */
         html[dir="rtl"] { text-align: right; }
@@ -290,7 +319,7 @@
             overflow: hidden;
         }
 
-        .card-emerald { background: linear-gradient(135deg, #134e5e 0%, #71b280 100%); }
+        .card-emerald { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color) 45%, #0f172a) 0%, var(--accent-color) 100%); }
         .card-navy    { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
         .card-desert  { background: linear-gradient(135deg, #936d55 0%, #c19b77 100%); }
         .card-crimson { background: linear-gradient(135deg, #591b1b 0%, #9a3232 100%); }
@@ -367,9 +396,9 @@
 
         .info-card-body {
             font-size: 0.88rem;
-            color: var(--text-main);
+            color: var(--text-color);
             line-height: 1.5;
-            background: rgba(16, 185, 129, 0.05);
+            background: color-mix(in srgb, var(--accent-color) 5%, transparent);
             border-left: 3px solid var(--accent-color);
             padding: 10px 12px;
             border-radius: 0 12px 12px 0;
@@ -431,7 +460,7 @@
 
         .assistive-menu-item {
             padding: 8px 10px !important;
-            color: var(--text-main, #00bcd4) !important;
+            color: var(--text-color, #00bcd4) !important;
             font-family: 'Georgia', 'Times New Roman', serif !important;
             font-size: 13px !important;
             font-weight: 500 !important;
@@ -456,7 +485,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #94a3b8;
+            color: var(--text-muted);
             padding: 12px 16px 6px 16px;
             margin-top: 4px;
         }
@@ -806,7 +835,7 @@
     <!-- GÜNÜN HİKMETLERİ KARTI -->
     <div class="countdown-card" style="padding: 15px 0;">
         <div class="quotes-header-flex">
-            <div style="font-weight: 700; color: var(--text-main); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
+            <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
             <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
         </div>
         
@@ -1899,14 +1928,22 @@
 
     function toggleTheme() {
         const isLight = document.documentElement.classList.toggle('light-mode');
-        document.body.classList.toggle('light-mode', isLight);
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
         updateThemeUI(isLight);
+        updateThemeColor();
     }
 
     function updateThemeUI(isLight) {
         const icon = document.getElementById('theme-icon');
-        if (icon) icon.innerText = isLight ? '☀️' : '🌙';
+        if (icon) icon.textContent = isLight ? '☀️' : '🌙';
+    }
+
+    // Safari üst/alt çubuğu sayfa zemin rengine uysun
+    function updateThemeColor() {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta) return;
+        const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
+        if (bg) meta.setAttribute('content', bg);
     }
 
     function saveSelectedCity() {
@@ -2076,15 +2113,9 @@
         const savedLang = localStorage.getItem('user_lang') || 'tr';
         setLanguage(savedLang);
 
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        let isLight = (savedTheme === 'light') || (!savedTheme && !systemPrefersDark);
-        
-        if (isLight) {
-            document.documentElement.classList.add('light-mode');
-            document.body.classList.add('light-mode');
-        }
-        updateThemeUI(isLight);
+        // Tema sınıfını head scripti zaten uyguladı; burada yalnızca ikon ve çubuk rengi güncellenir
+        updateThemeUI(document.documentElement.classList.contains('light-mode'));
+        updateThemeColor();
 
         const savedCity = localStorage.getItem('user_city') || 'Erzincan';
         document.getElementById('selected-city-name').innerText = savedCity;
