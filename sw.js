@@ -1,66 +1,68 @@
-const CACHE_NAME = 'ayetim-vakti-v5';
+const CACHE_NAME = 'ayetin-vakti-v6';
 const assetsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
     '/icon.png',
     '/esma.html'
-    // Projendeki diğer HTML veya JS/CSS dosyalarını buraya ekleyebilirsin:
-    // '/zaman.html', 
-    // '/kible.html'
+    // Projendeki diğer HTML veya JS/CSS dosyalarını buraya ekleyebilirsin
 ];
 
-// Kurulum aşaması: Dosyaları önbelleğe al
+// Kurulum: dosyaları tek tek önbelleğe al (biri bulunamazsa kurulum yarıda kalmasın)
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(assetsToCache);
-        })
+        caches.open(CACHE_NAME).then((cache) =>
+            Promise.allSettled(assetsToCache.map((url) => cache.add(url)))
+        )
     );
     self.skipWaiting();
 });
 
-// Eski önbellekleri temizleme
+// Eski önbellekleri temizle
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(
-                keys.map((key) => {
-                    if (key !== CACHE_NAME) {
-                        return caches.delete(key);
-                    }
-                })
-            );
-        })
+        caches.keys().then((keys) =>
+            Promise.all(keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : undefined)))
+        )
     );
     self.clients.claim();
 });
 
-// Fetch stratejisi: Önce internetten dene, başarılı olursa önbelleği güncelle; internet yoksa önbellekten sun
+// "?ts=..." gibi her istekte değişen parametreyi önbellek anahtarından çıkarır (önbellek şişmesin, çevrimdışı eşleşsin)
+function cacheKeyFor(request) {
+    const url = new URL(request.url);
+    if (url.searchParams.has('ts')) {
+        url.searchParams.delete('ts');
+        return url.toString();
+    }
+    return request;
+}
+
+// Fetch stratejisi: önce internetten dene, başarılıysa önbelleği güncelle; internet yoksa önbellekten sun
 self.addEventListener('fetch', (event) => {
-    // Sadece GET isteklerini önbellekle
-    if (event.request.method !== 'GET') return;
+    const request = event.request;
+    if (request.method !== 'GET') return;
+
+    const url = new URL(request.url);
+    // Ses dosyaları (hafız tilaveti vb.) önbelleğe alınmaz
+    if (url.pathname.endsWith('.mp3')) return;
 
     event.respondWith(
-        fetch(event.request)
+        fetch(request)
             .then((networkResponse) => {
-                // Eğer yanıt geçerliyse klonlayıp önbelleğe at
                 if (networkResponse && networkResponse.status === 200) {
                     const responseClone = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
+                    caches.open(CACHE_NAME).then((cache) => cache.put(cacheKeyFor(request), responseClone));
                 }
                 return networkResponse;
             })
-            .catch(() => {
-                // İnternet yoksa önbellekten bulmaya çalış
-                return caches.match(event.request).then((cachedResponse) => {
-                    if (cachedResponse) {
-                        return cachedResponse;
-                    }
-                    // İsteğe bağlı: Önbellekte de yoksa özel bir offline sayfası döndürebilirsin
-                });
-            })
+            .catch(() =>
+                caches.match(cacheKeyFor(request)).then((cachedResponse) => {
+                    if (cachedResponse) return cachedResponse;
+                    // Sayfa isteğiyse çevrimdışıyken ana sayfayı göster
+                    if (request.mode === 'navigate') return caches.match('/');
+                    return Response.error();
+                })
+            )
     );
 });
