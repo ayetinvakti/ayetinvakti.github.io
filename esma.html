@@ -155,6 +155,38 @@
             }
         }
 
+
+        /* Üst çubuk başlığı (Arapça hat) */
+        .nav-title {
+            flex: 1;
+            min-width: 0;
+            text-align: center;
+            padding: 0 8px;
+            line-height: 1.2;
+        }
+
+        .nav-title-ar {
+            font-family: 'Amiri', 'Traditional Arabic', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-title-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            margin-top: 2px;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
         .page-header {
             background: linear-gradient(135deg, var(--accent-color) 0%, color-mix(in srgb, var(--accent-color) 70%, transparent) 100%);
             border-radius: 18px;
@@ -381,6 +413,10 @@
 <div class="container">
     <header class="navbar">
         <a href="index.html" class="nav-btn" id="back-btn" title="Geri Dön">←</a>
+        <div class="nav-title">
+            <div class="nav-title-ar" lang="ar">أَسْمَاءُ ٱللَّهِ ٱلْحُسْنَىٰ</div>
+            <div class="nav-title-sub" id="nav-sub">99</div>
+        </div>
         <div class="nav-controls">
             <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
         </div>
@@ -411,8 +447,8 @@
         </div>
 
         <div class="modal-actions">
-            <button class="action-btn primary" onclick="playHumanAudioPronunciation()">
-                🔊 <span id="listen-text">İsmi Dinle</span>
+            <button class="action-btn primary" id="listen-btn" onclick="toggleEsmaAudio()">
+                <span id="listen-icon">🔊</span> <span id="listen-text">İsmi Dinle</span>
             </button>
             <button class="action-btn" onclick="closeModal()" id="close-text">Kapat</button>
         </div>
@@ -571,7 +607,6 @@
     }
 
     function openModal(esma) {
-        stopAudio();
         currentSelectedEsma = esma;
         document.getElementById('modalNumber').textContent = `${esma.id}`;
         document.getElementById('modalArabic').textContent = esma.arabic;
@@ -584,6 +619,7 @@
         meaningEl.lang = lang;
 
         document.getElementById('esmaModal').classList.add('active');
+        prepareAudio(esma);
     }
 
     function closeModal() {
@@ -601,26 +637,73 @@
         if (e.key === 'Escape') closeModal();
     });
 
-    function stopAudio() {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-        }
+    // --- GERÇEK SES KAYITLARI ---
+    // Her isim için bir kayıt: audio/esma/01.mp3 ... audio/esma/99.mp3
+    // (numara = listedeki sıra). Dosya yoksa düğme "kayıt yakında" olarak kapanır;
+    // bilgisayar sesiyle (TTS) okuma yapılmaz.
+    const AUDIO_DIR = 'audio/esma/';
+    let esmaAudio = null;
+    let audioState = 'idle'; // idle | playing | missing
+
+    function audioPath(id) {
+        return AUDIO_DIR + String(id).padStart(2, '0') + '.mp3';
     }
 
-    // Arapça arayüzde Arapça yazım, diğer dillerde okunuşu seslendirir
-    function playHumanAudioPronunciation() {
-        if (!currentSelectedEsma) return;
-        stopAudio();
-        if ('speechSynthesis' in window) {
-            const lang = localStorage.getItem('user_lang') || 'tr';
-            const isAr = lang === 'ar';
-            const utterance = new SpeechSynthesisUtterance(getEsmaName(currentSelectedEsma, lang));
-            utterance.lang = isAr ? 'ar-SA' : (lang === 'en' ? 'en-US' : 'tr-TR');
-            utterance.rate = 0.9;
-            window.speechSynthesis.speak(utterance);
-        } else {
-            alert((uiTranslations[currentLang] || uiTranslations.tr).noSpeech);
+    function refreshListenBtn() {
+        const t = uiTranslations[localStorage.getItem('user_lang') || 'tr'] || uiTranslations.tr;
+        const btn = document.getElementById('listen-btn');
+        const icon = document.getElementById('listen-icon');
+        const txt = document.getElementById('listen-text');
+        if (!btn) return;
+        btn.disabled = audioState === 'missing';
+        icon.textContent = audioState === 'playing' ? '⏸' : '🔊';
+        txt.textContent = audioState === 'missing' ? t.noAudio
+                        : audioState === 'playing' ? t.stopText
+                        : t.listenText;
+    }
+
+    function setAudioState(state) {
+        audioState = state;
+        refreshListenBtn();
+    }
+
+    function releaseAudio() {
+        if (!esmaAudio) return;
+        esmaAudio.onerror = esmaAudio.onended = esmaAudio.onpause = null;
+        try { esmaAudio.pause(); } catch (e) {}
+        esmaAudio = null;
+    }
+
+    function stopAudio() {
+        releaseAudio();
+        setAudioState('idle');
+    }
+
+    // Modal açılırken kaydı hazırlar (kullanıcı dokunuşuyla başladığı için iOS Safari'de sorunsuz çalışır)
+    function prepareAudio(esma) {
+        releaseAudio();
+        setAudioState('idle');
+        const a = new Audio();
+        a.preload = 'auto';
+        a.onerror = () => { if (esmaAudio === a) setAudioState('missing'); };
+        a.onended = () => { if (esmaAudio === a) setAudioState('idle'); };
+        a.src = audioPath(esma.id);
+        esmaAudio = a;
+    }
+
+    function toggleEsmaAudio() {
+        if (!esmaAudio || audioState === 'missing') return;
+        if (audioState === 'playing') {
+            esmaAudio.pause();
+            esmaAudio.currentTime = 0;
+            setAudioState('idle');
+            return;
         }
+        esmaAudio.currentTime = 0;
+        const a = esmaAudio;
+        const p = a.play();
+        setAudioState('playing');
+        if (p && p.catch) p.catch(() => { if (esmaAudio === a) setAudioState('missing'); });
     }
 
     // --- TEMA YÖNETİMİ ---
@@ -659,7 +742,9 @@
             listenText: "İsmi Dinle",
             closeText: "Kapat",
             meaningLabel: "Anlamı:",
-            noSpeech: "Tarayıcınız sesli okuma özelliğini desteklemiyor.",
+            stopText: "Durdur",
+            noAudio: "Ses kaydı yakında",
+            navSub: "99 İsim",
             dir: "ltr"
         },
         en: {
@@ -671,7 +756,9 @@
             listenText: "Listen Name",
             closeText: "Close",
             meaningLabel: "Meaning:",
-            noSpeech: "Your browser does not support text-to-speech.",
+            stopText: "Stop",
+            noAudio: "Recording coming soon",
+            navSub: "99 Names",
             dir: "ltr"
         },
         ar: {
@@ -683,7 +770,9 @@
             listenText: "استمع إلى الاسم",
             closeText: "إغلاق",
             meaningLabel: "المعنى:",
-            noSpeech: "متصفحك لا يدعم القراءة الصوتية.",
+            stopText: "إيقاف",
+            noAudio: "التسجيل الصوتي قريبًا",
+            navSub: "٩٩ اسمًا",
             dir: "rtl"
         }
     };
@@ -698,7 +787,8 @@
 
         document.getElementById('page-title').textContent = t.pageTitle;
         document.getElementById('page-desc').textContent = t.pageDesc;
-        document.getElementById('listen-text').textContent = t.listenText;
+        document.getElementById('nav-sub').textContent = t.navSub;
+        refreshListenBtn();
         document.getElementById('close-text').textContent = t.closeText;
         document.getElementById('meaning-label').textContent = t.meaningLabel;
         
