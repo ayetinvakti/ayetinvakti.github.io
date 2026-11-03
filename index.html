@@ -103,12 +103,49 @@
 
         /* --- Ayetin Vakti Altı Dua Alanı Stili --- */
         .app-subtitle-dua {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 600;
+            line-height: 1.5;
             color: var(--accent-color);
-            margin-bottom: 14px;
+            margin: 10px auto 18px;
+            padding: 0 12px;
+            max-width: 340px;
             letter-spacing: 0.3px;
+        }
+        .app-subtitle-dua span { display: block; text-wrap: balance; }
+
+        /* Açılış (splash) ekranı */
+        #splash {
+            position: fixed; inset: 0; z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-color);
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        .splash-inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .splash-logo {
+            width: 120px; height: 120px; border-radius: 28px; object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            animation: splashPop 0.7s cubic-bezier(.2,.8,.2,1) both;
+        }
+        .splash-title {
+            font-size: 1.6rem; font-weight: 700; color: var(--text-color); letter-spacing: 0.5px;
+            animation: splashFade 0.8s ease 0.25s both;
+        }
+        .splash-sub {
+            font-size: 0.85rem; color: var(--accent-color); font-weight: 600;
+            animation: splashFade 0.8s ease 0.45s both;
+        }
+        @keyframes splashPop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+        @keyframes splashFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) {
+            .splash-logo, .splash-title, .splash-sub { animation: none; }
+            #splash { transition: none; }
         }
 
         /* Konum ve Tarih Barı */
@@ -498,6 +535,37 @@
     </style>
 </head>
 <body>
+<!-- Açılış logosu: oturum başına bir kez gösterilir -->
+<div id="splash" aria-hidden="true">
+    <div class="splash-inner">
+        <img src="icon.png" alt="" class="splash-logo" onerror="this.style.display='none'">
+        <div class="splash-title">Ayetin Vakti</div>
+        <div class="splash-sub">﷽</div>
+    </div>
+</div>
+<script>
+    (function () {
+        var s = document.getElementById('splash');
+        var seen = false;
+        try { seen = sessionStorage.getItem('splash_seen') === '1'; } catch (e) {}
+        if (seen) { s.style.display = 'none'; return; }
+        try { sessionStorage.setItem('splash_seen', '1'); } catch (e) {}
+        var start = Date.now(), done = false;
+        function hide() {
+            if (done) return; done = true;
+            s.classList.add('hide');
+            setTimeout(function () { s.style.display = 'none'; }, 600);
+        }
+        function hideWhenReady() {
+            var wait = Math.max(0, 1400 - (Date.now() - start));
+            setTimeout(hide, wait);
+        }
+        if (document.readyState === 'complete') hideWhenReady();
+        else window.addEventListener('load', hideWhenReady);
+        setTimeout(hide, 4000); // güvenlik: ne olursa olsun 4 sn'de kapan
+    })();
+</script>
+
 
 <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
@@ -719,7 +787,8 @@
     </header>
 
     <div class="app-subtitle-dua">
-        Rabbim kolaylaştır, zorlaştırma; Rabbim hayırla sonuçlandır.
+        <span>Rabbim kolaylaştır, zorlaştırma;</span>
+        <span>Rabbim hayırla sonuçlandır.</span>
     </div>
 
     <div class="location-bar">
@@ -1380,44 +1449,142 @@
         "September": "Eylül", "October": "Ekim", "November": "Kasım", "December": "Aralık"
     };
 
-    const bigQuizPool = {
-        tr: [
-            { question: "1. Aşağıdakilerden hangisi abdesti bozan durumlardan biri değildir?", options: ["Ağız dolusu kusmak", "Bayılmak", "Ağlamak", "Namaz kılarken sesli gülmek"], answer: 2 },
-            { question: "2. Kur'an-ı Kerim'in en uzun suresi aşağıdakilerden hangisidir?", options: ["Yâsîn Suresi", "Bakara Suresi", "Al-i İmrân Suresi", "İhlâs Suresi"], answer: 1 },
-            { question: "3. Peygamber Efendimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?", options: ["Medine", "Kudüs", "Taif", "Mekke"], answer: 3 },
-            { question: "4. İslam'ın şartlarından biri olan hac ibadeti hangi ayda yerine getirilir?", options: ["Zilhicce", "Ramazan", "Muharrem", "Şevval"], answer: 0 },
-            { question: "5. Kur'an-ı Kerim'i oluşturan 20 sayfalık her bir bölüme ne ad verilir?", options: ["Sure", "Ayet", "Cüz", "Meâl"], answer: 2 },
-            { question: "6. Hz. İbrahim ile birlikte Kâbe'yi inşa eden oğlu hangi peygamberdir?", options: ["Hz. İshak", "Hz. İsmail", "Hz. Yakup", "Hz. Yusuf"], answer: 1 },
-            { question: "7. Fil Suresi hangi şehrin kâfirler tarafından kuşatılmasını ve hüsrana uğratılmasını anlatır?", options: ["Mekke", "Medine", "Taif", "Şam"], answer: 0 },
-            { question: "8. İslam inancına göre meleklerin başkanı (vahiy meleği) kimdir?", options: ["Azrail", "İsrafil", "Mikail", "Cebrail"], answer: 3 },
-            { question: "9. Kelime-i Şehadet'in ilk kelimesi ve anlamı aşağıdakilerden hangisidir?", options: ["Eşhedü (Şahitlik ederim)", "La ilahe (İlah yoktur)", "Muhammeden (Hz. Muhammed)", "Resulü (Elçisidir)"], answer: 0 },
-            { question: "10. Namazda ayakta durmayı ifade eden fıkhi terim hangisidir?", options: ["Rükü", "Secde", "Kıyam", "Kaide-i ahire"], answer: 2 }
-        ],
-        en: [
-            { question: "1. Which of the following does not break wudu?", options: ["Vomiting a mouthful", "Fainting", "Crying", "Laughing aloud in prayer"], answer: 2 },
-            { question: "2. What is the longest surah in the Quran?", options: ["Surah Yasin", "Surah Al-Baqarah", "Surah Al Imran", "Surah Al-Ikhlas"], answer: 1 },
-            { question: "3. In which city was Prophet Muhammad (PBUH) born?", options: ["Medina", "Jerusalem", "Taif", "Mecca"], answer: 3 },
-            { question: "4. In which month is Hajj performed?", options: ["Dhul-Hijjah", "Ramadan", "Muharram", "Shawwal"], answer: 0 },
-            { question: "5. What is a 20-page section of the Quran called?", options: ["Surah", "Ayah", "Juz", "Meal"], answer: 2 },
-            { question: "6. Which prophet, the son of Prophet Ibrahim, helped him build the Kaaba?", options: ["Prophet Ishaq", "Prophet Ismail", "Prophet Yaqub", "Prophet Yusuf"], answer: 1 },
-            { question: "7. Surah Al-Fil narrates the invasion of which city?", options: ["Mecca", "Medina", "Taif", "Damascus"], answer: 0 },
-            { question: "8. Who is the head of angels (angel of revelation)?", options: ["Azrael", "Israfil", "Mikael", "Jibreel"], answer: 3 },
-            { question: "9. What is the first word of the Shahada?", options: ["Ashhadu (I bear witness)", "La ilaha (There is no god)", "Muhammadan", "Rasuluhu"], answer: 0 },
-            { question: "10. What is the Islamic term for standing in prayer?", options: ["Ruku", "Sujood", "Qiyam", "Qa'dah"], answer: 2 }
-        ],
-        ar: [
-            { question: "1. أي مما يلي لا ينقض الوضوء؟", options: ["القيء ملء الفم", "الإغماء", "البكاء", "الضحك بصوت عال في الصلاة"], answer: 2 },
-            { question: "2. ما هي أطول سورة في القرآن الكريم؟", options: ["سورة يس", "سورة البقرة", "سورة آل عمران", "سورة الإخلاص"], answer: 1 },
-            { question: "3. في أي مدينة ولد النبي محمد (صلى الله عليه وسلم)؟", options: ["المدينة المنورة", "القدس", "الطائف", "مكة المكرمة"], answer: 3 },
-            { question: "4. في أي شهر يتم أداء فريضة الحج؟", options: ["ذو الحجة", "رمضان", "محرم", "شوال"], answer: 0 },
-            { question: "5. ماذا يسمى الجزء المكون من 20 صفحة في القرآن؟", options: ["سورة", "آية", "جزء", "معنى"], answer: 2 },
-            { question: "6. من هو النبي الذي بنى الكعبة مع والده النبي إبراهيم؟", options: ["النبي إسحاق", "النبي إسماعيل", "النبي يعقوب", "النبي يوسف"], answer: 1 },
-            { question: "7. سورة الفيل تروي غزو أي مدينة؟", options: ["مكة المكرمة", "المدينة المنورة", "الطائف", "دمشق"], answer: 0 },
-            { question: "8. من هو رئيس الملائكة (ملك الوحي)؟", options: ["عزرائيل", "إسرافيل", "ميكائيل", "جبريل"], answer: 3 },
-            { question: "9. ما هي الكلمة الأولى من الشهادة؟", options: ["أشهد", "لا إله", "محمداً", "رسوله"], answer: 0 },
-            { question: "10. ما هو المصطلح الإسلامي للوقوف في الصلاة؟", options: ["الركوع", "السجود", "القيام", "القعدة"], answer: 2 }
-        ]
-    };
+    // ============================================================
+    // BİLGİ TESTİ SORU HAVUZU
+    // Her soru: Q("TR|EN|AR", [doğru, yanlış1, yanlış2, yanlış3])
+    // Doğru şık her zaman ilk sıradadır; ekranda karıştırılır.
+    // Tek parça yazılan şıklar (ör. "7") her dilde aynı gösterilir.
+    // Tüm bilgiler Diyanet / MEB / ilmihal ve siyer kaynaklarıyla doğrulanmış temel bilgilerdir.
+    // ============================================================
+    const QUIZ_LEN = 10; // Her turda sorulan soru sayısı
+    function Q(q, o) {
+        const sp = s => { const p = s.split('|'); return p.length === 1 ? [p[0], p[0], p[0]] : p; };
+        return { q: sp(q), o: o.map(sp) };
+    }
+    const QUIZ_BANK = [
+        // --- İbadet ve Fıkıh ---
+        Q("Abdestin farzı kaç tanedir?|How many farz (obligatory) acts does wudu (ablution) have?|كم عدد فرائض الوضوء؟", ["4","3","5","6"]),
+        Q("Hanefî mezhebine göre guslün (boy abdesti) farzı kaç tanedir?|According to the Hanafi school, how many farz acts does ghusl have?|كم عدد فرائض الغسل عند الحنفية؟", ["3","2","4","5"]),
+        Q("Namazın farzları toplam kaç tanedir (şartları ve rükünleri birlikte)?|How many farz elements does prayer have in total (conditions and pillars together)?|كم عدد فرائض الصلاة في المجموع (الشروط والأركان معاً)؟", ["12","6","5","17"]),
+        Q("Günde kılınan beş vakit farz namazın toplam rekât sayısı kaçtır?|What is the total number of rak'ahs in the five daily farz prayers?|ما مجموع ركعات الصلوات الخمس المفروضة في اليوم؟", ["17","15","20","10"]),
+        Q("Akşam namazının farzı kaç rekâttır?|How many rak'ahs is the farz of the Maghrib prayer?|كم ركعة فرض صلاة المغرب؟", ["3","2","4","5"]),
+        Q("Sabah namazının farzı kaç rekâttır?|How many rak'ahs is the farz of the Fajr prayer?|كم ركعة فرض صلاة الفجر؟", ["2","4","3","1"]),
+        Q("Cuma namazının farzı kaç rekâttır?|How many rak'ahs is the farz of the Friday (Jumu'ah) prayer?|كم ركعة فرض صلاة الجمعة؟", ["2","4","3","6"]),
+        Q("Hanefî mezhebine göre teravih namazı kaç rekâttır?|According to the Hanafi school, how many rak'ahs is the Tarawih prayer?|كم ركعة صلاة التراويح عند الحنفية؟", ["20","8","12","10"]),
+        Q("Hanefî mezhebine göre vitir namazı kaç rekâttır?|According to the Hanafi school, how many rak'ahs is the Witr prayer?|كم ركعة صلاة الوتر عند الحنفية؟", ["3","1","2","4"]),
+        Q("İslam'ın şartı kaç tanedir?|How many pillars (conditions) of Islam are there?|كم عدد أركان الإسلام؟", ["5","6","4","7"]),
+        Q("İmanın şartı kaç tanedir?|How many articles of faith (iman) are there?|كم عدد أركان الإيمان؟", ["6","5","7","4"]),
+        Q("Aşağıdakilerden hangisi haram aylardan biridir?|Which of the following is one of the sacred months?|أي مما يلي من الأشهر الحرم؟", ["Recep|Rajab|رجب","Şaban|Sha'ban|شعبان","Ramazan|Ramadan|رمضان","Şevval|Shawwal|شوال"]),
+        Q("Arafat'ta vakfe, hangi ayın 9. günü yapılır?|In which month is the standing at Arafat performed, on the 9th day?|في أي شهر يكون الوقوف بعرفة في اليوم التاسع منه؟", ["Zilhicce|Dhul-Hijjah|ذو الحجة","Ramazan|Ramadan|رمضان","Muharrem|Muharram|محرم","Şevval|Shawwal|شوال"]),
+        Q("Hacda ziyaret (ifâda) tavafı kaç şavttır (tur)?|How many circuits (shawt) is the tawaf al-ifadah in Hajj?|كم شوطاً في طواف الإفاضة في الحج؟", ["7","3","5","9"]),
+        Q("Hicri takvimin ilk ayı hangisidir?|Which is the first month of the Hijri calendar?|ما هو أول شهر في التقويم الهجري؟", ["Muharrem|Muharram|محرم","Recep|Rajab|رجب","Ramazan|Ramadan|رمضان","Zilhicce|Dhul-Hijjah|ذو الحجة"]),
+        Q("Zilkade, hicri takvimin kaçıncı ayıdır?|Dhul-Qa'dah is which month of the Hijri calendar?|ذو القعدة هو الشهر كم في التقويم الهجري؟", ["11","10","9","12"]),
+        Q("Ramazan, hicri takvimin kaçıncı ayıdır?|Ramadan is which month of the Hijri calendar?|رمضان هو الشهر كم في التقويم الهجري؟", ["9","8","10","7"]),
+        Q("Hac ayları; Şevval ve Zilkade'nin tamamı ile Zilhicce'nin ilk kaç günüdür?|The Hajj months are all of Shawwal and Dhul-Qa'dah plus the first how many days of Dhul-Hijjah?|أشهر الحج هي شوال وذو القعدة كاملين وكم يوماً من ذي الحجة؟", ["10","7","9","15"]),
+        // --- Kur'an-ı Kerim ---
+        Q("Kur'an-ı Kerim'de kaç sure vardır?|How many surahs are there in the Quran?|كم عدد سور القرآن الكريم؟", ["114","99","124","30"]),
+        Q("Kur'an-ı Kerim'in ilk suresi hangisidir?|Which is the first surah of the Quran?|ما هي أول سورة في القرآن الكريم؟", ["Fâtiha|Al-Fatihah|الفاتحة","Bakara|Al-Baqarah|البقرة","İhlâs|Al-Ikhlas|الإخلاص","Nâs|An-Nas|الناس"]),
+        Q("Kur'an-ı Kerim'in son suresi hangisidir?|Which is the last surah of the Quran?|ما هي آخر سورة في القرآن الكريم؟", ["Nâs|An-Nas|الناس","Felak|Al-Falaq|الفلق","İhlâs|Al-Ikhlas|الإخلاص","Kevser|Al-Kawthar|الكوثر"]),
+        Q("Kur'an-ı Kerim'in en uzun suresi hangisidir?|Which is the longest surah of the Quran?|ما هي أطول سورة في القرآن الكريم؟", ["Bakara|Al-Baqarah|البقرة","Âl-i İmrân|Al Imran|آل عمران","Nisâ|An-Nisa|النساء","Mâide|Al-Ma'idah|المائدة"]),
+        Q("Kur'an-ı Kerim'in en kısa suresi hangisidir?|Which is the shortest surah of the Quran?|ما هي أقصر سورة في القرآن الكريم؟", ["Kevser|Al-Kawthar|الكوثر","Asr|Al-Asr|العصر","İhlâs|Al-Ikhlas|الإخلاص","Nâs|An-Nas|الناس"]),
+        Q("Fâtiha Suresi kaç âyettir?|How many verses does Surah Al-Fatihah have?|كم عدد آيات سورة الفاتحة؟", ["7","5","6","8"]),
+        Q("Bakara Suresi kaç âyettir?|How many verses does Surah Al-Baqarah have?|كم عدد آيات سورة البقرة؟", ["286","200","176","120"]),
+        Q("Âyetü'l-Kürsî, Kur'an'ın neresinde yer alır?|Where is Ayat al-Kursi found in the Quran?|أين تقع آية الكرسي في القرآن الكريم؟", ["Bakara, 255. âyet|Al-Baqarah, verse 255|سورة البقرة، الآية 255","Bakara, 282. âyet|Al-Baqarah, verse 282|سورة البقرة، الآية 282","Bakara, 286. âyet|Al-Baqarah, verse 286|سورة البقرة، الآية 286","Bakara, 201. âyet|Al-Baqarah, verse 201|سورة البقرة، الآية 201"]),
+        Q("Kur'an-ı Kerim yaklaşık kaç yılda, parça parça indirilmiştir?|Over roughly how many years was the Quran revealed in parts?|في كم سنة تقريباً نزل القرآن الكريم مفرّقاً؟", ["23","40","10","63"]),
+        Q("Kur'an-ı Kerim kaç cüzden oluşur?|How many juz' (parts) does the Quran consist of?|من كم جزءاً يتكون القرآن الكريم؟", ["30","20","114","60"]),
+        Q("Kur'an-ı Kerim'in ilk inen âyetleri hangi suredendir?|From which surah are the first revealed verses of the Quran?|من أي سورة نزلت أولى آيات القرآن الكريم؟", ["Alak Suresi (1-5. âyetler)|Surat al-Alaq (verses 1–5)|سورة العلق (الآيات 1–5)","Müddessir Suresi|Al-Muddaththir|المدثر","Kalem Suresi|Al-Qalam|القلم","Fâtiha Suresi|Al-Fatihah|الفاتحة"]),
+        Q("Yusuf Suresi, Kur'an'ın kaçıncı suresidir?|Surah Yusuf is which surah of the Quran?|سورة يوسف هي السورة رقم كم في القرآن الكريم؟", ["12","10","18","19"]),
+        Q("Diyanet İslam İlmihali'ne göre Kur'an'da ismi geçen peygamber sayısı kaçtır?|According to the Diyanet's Islamic catechism, how many prophets are mentioned by name in the Quran?|كم عدد الأنبياء المذكورين بأسمائهم في القرآن الكريم (وفق ما ذكرته رئاسة الشؤون الدينية التركية)؟", ["25","15","40","99"]),
+        Q("Kur'an-ı Kerim'de adı açıkça (ismen) geçen tek kadın kimdir?|Who is the only woman mentioned by name in the Quran?|من هي المرأة الوحيدة المذكورة باسمها في القرآن الكريم؟", ["Hz. Meryem|Maryam (Mary)|مريم","Hz. Hatice|Khadijah|خديجة","Hz. Âişe|Aisha|عائشة","Hz. Fâtıma|Fatimah|فاطمة"]),
+        Q("Kur'an'da adı en çok geçen peygamber kimdir?|Which prophet is mentioned by name most often in the Quran?|أي نبي ذُكر اسمه أكثر من غيره في القرآن الكريم؟", ["Hz. Musa|Musa (Moses)|موسى","Hz. İbrahim|Ibrahim (Abraham)|إبراهيم","Hz. Nuh|Nuh (Noah)|نوح","Hz. İsa|Isa (Jesus)|عيسى"]),
+        Q("Hz. Musa'ya hangi kitap verilmiştir?|Which scripture was given to Prophet Musa (Moses)?|أي كتاب أُنزل على موسى عليه السلام؟", ["Tevrat|Torah (Tawrat)|التوراة","İncil|Injil (Gospel)|الإنجيل","Zebur|Zabur (Psalms)|الزبور","Kur'an|Quran|القرآن"]),
+        Q("Hz. İsa'ya hangi kitap verilmiştir?|Which scripture was given to Prophet Isa (Jesus)?|أي كتاب أُنزل على عيسى عليه السلام؟", ["İncil|Injil (Gospel)|الإنجيل","Tevrat|Torah (Tawrat)|التوراة","Kur'an|Quran|القرآن","Zebur|Zabur (Psalms)|الزبور"]),
+        Q("Hz. Yusuf'u kardeşleri nereye attı?|Where did Prophet Yusuf's brothers throw him?|أين ألقى إخوة يوسف أخاهم؟", ["Kuyuya|Into a well|في البئر","Çöle|Into the desert|في الصحراء","Nehre|Into a river|في النهر","Uçuruma|Off a cliff|في الهاوية"]),
+        Q("Hz. Yunus'u hangi canlı yutmuştur?|Which creature swallowed Prophet Yunus (Jonah)?|أي مخلوق ابتلع يونس عليه السلام؟", ["Balık|A great fish|الحوت","Timsah|A crocodile|التمساح","Kurt|A wolf|الذئب","Yılan|A snake|الثعبان"]),
+        Q("İlk insan ve ilk peygamber kimdir?|Who is the first human being and the first prophet?|من هو أول إنسان وأول نبي؟", ["Hz. Âdem|Prophet Adam|آدم","Hz. Nuh|Nuh (Noah)|نوح","Hz. İbrahim|Ibrahim (Abraham)|إبراهيم","Hz. Musa|Musa (Moses)|موسى"]),
+        Q("Fil Suresi hangi olayı anlatır?|Which event does Surah Al-Fil describe?|ما الحادثة التي تحكيها سورة الفيل؟", ["Ebrehe'nin ordusuyla Kâbe'yi yıkmaya gelmesini ve helak olmasını|Abraha's army coming to demolish the Kaaba and being destroyed|مجيء جيش أبرهة لهدم الكعبة وهلاكه","Bedir'de müşriklerin yenilmesini|The defeat of the polytheists at Badr|هزيمة المشركين في بدر","Hendek'te Medine'nin kuşatılmasını|The siege of Medina at the Trench|حصار المدينة في الخندق","Mekke'nin fethini|The conquest of Mecca|فتح مكة"]),
+        Q("Fil ordusunun komutanı kimdir?|Who was the commander of the army of the elephant?|من كان قائد جيش الفيل؟", ["Ebrehe|Abraha|أبرهة","Ebu Cehil|Abu Jahl|أبو جهل","Ebu Leheb|Abu Lahab|أبو لهب","Ebu Süfyan|Abu Sufyan|أبو سفيان"]),
+        // --- Siyer-i Nebî ---
+        Q("Peygamberimiz (s.a.v.) hangi şehirde dünyaya gelmiştir?|In which city was the Prophet (PBUH) born?|في أي مدينة وُلد النبي صلى الله عليه وسلم؟", ["Mekke|Mecca|مكة المكرمة","Medine|Medina|المدينة المنورة","Taif|Ta'if|الطائف","Kudüs|Jerusalem|القدس"]),
+        Q("Peygamberimizin babasının adı nedir?|What was the name of the Prophet's father?|ما اسم والد النبي صلى الله عليه وسلم؟", ["Abdullah|Abdullah|عبد الله","Ebu Talib|Abu Talib|أبو طالب","Abdülmuttalib|Abdul-Muttalib|عبد المطلب","Ebu Leheb|Abu Lahab|أبو لهب"]),
+        Q("Peygamberimizin annesinin adı nedir?|What was the name of the Prophet's mother?|ما اسم والدة النبي صلى الله عليه وسلم؟", ["Âmine|Amina|آمنة","Hatice|Khadijah|خديجة","Halime|Halima|حليمة","Fâtıma|Fatimah|فاطمة"]),
+        Q("Peygamberimizin süt annesi kimdir?|Who was the Prophet's wet nurse?|من هي مرضعة النبي صلى الله عليه وسلم؟", ["Halime|Halima|حليمة","Âmine|Amina|آمنة","Hatice|Khadijah|خديجة","Âişe|Aisha|عائشة"]),
+        Q("Annesi vefat edince Peygamberimizi himayesine alan dedesi kimdir?|Which grandfather took the Prophet under his care after his mother's death?|من هو جده الذي كفله بعد وفاة أمه؟", ["Abdülmuttalib|Abdul-Muttalib|عبد المطلب","Ebu Talib|Abu Talib|أبو طالب","Abdullah|Abdullah|عبد الله","Hz. Abbas|Abbas|العباس"]),
+        Q("Dedesinin vefatından sonra Peygamberimizi himayesine alan amcası kimdir?|Which uncle took the Prophet under his care after his grandfather's death?|من هو عمه الذي كفله بعد وفاة جده؟", ["Ebu Talib|Abu Talib|أبو طالب","Hz. Hamza|Hamza|حمزة","Hz. Abbas|Abbas|العباس","Ebu Leheb|Abu Lahab|أبو لهب"]),
+        Q("Peygamberimiz hangi olayın yaşandığı yıl dünyaya gelmiştir?|In the year of which event was the Prophet born?|في عام أي حادثة وُلد النبي صلى الله عليه وسلم؟", ["Fil Vakası (Fil Yılı)|The Event of the Elephant|حادثة الفيل (عام الفيل)","Hicret|The Hijrah|الهجرة","Bedir Savaşı|The Battle of Badr|غزوة بدر","Mekke'nin fethi|The Conquest of Mecca|فتح مكة"]),
+        Q("Peygamberimiz Hz. Hatice ile evlendiğinde kaç yaşındaydı?|How old was the Prophet when he married Khadijah?|كم كان عمر النبي صلى الله عليه وسلم حين تزوج خديجة؟", ["25","20","30","40"]),
+        Q("Peygamberimizin ilk eşi kimdir?|Who was the Prophet's first wife?|من هي أولى زوجات النبي صلى الله عليه وسلم؟", ["Hz. Hatice|Khadijah|خديجة","Hz. Âişe|Aisha|عائشة","Hz. Hafsa|Hafsa|حفصة","Hz. Ümmü Seleme|Umm Salama|أم سلمة"]),
+        Q("Peygamberimize ilk iman eden kadın kimdir?|Who was the first woman to believe in the Prophet?|من هي أول امرأة آمنت بالنبي صلى الله عليه وسلم؟", ["Hz. Hatice|Khadijah|خديجة","Hz. Âişe|Aisha|عائشة","Hz. Fâtıma|Fatimah|فاطمة","Hz. Hafsa|Hafsa|حفصة"]),
+        Q("Peygamberimize ilk vahiy kaç yaşında gelmiştir?|At what age did the first revelation come to the Prophet?|في أي عمر نزل الوحي على النبي صلى الله عليه وسلم لأول مرة؟", ["40","25","30","63"]),
+        Q("İlk vahiy nerede gelmiştir?|Where did the first revelation come?|أين نزل الوحي لأول مرة؟", ["Hira Mağarası (Nur Dağı)|Cave of Hira (Mount Nur)|غار حراء (جبل النور)","Sevr Mağarası|Cave of Thawr|غار ثور","Uhud Dağı|Mount Uhud|جبل أحد","Arafat Dağı|Mount Arafat|جبل عرفات"]),
+        Q("Peygamberimize vahyi getiren melek kimdir?|Which angel brought the revelation to the Prophet?|من الملك الذي نزل بالوحي على النبي صلى الله عليه وسلم؟", ["Cebrâil|Jibril (Gabriel)|جبريل","Mikâil|Mikail (Michael)|ميكائيل","İsrâfil|Israfil|إسرافيل","Azrâil|Azrail|عزرائيل"]),
+        Q("Peygamberimiz kaç yaşında vefat etmiştir?|At what age did the Prophet pass away?|في أي عمر توفي النبي صلى الله عليه وسلم؟", ["63","53","70","40"]),
+        Q("Ebu Talib ve Hz. Hatice'nin vefat ettiği yıla ne ad verilir?|What is the year of the deaths of Abu Talib and Khadijah called?|ماذا يسمى العام الذي توفي فيه أبو طالب وخديجة؟", ["Hüzün Yılı|Year of Sorrow|عام الحزن","Fil Yılı|Year of the Elephant|عام الفيل","Fetih Yılı|Year of Conquest|عام الفتح","Hicret Yılı|Year of the Hijrah|عام الهجرة"]),
+        Q("Hicretten önce Medine'nin adı nedir?|What was the name of Medina before the Hijrah?|ما اسم المدينة المنورة قبل الهجرة؟", ["Yesrib|Yathrib|يثرب","Taif|Ta'if|الطائف","Şam|Damascus|دمشق","Kudüs|Jerusalem|القدس"]),
+        Q("Peygamberimizin Mekke'den Medine'ye göçüne ne ad verilir?|What is the Prophet's migration from Mecca to Medina called?|ماذا تسمى هجرة النبي صلى الله عليه وسلم من مكة إلى المدينة؟", ["Hicret|Hijrah|الهجرة","Biat|Bay'ah (pledge)|البيعة","Mi'rac|Mi'raj|المعراج","Fetih|Conquest|الفتح"]),
+        Q("Peygamberimizin ilk müezzini kimdir?|Who was the Prophet's first muezzin?|من هو أول مؤذن للنبي صلى الله عليه وسلم؟", ["Bilâl-i Habeşî|Bilal al-Habashi|بلال الحبشي","Hz. Ömer|Umar|عمر","Hz. Ali|Ali|علي","Hz. Osman|Uthman|عثمان"]),
+        Q("Müslümanlarla Mekkeli müşrikler arasındaki ilk büyük savaş hangisidir?|Which was the first major battle between the Muslims and the Meccan polytheists?|ما أول معركة كبرى بين المسلمين ومشركي مكة؟", ["Bedir|Badr|بدر","Uhud|Uhud|أحد","Hendek|The Trench|الخندق","Huneyn|Hunayn|حنين"]),
+        Q("Uhud Savaşı hicretin kaçıncı yılında yapılmıştır?|In which year after the Hijrah was the Battle of Uhud fought?|في أي سنة هجرية وقعت غزوة أحد؟", ["3","2","5","8"]),
+        Q("Hendek Savaşı hicretin kaçıncı yılında yapılmıştır?|In which year after the Hijrah was the Battle of the Trench fought?|في أي سنة هجرية وقعت غزوة الخندق؟", ["5","3","2","8"]),
+        Q("Mekke'nin fethi hicretin kaçıncı yılında gerçekleşmiştir?|In which year after the Hijrah did the Conquest of Mecca take place?|في أي سنة هجرية كان فتح مكة؟", ["8","5","6","10"]),
+        Q("Hz. Hamza hangi savaşta şehit olmuştur?|In which battle was Hamza martyred?|في أي معركة استُشهد حمزة رضي الله عنه؟", ["Uhud|Uhud|أحد","Bedir|Badr|بدر","Hendek|The Trench|الخندق","Mûte|Mu'tah|مؤتة"]),
+        Q("Hendek Savaşı'nda şehrin etrafına hendek kazılmasını kim önermiştir?|Who suggested digging the trench around the city in the Battle of the Trench?|من اقترح حفر الخندق حول المدينة في غزوة الخندق؟", ["Selmân-ı Fârisî|Salman al-Farisi|سلمان الفارسي","Bilâl-i Habeşî|Bilal al-Habashi|بلال الحبشي","Hz. Ebûbekir|Abu Bakr|أبو بكر","Hz. Ömer|Umar|عمر"])
+    ];
+
+    // --- Tohumlu (seeded) rastgelelik: Düello'da iki oyuncuya da aynı sorular ve şık sırası gelsin ---
+    function seedFromString(str) {
+        let h = 1779033703 ^ str.length;
+        for (let i = 0; i < str.length; i++) {
+            h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+            h = (h << 13) | (h >>> 19);
+        }
+        return (h ^ (h >>> 16)) >>> 0;
+    }
+    function mulberry32(a) {
+        return function () {
+            a |= 0; a = (a + 0x6D2B79F5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+    function shuffled(arr, rnd) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(rnd() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+    // Bir tur oluştur: havuzdan QUIZ_LEN soru seç, her sorunun şık sırasını karıştır
+    function buildSession(rnd) {
+        return shuffled(QUIZ_BANK.map((_, i) => i), rnd).slice(0, QUIZ_LEN).map(bi => ({
+            bi: bi,
+            perm: shuffled([0, 1, 2, 3], rnd)
+        }));
+    }
+    // Turu aktif dile göre ekranda gösterilecek biçime çevir
+    function renderSession(session) {
+        const li = currentLang === 'en' ? 1 : (currentLang === 'ar' ? 2 : 0);
+        return session.map(s => {
+            const item = QUIZ_BANK[s.bi];
+            return {
+                question: item.q[li],
+                options: s.perm.map(k => item.o[k][li]),
+                answer: s.perm.indexOf(0)
+            };
+        });
+    }
+    let soloSession = buildSession(Math.random);
+    let duelSessionCache = { code: null, session: null };
+    function soloList() { return renderSession(soloSession); }
+    function duelList() {
+        if (!activeRoomCode) return soloList();
+        if (duelSessionCache.code !== activeRoomCode) {
+            duelSessionCache = { code: activeRoomCode, session: buildSession(mulberry32(seedFromString('ayet-' + activeRoomCode))) };
+        }
+        return renderSession(duelSessionCache.session);
+    }
 
     let currentQuestionIndex = 0;
     let soloCorrectCount = 0;
@@ -1490,7 +1657,6 @@
             }
         });
         
-        currentQuestionIndex = 0;
         loadSoloQuestion();
         loadRandomInfo(); // Dil değiştiğinde de rastgele bilgiyi yeni dile göre güncelle
 
@@ -1510,7 +1676,7 @@
     }
 
     function loadSoloQuestion() {
-        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+        const qList = soloList();
         
         if (currentQuestionIndex >= qList.length) {
             showSoloResultScreen();
@@ -1540,7 +1706,7 @@
     }
 
     function checkSoloAnswer(selectedIndex, clickedBtn) {
-        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+        const qList = soloList();
         const correctIdx = qList[currentQuestionIndex].answer;
         const allButtons = document.querySelectorAll('#solo-quiz-area .quiz-option-btn');
         
@@ -1591,6 +1757,7 @@
     }
 
     function restartSoloQuiz() {
+        soloSession = buildSession(Math.random);
         currentQuestionIndex = 0;
         soloCorrectCount = 0;
         soloWrongCount = 0;
@@ -1711,7 +1878,7 @@
             document.getElementById('score-p1').innerText = `Sen: ${myScore}`;
             document.getElementById('score-p2').innerText = `Rakip: ${rivalScore}`;
 
-            const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+            const qList = duelList();
             const targetQ = data.currentQ !== undefined ? data.currentQ : 0;
 
             // DÜZELTME: Oyun normal bittiyse önce bu kontrol edilir (hükmen galibiyet hatası giderildi)
@@ -1780,7 +1947,7 @@
 
     function loadDuelQuestion(qIndex) {
         window.activeDuelQIndex = qIndex;
-        const qList = bigQuizPool[currentLang] || bigQuizPool['tr'];
+        const qList = duelList();
         if (qIndex >= qList.length) return;
 
         const qData = qList[qIndex];
@@ -1871,6 +2038,7 @@
         }
         activeRoomRef = null;
         activeRoomCode = null;
+        duelSessionCache = { code: null, session: null };
         playerRole = null;
         window.activeDuelQIndex = undefined;
 
