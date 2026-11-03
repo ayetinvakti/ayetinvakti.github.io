@@ -1,3 +1,4 @@
+importScripts('/push-sw.js');
 const CACHE_NAME = 'ayetin-vakti-v6';
 const assetsToCache = [
     '/',
