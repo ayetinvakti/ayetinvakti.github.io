@@ -60,15 +60,17 @@
   var CSS = '' +
     '.avm-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:100;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}' +
     '.avm-overlay.avm-open{opacity:1;visibility:visible}' +
-    '.avm-drawer{position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85vw;background:var(--drawer-bg,var(--card-bg,#162032));color:var(--text-color,#f8fafc);z-index:101;box-shadow:5px 0 25px rgba(0,0,0,.3);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);transform:translateX(-105%);visibility:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1),visibility .3s;touch-action:manipulation}' +
+    '.avm-drawer{position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85vw;background:var(--drawer-bg,#1e293b);color:var(--text-color,#f8fafc);z-index:101;box-shadow:5px 0 25px rgba(0,0,0,.3);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);transform:translateX(-105%);visibility:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1),visibility .3s;touch-action:manipulation}' +
     'html[dir="rtl"] .avm-drawer{left:auto;right:0;transform:translateX(105%);box-shadow:-5px 0 25px rgba(0,0,0,.3)}' +
+    'html.light-mode .avm-drawer{background:var(--drawer-bg,#ffffff)}' +
     '.avm-drawer.avm-open,html[dir="rtl"] .avm-drawer.avm-open{transform:none;visibility:visible}' +
     '.avm-head{display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid rgba(128,128,128,.15)}' +
-    '.avm-title{font-size:1.2rem;font-weight:800;color:var(--accent-color,#00bcd4)}' +
-    '.avm-close{background:none;border:none;color:var(--text-color,#f8fafc);font-size:20px;cursor:pointer;padding:6px;font-family:inherit}' +
+    '.avm-title{font-size:19px;line-height:1.2;font-weight:800;color:var(--accent-color,#00bcd4)}' +
+    '.avm-close{background:none;border:none;color:var(--text-color,#f8fafc);cursor:pointer;padding:6px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-family:inherit}'+
+    '.avm-close svg{width:20px;height:20px;display:block}' +
     '.avm-links{display:flex;flex-direction:column;gap:4px;padding:16px;overflow-y:auto;flex:1;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}' +
     '.avm-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted,#94a3b8);padding:12px 12px 6px;margin-top:4px}' +
-    '.avm-item{display:flex;align-items:center;gap:12px;padding:12px;color:var(--text-color,#f8fafc);text-decoration:none;border-radius:10px;font-size:14px;font-weight:500;transition:background .2s}' +
+    '.avm-item{box-sizing:border-box;line-height:1.3;display:flex;align-items:center;gap:12px;padding:12px;color:var(--text-color,#f8fafc);text-decoration:none;border-radius:10px;font-size:14px;font-weight:500;transition:background .2s}' +
     '.avm-item[aria-current="page"]{background:color-mix(in srgb,var(--accent-color,#00bcd4) 16%,transparent);font-weight:700}' +
     '.avm-ico{width:32px;height:32px;border-radius:8px;background:color-mix(in srgb,var(--accent-color,#00bcd4) 10%,transparent);display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}' +
     '.avm-div{height:1px;background:rgba(128,128,128,.15);margin:12px 0}' +
@@ -130,7 +132,7 @@
     drawer.setAttribute('aria-modal', 'true');
     drawer.setAttribute('aria-hidden', 'true');
     drawer.innerHTML = '<div class="avm-head"><div class="avm-title">Ayetin Vakti</div>' +
-      '<button type="button" class="avm-close">✕</button></div><nav class="avm-links"></nav>';
+      '<button type="button" class="avm-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div><nav class="avm-links"></nav>';
     closeBtn = drawer.querySelector('.avm-close');
     linksEl = drawer.querySelector('.avm-links');
     closeBtn.addEventListener('click', close);
