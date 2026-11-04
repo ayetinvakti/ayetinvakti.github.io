@@ -35,7 +35,7 @@
     ] },
     { title: 'Etkileşim', items: [
       ['Ayet Asistan', '💬', 'ayet-asistan'],
-      ['Dini Tabu', '🎲', 'Islami-Tabu']
+      ['Dini Tabu', '🤫', 'Islami-Tabu']
     ] }
   ];
   var YOUTUBE = 'https://www.youtube.com/@AyetinVakti';
