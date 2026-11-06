@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="https://ayetinvakti.github.io/menu.js" defer></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -157,12 +158,11 @@
 
 
         /* Üst çubuk başlığı (Arapça hat) */
+        .nav-group { display: flex; align-items: center; gap: 8px; }
+
+        /* Üst çubuk başlığı (Arapça hat) çubuktan kaldırıldı; JS'in bulabilmesi için DOM'da gizli duruyor */
         .nav-title {
-            flex: 1;
-            min-width: 0;
-            text-align: center;
-            padding: 0 8px;
-            line-height: 1.2;
+            display: none;
         }
 
         .nav-title-ar {
@@ -412,13 +412,16 @@
 
 <div class="container">
     <header class="navbar">
-        <a href="index.html" class="nav-btn" id="back-btn" title="Geri Dön">←</a>
+        <div class="nav-group">
+            <a href="https://ayetinvakti.github.io/" class="nav-btn" id="back-btn" title="Geri Dön" aria-label="Geri Dön">←</a>
+            <button class="nav-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer" title="Menü">☰</button>
+        </div>
         <div class="nav-title">
             <div class="nav-title-ar" lang="ar">أَسْمَاءُ ٱللَّهِ ٱلْحُسْنَىٰ</div>
             <div class="nav-title-sub" id="nav-sub">99</div>
         </div>
         <div class="nav-controls">
-            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
+            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir" aria-label="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
