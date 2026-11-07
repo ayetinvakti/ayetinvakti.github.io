@@ -106,7 +106,7 @@
 
     // ---- Parlak görünüm CSS'i (yalnızca gerçek kart ve butonlar) ----
     var CARDS = '.vakit-card:not(.active), .sweet-dhikr-bar, .mode-bar, .modal-card, .ios-modal-content, .settings-card';
-    var BTNS = '.btn, .tool-btn, .notification-btn, .home-btn, .theme-icon-btn, .menu-btn, .back-btn, .btn-ui, .target-opt-btn:not(.active), .sweet-dhikr-item.active, .mode-item.active';
+    var BTNS = '.avm-ico, .avm-item[aria-current="page"], .btn, .tool-btn, .notification-btn, .home-btn, .theme-icon-btn, .menu-btn, .back-btn, .btn-ui, .target-opt-btn:not(.active), .sweet-dhikr-item.active, .mode-item.active';
     function pre(list, extra) {
         return list.split(',').map(function (s) { return 'html.finish-glossy ' + s.trim() + (extra || ''); }).join(',\n');
     }
@@ -148,6 +148,18 @@
         '  background-image: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 60%);',
         '  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 0 10px color-mix(in srgb, var(--accent-color) 30%, transparent);',
         '}',
+        /* Sol menü (menu.js çekmecesi): zemini --card-bg'den gelir; parlama burada eklenir */
+        'html.finish-glossy .avm-drawer {',
+        '  background-origin: border-box; background-repeat: no-repeat;',
+        '  background-image: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 28%, rgba(255,255,255,0) 50%);',
+        '  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 5px 0 25px rgba(0,0,0,0.3);',
+        '}',
+        'html[dir="rtl"].finish-glossy .avm-drawer { box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), -5px 0 25px rgba(0,0,0,0.3); }',
+        'html.finish-glossy.surf-light .avm-drawer {',
+        '  background-image: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 40%), linear-gradient(0deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0) 35%);',
+        '  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 5px 0 25px rgba(15,23,42,0.18);',
+        '}',
+        'html[dir="rtl"].finish-glossy.surf-light .avm-drawer { box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), -5px 0 25px rgba(15,23,42,0.18); }',
         /* Sistem kontrolleri (seçim listesi vb.) yüzey açıklığına uysun; sayfanın html.light-mode kuralını geçsin diye :root ile güçlendirildi */
         'html:root.surf-dark { color-scheme: dark; }',
         'html:root.surf-light { color-scheme: light; }'
