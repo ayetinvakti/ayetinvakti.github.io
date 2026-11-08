@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="https://ayetinvakti.github.io/finish.js?v=3"></script>
     <script src="https://ayetinvakti.github.io/menu.js" defer></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -411,17 +412,17 @@
 <body>
 
 <div class="container">
-    <header class="navbar">
+    <header class="navbar fin-card">
         <div class="nav-group">
-            <a href="https://ayetinvakti.github.io/" class="nav-btn" id="back-btn" title="Geri Dön" aria-label="Geri Dön">←</a>
-            <button class="nav-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer" title="Menü">☰</button>
+            <a href="https://ayetinvakti.github.io/" class="nav-btn fin-btn" id="back-btn" title="Geri Dön" aria-label="Geri Dön">←</a>
+            <button class="nav-btn fin-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer" title="Menü">☰</button>
         </div>
         <div class="nav-title">
             <div class="nav-title-ar" lang="ar">أَسْمَاءُ ٱللَّهِ ٱلْحُسْنَىٰ</div>
             <div class="nav-title-sub" id="nav-sub">99</div>
         </div>
         <div class="nav-controls">
-            <button id="theme-toggle" class="nav-btn" title="Temayı Değiştir" aria-label="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
+            <button id="theme-toggle" class="nav-btn fin-btn" title="Temayı Değiştir" aria-label="Temayı Değiştir" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
@@ -450,10 +451,10 @@
         </div>
 
         <div class="modal-actions">
-            <button class="action-btn primary" id="listen-btn" onclick="toggleEsmaAudio()">
+            <button class="action-btn fin-btn primary" id="listen-btn" onclick="toggleEsmaAudio()">
                 <span id="listen-icon">🔊</span> <span id="listen-text">İsmi Dinle</span>
             </button>
-            <button class="action-btn" onclick="closeModal()" id="close-text">Kapat</button>
+            <button class="action-btn fin-btn" onclick="closeModal()" id="close-text">Kapat</button>
         </div>
     </div>
 </div>
@@ -590,7 +591,7 @@
 
         esmaData.forEach(esma => {
             const card = document.createElement('div');
-            card.className = 'esma-card';
+            card.className = 'esma-card fin-card';
             card.onclick = () => openModal(esma);
 
             const lang = localStorage.getItem('user_lang') || 'tr';
