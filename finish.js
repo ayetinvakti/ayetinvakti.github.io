@@ -55,9 +55,9 @@
             setCls('finish-glossy', ls('custom_finish') === 'glossy');
 
             // Bazı sayfalarda (ör. Vakit Asistanı) kart yüzeyi özel arka plandan değil 'custom_card'tan gelir:
-            // <html data-finish-surface="card"> yazılırsa yüzey açıklığı oradan hesaplanır
+            // <html data-finish-surface="card"> yazılırsa yüzey açıklığı önce custom_card, yoksa custom_bg'den hesaplanır
             var cardMode = d.getAttribute('data-finish-surface') === 'card';
-            var bg = hex(ls(cardMode ? 'custom_card' : 'custom_bg'));
+            var bg = cardMode ? (hex(ls('custom_card')) || hex(ls('custom_bg'))) : hex(ls('custom_bg'));
             var txt = hex(ls('custom_text'));
             var surfLight;
 
