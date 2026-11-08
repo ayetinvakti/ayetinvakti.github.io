@@ -554,6 +554,24 @@
         .bb-track { height: 8px; border-radius: 99px; background: rgba(128,128,128,0.2); overflow: hidden; }
         .bb-track i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--accent-color); transition: width 0.5s ease; }
         @media (prefers-reduced-motion: reduce) { .bb-btn, .bb-track i, .bb-dot { transition: none; } }
+    
+        /* Site içi arama */
+        .sr-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1002; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .sr-overlay.active { opacity: 1; pointer-events: auto; }
+        .sr-panel { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 12px); left: 50%; transform: translateX(-50%); width: 92%; max-width: 460px; max-height: 78vh; display: flex; flex-direction: column; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .sr-bar { display: flex; gap: 8px; align-items: center; }
+        .sr-input { flex: 1; min-width: 0; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 16px; outline: none; }
+        .sr-input:focus { border-color: var(--accent-color); }
+        .sr-close { width: 40px; height: 40px; flex: none; border-radius: 12px; border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; }
+        .sr-hint { font-size: 0.72rem; color: var(--text-muted); margin: 10px 4px 6px; }
+        .sr-list { overflow-y: auto; display: flex; flex-direction: column; gap: 6px; -webkit-overflow-scrolling: touch; }
+        .sr-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.02); color: var(--text-color); text-decoration: none; cursor: pointer; text-align: start; font: inherit; width: 100%; }
+        .sr-item:active { transform: scale(0.98); }
+        .sr-ico { width: 34px; height: 34px; flex: none; border-radius: 10px; background: color-mix(in srgb, var(--accent-color) 10%, transparent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .sr-txt { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+        .sr-name { font-size: 0.9rem; font-weight: 600; }
+        .sr-desc { font-size: 0.72rem; color: var(--text-muted); }
+        .sr-empty { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 18px 8px; }
     </style>
 </head>
 <body>
@@ -749,6 +767,7 @@
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
         <div class="nav-right" style="display: flex; gap: 8px; align-items: center;">
+            <button class="icon-btn fin-btn" onclick="openSiteSearch()" id="search-btn" aria-label="Ara">🔍</button>
             <button class="icon-btn fin-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
                 <span id="theme-icon">🌙</span>
             </button>
@@ -2486,6 +2505,126 @@
     window.addEventListener('storage', function (e) { if (!e.key || e.key.indexOf('kaba_build_') === 0) render(); });
     document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
     window.addEventListener('pageshow', function (e) { if (e.persisted) render(); });
+})();
+</script>
+<div class="sr-overlay" id="srOverlay" onclick="if(event.target===this)closeSiteSearch()">
+    <div class="sr-panel fin-card" role="dialog" aria-modal="true" aria-label="Ara">
+        <div class="sr-bar">
+            <input type="search" id="srInput" class="sr-input" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+            <button type="button" class="sr-close" onclick="closeSiteSearch()" aria-label="Kapat">✕</button>
+        </div>
+        <div class="sr-hint" id="srHint"></div>
+        <div class="sr-list" id="srList"></div>
+    </div>
+</div>
+<script>
+// Site içi arama: yalnızca sayfaları ve araçları bulur (sayfa adı + anahtar kelimeler); dini bilgi üretmez.
+(function () {
+    var UI = {
+        tr: { ph: 'Ara: namaz, kıble, dua, zekat…', hint: 'Sık kullanılanlar', none: 'Sonuç bulunamadı. Başka bir kelime dene (ör. namaz, kıble, dua).', loc: 'tr' },
+        en: { ph: 'Search: prayer, qibla, dua, zakat…', hint: 'Popular', none: 'No results. Try another word (e.g. prayer, qibla, dua).', loc: 'en' },
+        ar: { ph: 'ابحث: صلاة، قبلة، دعاء، زكاة…', hint: 'الأكثر استخدامًا', none: 'لا توجد نتائج. جرّب كلمة أخرى (مثل صلاة، قبلة، دعاء).', loc: 'ar' }
+    };
+    // n: ad, d: kısa açıklama (tr|en|ar), k: anahtar kelimeler (3 dil karışık)
+    var ITEMS = [
+        { u: 'Namaz-vakitleri/', i: '🕌', n: ['Namaz Vakitleri', 'Prayer Times', 'مواقيت الصلاة'], d: ['Günlük vakitler ve bildirimler', 'Daily times and notifications', 'المواقيت اليومية والتنبيهات'], k: 'namaz vakti vakitleri ezan imsak gunes sabah ogle ikindi aksam yatsi kerahat bildirim prayer times adhan fajr dhuhr asr maghrib isha notification اذان مواقيت صلاة' },
+        { u: 'kible-pusulasi', i: '🧭', n: ['Kıble Pusulası', 'Qibla Compass', 'اتجاه القبلة'], d: ['Kıble yönünü pusulayla bul', 'Find the qibla direction', 'اعرف اتجاه القبلة'], k: 'kible kıble pusula yon kabe qibla compass direction kaaba قبلة بوصلة كعبة' },
+        { u: 'Zikirmatik/', i: '📿', n: ['Zikirmatik', 'Dhikr Counter', 'عداد الذكر'], d: ['Zikir ve tesbih sayacı', 'Dhikr and tasbih counter', 'عداد للذكر والتسبيح'], k: 'zikir zikirmatik tesbih sayac say dhikr tasbih counter ذكر تسبيح مسبحة عداد' },
+        { u: 'kaza-namazi', i: '⏳', n: ['Kaza Namazı', 'Qada Prayers', 'قضاء الصلاة'], d: ['Kaza namazı borcunu takip et', 'Track your qada prayers', 'تابع قضاء صلواتك'], k: 'kaza borc namaz kilinmayan qada missed prayers قضاء' },
+        { u: 'gunun-ayeti', i: '✨', n: ['Günün Ayeti', 'Verse of the Day', 'آية اليوم'], d: ['Günün ayeti, duası ve hadisi', 'Verse, dua and hadith of the day', 'آية ودعاء وحديث اليوم'], k: 'gunun ayeti ayet dua hadis gunluk verse hadith day آية حديث' },
+        { u: 'kuran-oku', i: '📖', n: ['Kur\'an-ı Kerim', 'Holy Quran', 'القرآن الكريم'], d: ['Kur\'an-ı Kerim oku', 'Read the Holy Quran', 'اقرأ القرآن الكريم'], k: 'kuran kur an quran koran sure ayet oku mushaf سورة قرآن' },
+        { u: 'esma.html', i: '🌙', n: ['Esmaül Hüsna', 'Asmaul Husna', 'أسماء الله الحسنى'], d: ['99 isim ve anlamları', 'The 99 names and meanings', 'الأسماء التسعة والتسعون ومعانيها'], k: 'esma esmaul husna 99 isim allah names asma اسماء حسنى' },
+        { u: 'gunluk-dualar', i: '🤲', n: ['Günlük Dualar', 'Daily Duas', 'الأدعية اليومية'], d: ['Günlük dualar', 'Daily supplications', 'الأدعية اليومية'], k: 'dua dualar gunluk ezber supplication duas dua دعاء ادعية' },
+        { u: 'Haftanin-Hutbesi', i: '📜', n: ['Haftanın Hutbesi', 'Weekly Khutbah', 'خطبة الأسبوع'], d: ['Haftanın hutbesi', 'This week\'s khutbah', 'خطبة هذا الأسبوع'], k: 'hutbe haftanin cuma khutbah friday sermon جمعة خطبة' },
+        { u: 'Ilmihal', i: '📚', n: ['İlmihal Kütüphanesi', 'Ilmihal Library', 'علم الحال (İlmihal)'], d: ['İlmihal Kütüphanesi', 'Ilmihal library', 'مكتبة علم الحال'], k: 'ilmihal kutuphane fikih fıkıh ibadet hanefi ilm hal علم حال' },
+        { u: 'namaz-ogretmeni', i: '🧎', n: ['Namaz Öğretmeni', 'Prayer Teacher', 'معلم الصلاة'], d: ['Adım adım namaz öğren', 'Learn the prayer step by step', 'تعلّم الصلاة خطوة بخطوة'], k: 'namaz ogretmeni ogren nasil kilinir animasyon kadin erkek ogretici learn prayer teacher how to pray تعلم صلاة' },
+        { u: '5-5-namaz/', i: '🕋', n: ['5-5 Namaz', 'Spiritual Kaaba Building', 'بناء الكعبة الروحية'], d: ['Namaz takibi ve Kâbe inşası', 'Prayer tracker and Kaaba building', 'متابعة الصلاة وبناء الكعبة'], k: '5-5 5 5 55 besbes namaz takip isaretle kabe insa tracker kaaba build كعبة متابعة' },
+        { u: 'dini-gunler', i: '📅', n: ['Dini Günler', 'Religious Days', 'الأيام الدينية'], d: ['Dini günler ve geceler', 'Religious days and nights', 'الأيام والليالي الدينية'], k: 'dini gunler geceler kandil bayram hicri takvim takvim religious days calendar eid hijri أيام دينية تقويم هجري' },
+        { u: 'Ramazan-ozel-imsakiye', i: '🌙', n: ['Ramazan İmsakiyesi', 'Ramadan Timetable', 'إمساكية رمضان'], d: ['Ramazan imsakiyesi', 'Ramadan imsakiye', 'إمساكية رمضان'], k: 'ramazan imsakiye iftar sahur oruc ramadan imsakiyah timetable fasting رمضان امساكية' },
+        { u: 'Siyer-i-Nebi', i: '📗', n: ['Siyer-i Nebi', 'Sirah of the Prophet', 'السيرة النبوية'], d: ['Peygamberimizin hayatı', 'The life of the Prophet', 'حياة النبي'], k: 'siyer nebi peygamber hayati hz muhammed sirah seerah prophet سيرة نبي' },
+        { u: 'Yakindaki-Camiler/', i: '🕌', n: ['Yakındaki Camiler', 'Nearby Mosques', 'المساجد القريبة'], d: ['Yakındaki camileri bul', 'Find nearby mosques', 'اعثر على المساجد القريبة'], k: 'cami camiler mescit yakin yakindaki harita konum mosque mosques nearby map مسجد مساجد' },
+        { u: 'zekat-hesaplama', i: '💰', n: ['Zekat Hesaplama', 'Zakat Calculator', 'حساب الزكاة'], d: ['Zekat hesaplama', 'Calculate zakat', 'احسب زكاتك'], k: 'zekat zakat nisap altin hesaplama hesap calculator zakah زكاة' },
+        { u: 'Islami-Tabu', i: '🤫', n: ['İslami Tabu', 'Islamic Taboo', 'تابو الإسلامي'], d: ['İslami kelime oyunu', 'Islamic word game', 'لعبة كلمات إسلامية'], k: 'tabu islami oyun eglence kelime taboo game word لعبة' },
+        { u: 'ayet-asistan', i: '💬', n: ['Ayet Asistan', 'Ayet Assistant', 'مساعد آية'], d: ['Ayet Asistan ile sohbet', 'Chat with Ayet Assistant', 'تحدث مع مساعد آية'], k: 'asistan ayet asistan yapay zeka soru sor sohbet assistant ai chat ask مساعد' },
+        { u: 'ayarlar', i: '⚙️', n: ['Ayarlar', 'Settings', 'الإعدادات'], d: ['Tema, dil ve görünüm', 'Theme, language and appearance', 'السمة واللغة والمظهر'], k: 'ayarlar ayar tema dil renk yazi arka plan mat parlak gorunum settings theme language color background إعدادات' },
+        { s: '.quiz-card', i: '📝', n: ['Bilgi Testi', 'Knowledge Quiz', 'اختبار المعلومات'], d: ['Ana sayfada bilgi testi ve düello', 'Quiz and duel on this page', 'اختبار ومبارزة في هذه الصفحة'], k: 'bilgi testi test quiz yarisma duello duel soru knowledge اختبار' }
+    ];
+    var POPULAR = [0, 1, 6, 7, 3, 10];   // ilk açılışta gösterilen öneriler
+
+    function norm(t) {
+        return String(t || '').toLocaleLowerCase('tr')
+            .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+            .replace(/[\u2019\u2018\u02BC'`´]/g, '')
+            .replace(/ı/g, 'i').replace(/ç/g, 'c').replace(/ş/g, 's').replace(/ğ/g, 'g')
+            .replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/[âäà]/g, 'a').replace(/[îï]/g, 'i').replace(/û/g, 'u')
+            .replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه');
+    }
+    ITEMS.forEach(function (it) {
+        it.nn = it.n.map(norm);
+        it.words = norm(it.n.join(' ') + ' ' + it.k).split(/[^a-z0-9\u0600-\u06FF]+/).filter(Boolean);
+        it.hay = it.words.join(' ');
+        it.compact = it.words.join('');
+    });
+    function lang() { var l = null; try { l = localStorage.getItem('user_lang'); } catch (e) {} return UI[l] ? l : 'tr'; }
+    function idx() { return { tr: 0, en: 1, ar: 2 }[lang()]; }
+
+    function tokenScore(it, t) {
+        if (it.nn.some(function (n) { return n.indexOf(t) === 0; })) return 4;             // ad bu harflerle başlıyor
+        if (it.nn.some(function (n) { return n.split(/[^a-z0-9\u0600-\u06FF]+/).some(function (w) { return w.indexOf(t) === 0; }); })) return 3;
+        if (it.words.some(function (w) { return w.indexOf(t) === 0; })) return 2;           // anahtar kelime başı
+        if (t.length >= 3 && (it.hay.indexOf(t) !== -1 || it.compact.indexOf(t) !== -1)) return 1;
+        return 0;
+    }
+    function search(q) {
+        var toks = norm(q).split(/[^a-z0-9\u0600-\u06FF]+/).filter(Boolean);
+        if (!toks.length) return POPULAR.map(function (i) { return ITEMS[i]; });
+        function run(all) {
+            var out = [];
+            ITEMS.forEach(function (it) {
+                var sum = 0, hit = 0;
+                toks.forEach(function (t) { var sc = tokenScore(it, t); if (sc) { hit++; sum += sc; } });
+                if (all ? hit === toks.length : hit > 0) out.push({ it: it, sc: sum });
+            });
+            out.sort(function (a, b) { return b.sc - a.sc; });
+            return out.map(function (x) { return x.it; });
+        }
+        var res = run(true);
+        return res.length ? res : run(false);
+    }
+
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function render() {
+        var q = document.getElementById('srInput').value, l = lang(), x = idx(), res = search(q), list = document.getElementById('srList');
+        document.getElementById('srHint').textContent = q.trim() ? '' : UI[l].hint;
+        if (!res.length) { list.innerHTML = '<div class="sr-empty">' + esc(UI[l].none) + '</div>'; return; }
+        list.innerHTML = res.map(function (it) {
+            var go = it.s ? 'data-s="' + it.s + '"' : 'data-u="' + it.u + '"';
+            return '<button type="button" class="sr-item" ' + go + '><span class="sr-ico">' + it.i + '</span><span class="sr-txt"><span class="sr-name">' + esc(it.n[x]) + '</span><span class="sr-desc">' + esc(it.d[x]) + '</span></span></button>';
+        }).join('');
+    }
+    function go(btn) {
+        if (btn.dataset.s) {
+            closeSiteSearch();
+            var el = document.querySelector(btn.dataset.s);
+            if (el) setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+        } else if (btn.dataset.u) { location.href = btn.dataset.u; }
+    }
+    window.openSiteSearch = function () {
+        var inp = document.getElementById('srInput');
+        inp.placeholder = UI[lang()].ph; inp.value = '';
+        document.getElementById('srOverlay').classList.add('active');
+        render(); inp.focus();
+    };
+    window.closeSiteSearch = function () { document.getElementById('srOverlay').classList.remove('active'); document.getElementById('srInput').blur(); };
+    document.addEventListener('DOMContentLoaded', function () {
+        var inp = document.getElementById('srInput');
+        inp.addEventListener('input', render);
+        inp.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { var f = document.querySelector('#srList .sr-item'); if (f) go(f); }
+        });
+        document.getElementById('srList').addEventListener('click', function (e) { var b = e.target.closest('.sr-item'); if (b) go(b); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSiteSearch(); });
+    });
 })();
 </script>
 </body>
