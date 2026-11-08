@@ -305,7 +305,7 @@
         @media (hover: hover) {
             .assistant-option-btn:hover { background: color-mix(in srgb, var(--accent-color) 5%, transparent); border-color: var(--accent-color); }
         }
-        .feedback-textarea { width: 100%; height: 100px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 0.9rem; margin: 10px 0; resize: none; }
+        .feedback-textarea { width: 100%; height: 130px; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); font-size: 16px; margin: 10px 0 4px; resize: none; }
 
         /* --- RTL UYUMLULUK KODLARI (Arapça vs. için) --- */
         html[dir="rtl"] { text-align: right; }
@@ -572,6 +572,19 @@
         .sr-name { font-size: 0.9rem; font-weight: 600; }
         .sr-desc { font-size: 0.72rem; color: var(--text-muted); }
         .sr-empty { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 18px 8px; }
+    
+        /* Şikayet / Destek / Öneri formu */
+        #assistantModal .modal-card { max-height: 88vh; overflow-y: auto; }
+        .fb-chips { display: flex; gap: 6px; margin-top: 10px; }
+        .fb-chip { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 9px 4px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.02); color: var(--text-muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .fb-chip.active { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
+        .fb-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.72rem; color: var(--text-muted); min-height: 18px; margin-bottom: 10px; }
+        .fb-msg.err { color: #ef4444; }
+        .fb-done { text-align: center; padding: 10px 0 14px; }
+        .fb-done-ico { font-size: 2.4rem; margin-bottom: 6px; }
+        .fb-done-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .fb-done-text { font-size: 0.85rem; color: var(--text-muted); }
+        .modal-save-btn:disabled { opacity: 0.6; cursor: default; }
     </style>
 </head>
 <body>
@@ -718,42 +731,57 @@
 <div id="assistive-menu" class="assistive-menu-container hidden"></div>
 
 <!-- Asistan Seçim ve İşlem Modalı -->
-<div class="modal-overlay" id="assistantModal">
-    <div class="modal-card fin-card">
+<div class="modal-overlay" id="assistantModal" onclick="if(event.target===this)closeAssistantModal()">
+    <div class="modal-card fin-card" role="dialog" aria-modal="true" aria-labelledby="assistantModalTitle">
         <div class="modal-header">
             <div class="modal-title" id="assistantModalTitle">Ayetin Vakti Asistan</div>
-            <button class="modal-close" onclick="closeAssistantModal()">✕</button>
+            <button class="modal-close" onclick="closeAssistantModal()" id="as-close" aria-label="Kapat">✕</button>
         </div>
-        
+
         <div id="assistantMainView">
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
+            <div id="as-help" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
                 Size nasıl yardımcı olabiliriz? Lütfen bir seçenek seçin:
             </div>
             <div class="assistant-options">
-                <a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" class="assistant-option-btn">
+                <a href="https://ayetinvakti.github.io/ayet-asistan/" target="_blank" rel="noopener" class="assistant-option-btn">
                     <span style="font-size: 1.2rem;">🤖</span>
                     <div>
-                        <div style="font-weight: 600;">Ayet Asistanı</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Yapay zeka asistanımıza soru sorun</div>
+                        <div id="as-ai-name" style="font-weight: 600;">Ayet Asistanı</div>
+                        <div id="as-ai-desc" style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Yapay zeka asistanımıza soru sorun</div>
                     </div>
                 </a>
                 <button class="assistant-option-btn" onclick="openComplaintForm()">
                     <span style="font-size: 1.2rem;">📝</span>
                     <div>
-                        <div style="font-weight: 600;">Şikayet, Destek ve Öneri</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Görüş ve taleplerinizi iletin</div>
+                        <div id="as-fb-name" style="font-weight: 600;">Şikayet, Destek ve Öneri</div>
+                        <div id="as-fb-desc" style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Görüş ve taleplerinizi iletin</div>
                     </div>
                 </button>
             </div>
         </div>
 
         <div id="assistantComplaintView" style="display: none;">
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">
-                Talep, şikayet veya önerilerinizi bize yazabilirsiniz:
+            <div id="fb-intro" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">
+                Konuyu seçin (isteğe bağlı) ve mesajınızı yazın:
             </div>
-            <textarea id="complaintInputText" class="feedback-textarea" placeholder="Mesajınızı buraya yazın..."></textarea>
-            <button class="modal-save-btn fin-btn" onclick="submitComplaint()">Talebi Gönder</button>
-            <button class="modal-save-btn fin-btn" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); margin-top: 8px;" onclick="backToAssistantMain()">Geri Dön</button>
+            <div class="fb-chips" role="group">
+                <button type="button" class="fb-chip" data-c="sikayet" aria-pressed="false" onclick="pickFbCategory('sikayet')"><span>🛠️</span><span id="fb-chip-sikayet">Şikayet</span></button>
+                <button type="button" class="fb-chip" data-c="destek" aria-pressed="false" onclick="pickFbCategory('destek')"><span>🙋</span><span id="fb-chip-destek">Destek</span></button>
+                <button type="button" class="fb-chip" data-c="oneri" aria-pressed="false" onclick="pickFbCategory('oneri')"><span>💡</span><span id="fb-chip-oneri">Öneri</span></button>
+            </div>
+            <textarea id="complaintInputText" class="feedback-textarea" dir="auto" maxlength="1000" oninput="updateFbCount(); fbMsg('')" placeholder="Mesajınızı buraya yazın..."></textarea>
+            <div class="fb-foot"><span id="fb-msg" class="fb-msg" role="alert"></span><span id="fb-count">0 / 1000</span></div>
+            <button class="modal-save-btn fin-btn" id="fb-send" onclick="submitComplaint()">Talebi Gönder</button>
+            <button class="modal-save-btn fin-btn" id="fb-back" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); margin-top: 8px;" onclick="backToAssistantMain()">Geri Dön</button>
+        </div>
+
+        <div id="assistantDoneView" style="display: none;">
+            <div class="fb-done">
+                <div class="fb-done-ico">✅</div>
+                <div class="fb-done-title" id="fb-done-title">Mesajınız bize ulaştı</div>
+                <div class="fb-done-text" id="fb-done-text">Teşekkür ederiz, geri bildiriminiz için sağ olun.</div>
+            </div>
+            <button class="modal-save-btn fin-btn" id="fb-done-close" onclick="closeAssistantModal()">Kapat</button>
         </div>
     </div>
 </div>
@@ -1597,45 +1625,120 @@
     let lastFetchedData = null;
     let lastFetchDay = new Date().getDate(); // Gece yarısı vakitleri yenilemek için
 
+    // ===== Asistan / Şikayet-Destek-Öneri =====
+    const AS_T = {
+        tr: { title: 'Ayetin Vakti Asistan', help: 'Size nasıl yardımcı olabiliriz? Lütfen bir seçenek seçin:', ai_name: 'Ayet Asistanı', ai_desc: 'Yapay zeka asistanımıza soru sorun',
+              fb_name: 'Şikayet, Destek ve Öneri', fb_desc: 'Görüş ve taleplerinizi iletin', fb_intro: 'Konuyu seçin (isteğe bağlı) ve mesajınızı yazın:',
+              c_sikayet: 'Şikayet', c_destek: 'Destek', c_oneri: 'Öneri', ph: 'Mesajınızı buraya yazın...', send: 'Talebi Gönder', back: 'Geri Dön', sending: 'Gönderiliyor...',
+              done_title: 'Mesajınız bize ulaştı', done_text: 'Teşekkür ederiz, geri bildiriminiz için sağ olun.', close: 'Kapat',
+              err_short: 'Lütfen en az 5 karakterlik bir mesaj yazın.', err_wait: 'Yeni bir mesajı biraz sonra gönderebilirsiniz.', err_fail: 'Gönderilemedi. Bağlantınızı kontrol edip tekrar deneyin.', slow: 'Bağlantı yavaş. Sayfayı kapatmadan bekleyin.' },
+        en: { title: 'Ayetin Vakti Assistant', help: 'How can we help you? Please choose an option:', ai_name: 'Ayet Assistant', ai_desc: 'Ask our AI assistant a question',
+              fb_name: 'Complaint, Support & Suggestion', fb_desc: 'Send us your feedback and requests', fb_intro: 'Pick a topic (optional) and write your message:',
+              c_sikayet: 'Complaint', c_destek: 'Support', c_oneri: 'Suggestion', ph: 'Write your message here...', send: 'Send', back: 'Back', sending: 'Sending...',
+              done_title: 'Your message reached us', done_text: 'Thank you for your feedback.', close: 'Close',
+              err_short: 'Please write at least 5 characters.', err_wait: 'You can send another message in a moment.', err_fail: 'Could not send. Check your connection and try again.', slow: 'Connection is slow. Please keep the page open.' },
+        ar: { title: 'مساعد Ayetin Vakti', help: 'كيف يمكننا مساعدتك؟ اختر أحد الخيارات:', ai_name: 'مساعد آية', ai_desc: 'اسأل مساعدنا الذكي',
+              fb_name: 'شكوى أو دعم أو اقتراح', fb_desc: 'أرسل رأيك وطلباتك', fb_intro: 'اختر الموضوع (اختياري) واكتب رسالتك:',
+              c_sikayet: 'شكوى', c_destek: 'دعم', c_oneri: 'اقتراح', ph: 'اكتب رسالتك هنا...', send: 'إرسال', back: 'رجوع', sending: 'جارٍ الإرسال...',
+              done_title: 'وصلتنا رسالتك', done_text: 'شكرًا لك على ملاحظاتك.', close: 'إغلاق',
+              err_short: 'يرجى كتابة رسالة من 5 أحرف على الأقل.', err_wait: 'يمكنك إرسال رسالة جديدة بعد قليل.', err_fail: 'تعذّر الإرسال. تحقّق من الاتصال وحاول مرة أخرى.', slow: 'الاتصال بطيء. أبقِ الصفحة مفتوحة.' }
+    };
+    const asT = () => AS_T[currentLang] || AS_T.tr;
+    let fbCategory = null, fbSending = false;
+
+    function applyAssistantI18n() {
+        const T = asT();
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        set('as-help', T.help); set('as-ai-name', T.ai_name); set('as-ai-desc', T.ai_desc);
+        set('as-fb-name', T.fb_name); set('as-fb-desc', T.fb_desc); set('fb-intro', T.fb_intro);
+        set('fb-chip-sikayet', T.c_sikayet); set('fb-chip-destek', T.c_destek); set('fb-chip-oneri', T.c_oneri);
+        set('fb-back', T.back); set('fb-done-title', T.done_title); set('fb-done-text', T.done_text); set('fb-done-close', T.close);
+        if (!fbSending) set('fb-send', T.send);
+        document.getElementById('complaintInputText').placeholder = T.ph;
+        document.getElementById('as-close').setAttribute('aria-label', T.close);
+        const onMain = document.getElementById('assistantMainView').style.display !== 'none';
+        set('assistantModalTitle', onMain ? T.title : T.fb_name);
+    }
+    window.applyAssistantI18n = applyAssistantI18n;
+
+    function showAssistantView(v) {
+        document.getElementById('assistantMainView').style.display = v === 'main' ? 'block' : 'none';
+        document.getElementById('assistantComplaintView').style.display = v === 'form' ? 'block' : 'none';
+        document.getElementById('assistantDoneView').style.display = v === 'done' ? 'block' : 'none';
+        applyAssistantI18n();
+    }
+
     function toggleAssistantModal() {
-        const modal = document.getElementById('assistantModal');
-        modal.classList.toggle('active');
-        backToAssistantMain(); 
+        document.getElementById('assistantModal').classList.toggle('active');
+        showAssistantView('main');
     }
 
     function closeAssistantModal() {
         document.getElementById('assistantModal').classList.remove('active');
     }
 
-    function backToAssistantMain() {
-        document.getElementById('assistantMainView').style.display = 'block';
-        document.getElementById('assistantComplaintView').style.display = 'none';
-        document.getElementById('assistantModalTitle').innerText = "Ayetin Vakti Asistan";
-    }
+    function backToAssistantMain() { showAssistantView('main'); }
 
     function openComplaintForm() {
-        document.getElementById('assistantMainView').style.display = 'none';
-        document.getElementById('assistantComplaintView').style.display = 'block';
-        document.getElementById('assistantModalTitle').innerText = "Şikayet, Destek ve Öneri";
-        document.getElementById('complaintInputText').value = '';
+        fbMsg('');
+        showAssistantView('form');       // yarım kalan mesaj korunur; yalnızca gönderince temizlenir
+        updateFbCount();
+    }
+
+    function pickFbCategory(c) {
+        fbCategory = (fbCategory === c) ? null : c;
+        document.querySelectorAll('.fb-chip').forEach(b => {
+            const on = b.dataset.c === fbCategory;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+    }
+
+    function updateFbCount() {
+        document.getElementById('fb-count').textContent = document.getElementById('complaintInputText').value.length + ' / 1000';
+    }
+
+    function fbMsg(text, kind) {
+        const el = document.getElementById('fb-msg');
+        el.textContent = text || '';
+        el.className = 'fb-msg' + (kind ? ' ' + kind : '');
     }
 
     function submitComplaint() {
-        const text = document.getElementById('complaintInputText').value.trim();
-        if (!text) {
-            alert("Lütfen boş bırakmayın!");
-            return;
-        }
+        if (fbSending) return;
+        const T = asT();
+        const ta = document.getElementById('complaintInputText');
+        const btn = document.getElementById('fb-send');
+        const text = ta.value.trim();
+        if (text.length < 5) { fbMsg(T.err_short, 'err'); ta.focus(); return; }
 
-        rdb.ref('complaints').push({
-            message: text,
-            date: new Date().toISOString()
-        }).then(() => {
-            alert("✅ Talebiniz başarıyla iletildi. Teşekkür ederiz!");
-            closeAssistantModal();
-        }).catch(err => {
-            alert("Gönderilemedi, hata oluştu: " + err.message);
-        });
+        let last = 0;
+        try { last = parseInt(localStorage.getItem('complaint_last_ts') || '0', 10) || 0; } catch (e) {}
+        if (Date.now() - last < 30000) { fbMsg(T.err_wait, 'err'); return; }
+
+        fbSending = true; btn.disabled = true; btn.textContent = T.sending; fbMsg('');
+        const slow = setTimeout(() => fbMsg(T.slow), 8000);
+        const done = () => { clearTimeout(slow); fbSending = false; btn.disabled = false; btn.textContent = asT().send; };
+
+        const ua = navigator.userAgent || '';
+        const platform = /iPhone|iPad|iPod/i.test(ua) ? 'ios' : /Android/i.test(ua) ? 'android' : 'other';
+        const standalone = !!(navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches));
+
+        try {
+            rdb.ref('complaints').push({
+                message: text.slice(0, 1000),
+                category: fbCategory || 'none',
+                lang: currentLang,
+                platform: platform,
+                standalone: standalone,
+                date: new Date().toISOString()
+            }).then(() => {
+                try { localStorage.setItem('complaint_last_ts', String(Date.now())); } catch (e) {}
+                ta.value = ''; updateFbCount();
+                if (fbCategory) pickFbCategory(fbCategory);     // seçimi sıfırla
+                done(); showAssistantView('done');
+            }).catch(() => { done(); fbMsg(asT().err_fail, 'err'); });
+        } catch (e) { done(); fbMsg(asT().err_fail, 'err'); }
     }
 
     function setLanguage(lang) {
@@ -1660,6 +1763,7 @@
         loadSoloQuestion();
         loadRandomInfo(); // Dil değiştiğinde de rastgele bilgiyi yeni dile göre güncelle
         if (window.renderBesBes) window.renderBesBes();
+        applyAssistantI18n();
 
         if (lastFetchedData) {
             updateDateUI(lastFetchedData);
