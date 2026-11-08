@@ -157,7 +157,7 @@
         #hicri-date-text { font-weight: 600; color: var(--accent-color); font-size: 0.85rem; }
 
         /* Kartlar ortak */
-        .countdown-card, .quiz-card, .content-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .countdown-card, .quiz-card, .content-card, .bb-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
         /* Sayaç Bölümü */
         .countdown-title { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 4px; }
@@ -534,6 +534,26 @@
             padding: 12px 16px 6px 16px;
             margin-top: 4px;
         }
+    
+        /* 5-5 Namaz mini takip kartı */
+        .bb-card { padding: 16px 16px 18px; }
+        .bb-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .bb-title { font-size: 0.95rem; font-weight: 700; }
+        .bb-link { font-size: 0.75rem; color: var(--accent-color); font-weight: 600; text-decoration: none; white-space: nowrap; }
+        .bb-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .bb-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0 14px; }
+        .bb-btn { background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 2px 7px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-color); font: inherit; transition: transform 0.12s, background 0.2s, border-color 0.2s; -webkit-tap-highlight-color: transparent; }
+        .bb-btn:active { transform: scale(0.94); }
+        .bb-name { font-size: 0.7rem; color: var(--text-muted); }
+        .bb-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--text-muted) 55%, transparent); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+        .bb-btn.done { border-color: var(--accent-color); background: color-mix(in srgb, var(--accent-color) 8%, transparent); }
+        .bb-btn.done .bb-dot { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
+        .bb-btn.done .bb-name { color: var(--accent-color); font-weight: 600; }
+        .bb-month-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+        .bb-month-top b { font-size: 0.95rem; color: var(--accent-color); }
+        .bb-track { height: 8px; border-radius: 99px; background: rgba(128,128,128,0.2); overflow: hidden; }
+        .bb-track i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--accent-color); transition: width 0.5s ease; }
+        @media (prefers-reduced-motion: reduce) { .bb-btn, .bb-track i, .bb-dot { transition: none; } }
     </style>
 </head>
 <body>
@@ -854,6 +874,18 @@
                 <span class="time-val" id="val-yatsi">--:--</span>
             </div>
         </div>
+    </div>
+
+    <!-- 5-5 NAMAZ MİNİ TAKİP KARTI -->
+    <div class="bb-card fin-card" id="bb-card">
+        <div class="bb-head">
+            <div class="bb-title" id="bb-title">🕋 Manevi Kâbe İnşası</div>
+            <a class="bb-link" id="bb-link" href="5-5-namaz/">Kâbe'ni gör ›</a>
+        </div>
+        <div class="bb-sub" id="bb-sub"></div>
+        <div class="bb-row" id="bb-row" role="group"></div>
+        <div class="bb-month-top"><span id="bb-month-label"></span><b id="bb-month-pct">%0</b></div>
+        <div class="bb-track"><i id="bb-fill"></i></div>
     </div>
 
     <!-- GÜNÜN HİKMETLERİ KARTI -->
@@ -1608,6 +1640,7 @@
         
         loadSoloQuestion();
         loadRandomInfo(); // Dil değiştiğinde de rastgele bilgiyi yeni dile göre güncelle
+        if (window.renderBesBes) window.renderBesBes();
 
         if (lastFetchedData) {
             updateDateUI(lastFetchedData);
@@ -2384,6 +2417,76 @@
         });
         window.addEventListener('mouseup', finishPress);
     });
+</script>
+<script>
+// 5-5 Namaz mini takip kartı: 5-5 Namaz sayfasıyla aynı kaydı (localStorage) paylaşır.
+// Yalnızca 5 farzı işaretler; Vitir ve Sünnet kayıtlarına dokunmaz.
+(function () {
+    var TOTAL = 7, WEIGHTS = [3, 3, 3, 3, 3, 2, 1], MAXD = 18;
+    var ICONS = ['🌅', '☀️', '🌤️', '🌇', '🌙'];
+    var T = {
+        tr: { title: '🕋 Manevi Kâbe İnşası', link: 'Kâbe\'ni gör ›', names: ['Sabah', 'Öğle', 'İkindi', 'Akşam', 'Yatsı'], farz: 'farz', build: 'Kâbe İnşası', loc: 'tr-TR' },
+        en: { title: '🕋 Spiritual Kaaba Building', link: 'See your Kaaba ›', names: ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'], farz: 'obligatory', build: 'Kaaba Building', loc: 'en-US' },
+        ar: { title: '🕋 بناء الكعبة الروحية', link: 'شاهد كعبتك ›', names: ['الفجر', 'الظهر', 'العصر', 'المغرب', 'العشاء'], farz: 'فرض', build: 'بناء الكعبة', loc: 'ar-u-ca-gregory-nu-latn' }
+    };
+    function lang() { var l = null; try { l = localStorage.getItem('user_lang'); } catch (e) {} return T[l] ? l : 'tr'; }
+    function keyFor(y, m, d) { return y === 2026 ? 'kaba_build_v2_' + (m + 1) + '_' + d : 'kaba_build_v3_' + y + '_' + (m + 1) + '_' + d; }
+    function getData(y, m, d) {
+        var out = [];
+        try { var a = JSON.parse(localStorage.getItem(keyFor(y, m, d))); if (Array.isArray(a)) out = a.map(Boolean); } catch (e) {}
+        while (out.length < TOTAL) out.push(false);
+        return out.slice(0, TOTAL);
+    }
+    function saveData(y, m, d, data) { try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) {} }
+    function dayPts(a) { return a.reduce(function (t, v, i) { return t + (v ? WEIGHTS[i] : 0); }, 0); }
+
+    function render() {
+        var row = document.getElementById('bb-row');
+        if (!row) return;
+        var L = T[lang()], now = new Date(), y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+        var data = getData(y, m, d), done = data.slice(0, 5).filter(Boolean).length;
+        var fmt = new Intl.NumberFormat(L.loc, { maximumFractionDigits: 1 });
+
+        document.getElementById('bb-title').textContent = L.title;
+        document.getElementById('bb-link').textContent = L.link;
+        document.getElementById('bb-sub').textContent = done + ' / 5 ' + L.farz;
+
+        var h = '';
+        for (var i = 0; i < 5; i++) {
+            h += '<button type="button" class="bb-btn' + (data[i] ? ' done' : '') + '" data-i="' + i + '" aria-pressed="' + (!!data[i]) + '">' +
+                 '<span class="bb-name">' + ICONS[i] + '</span><span class="bb-dot">✓</span><span class="bb-name">' + L.names[i] + '</span></button>';
+        }
+        row.innerHTML = h;
+
+        var dim = new Date(y, m + 1, 0).getDate(), pts = 0;
+        for (var k = 1; k <= d; k++) pts += dayPts(getData(y, m, k));
+        var pct = pts / (dim * MAXD) * 100;
+        document.getElementById('bb-month-label').textContent =
+            new Intl.DateTimeFormat(L.loc, { month: 'long', year: 'numeric' }).format(new Date(y, m, 1)) + ' • ' + L.build;
+        document.getElementById('bb-month-pct').textContent = '%' + fmt.format(pct);
+        document.getElementById('bb-fill').style.width = pct.toFixed(2) + '%';
+    }
+    window.renderBesBes = render;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var row = document.getElementById('bb-row');
+        row.addEventListener('click', function (e) {
+            var b = e.target.closest('.bb-btn');
+            if (!b) return;
+            var now = new Date(), y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+            var data = getData(y, m, d), i = parseInt(b.dataset.i, 10);
+            data[i] = !data[i];
+            saveData(y, m, d, data);
+            try { if (navigator.vibrate) navigator.vibrate(10); } catch (err) {}
+            render();
+        });
+        render();
+    });
+    // 5-5 Namaz sayfasında veya başka sekmede değişince / gün dönünce güncel kal
+    window.addEventListener('storage', function (e) { if (!e.key || e.key.indexOf('kaba_build_') === 0) render(); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) render(); });
+})();
 </script>
 </body>
 </html>
