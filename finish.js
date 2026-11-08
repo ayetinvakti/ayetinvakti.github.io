@@ -54,11 +54,16 @@
 
             setCls('finish-glossy', ls('custom_finish') === 'glossy');
 
-            var bg = hex(ls('custom_bg'));
+            // Bazı sayfalarda (ör. Vakit Asistanı) kart yüzeyi özel arka plandan değil 'custom_card'tan gelir:
+            // <html data-finish-surface="card"> yazılırsa yüzey açıklığı oradan hesaplanır
+            var cardMode = d.getAttribute('data-finish-surface') === 'card';
+            var bg = hex(ls(cardMode ? 'custom_card' : 'custom_bg'));
             var txt = hex(ls('custom_text'));
             var surfLight;
 
-            if (bg) {
+            if (bg && cardMode) {
+                surfLight = lum(bg) > 0.18;
+            } else if (bg) {
                 var bgLight = lum(bg) > 0.18;
                 surfLight = bgLight;
                 hadCustomBg = true;
