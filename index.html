@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayetin Vakti</title>
+    <script src="https://ayetinvakti.github.io/finish.js?v=3"></script>
     <script src="https://ayetinvakti.github.io/menu.js" defer></script>
     
     <meta name="theme-color" content="#0f172a">
@@ -570,7 +571,7 @@
 
 <!-- Konum Seçim Modalı -->
 <div class="modal-overlay" id="locationModal">
-    <div class="modal-card">
+    <div class="modal-card fin-card">
         <div class="modal-header">
             <div class="modal-title" data-i18n="modal_loc_title">Konum Seçin</div>
             <button class="modal-close" onclick="toggleLocationModal()">✕</button>
@@ -661,7 +662,7 @@
             <option value="Osmaniye">Osmaniye</option>
             <option value="Düzce">Düzce</option>
         </select>
-        <button class="modal-save-btn" onclick="saveSelectedCity()" data-i18n="modal_loc_btn">Konumu Uygula</button>
+        <button class="modal-save-btn fin-btn" onclick="saveSelectedCity()" data-i18n="modal_loc_btn">Konumu Uygula</button>
     </div>
 </div>
 
@@ -680,7 +681,7 @@
 
 <!-- Asistan Seçim ve İşlem Modalı -->
 <div class="modal-overlay" id="assistantModal">
-    <div class="modal-card">
+    <div class="modal-card fin-card">
         <div class="modal-header">
             <div class="modal-title" id="assistantModalTitle">Ayetin Vakti Asistan</div>
             <button class="modal-close" onclick="closeAssistantModal()">✕</button>
@@ -713,8 +714,8 @@
                 Talep, şikayet veya önerilerinizi bize yazabilirsiniz:
             </div>
             <textarea id="complaintInputText" class="feedback-textarea" placeholder="Mesajınızı buraya yazın..."></textarea>
-            <button class="modal-save-btn" onclick="submitComplaint()">Talebi Gönder</button>
-            <button class="modal-save-btn" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); margin-top: 8px;" onclick="backToAssistantMain()">Geri Dön</button>
+            <button class="modal-save-btn fin-btn" onclick="submitComplaint()">Talebi Gönder</button>
+            <button class="modal-save-btn fin-btn" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); margin-top: 8px;" onclick="backToAssistantMain()">Geri Dön</button>
         </div>
     </div>
 </div>
@@ -724,11 +725,11 @@
 <div class="container">
     <header class="navbar">
         <div class="nav-left">
-            <button class="menu-btn" data-drawer-toggle aria-label="Menü">☰</button>
+            <button class="menu-btn fin-btn" data-drawer-toggle aria-label="Menü">☰</button>
             <a href="#" class="app-title">Ayetin Vakti</a>
         </div>
         <div class="nav-right" style="display: flex; gap: 8px; align-items: center;">
-            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
+            <button class="icon-btn fin-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Tema Değiştir">
                 <span id="theme-icon">🌙</span>
             </button>
         </div>
@@ -739,7 +740,7 @@
         <span>Rabbim hayırla sonuçlandır.</span>
     </div>
 
-    <div class="location-bar">
+    <div class="location-bar fin-card">
         <div class="location-info">
             <div class="location-city" id="location-city-text" onclick="toggleLocationModal()" title="Konumu Değiştir">
                 📍 <span id="selected-city-name">Erzincan</span>, Türkiye ▾
@@ -753,7 +754,7 @@
     </div>
 
     <!-- İslam Dini ve Kültürü Bilgi Testi & Canlı Düello Kartı -->
-    <div class="quiz-card">
+    <div class="quiz-card fin-card">
         <div class="card-header-flex">
             <div class="card-section-title" data-i18n="quiz_title">📝 İslam Dini ve Kültürü Bilgi Testi</div>
             <div id="quiz-progress" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Mod Seç</div>
@@ -770,14 +771,14 @@
                 <div class="quiz-options" id="quiz-options-container"></div>
                 <div class="quiz-footer">
                     <span id="quiz-feedback-text" style="font-size: 0.85rem; font-weight: 600;"></span>
-                    <button class="quiz-next-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
+                    <button class="quiz-next-btn fin-btn" id="quiz-next-button" onclick="nextQuestion()" style="display: none;" data-i18n="quiz_next">Sonraki</button>
                 </div>
             </div>
             <div id="solo-result-view" style="display: none;" class="duel-result-box">
                 <div class="duel-result-title">🎉 Test Tamamlandı!</div>
                 <div class="duel-result-scores" id="solo-final-scores-text">Skorlar hesaplanıyor...</div>
                 <div id="solo-announcement" style="font-size: 1.05rem; font-weight: 600; margin-bottom: 16px;">Tebrikler, tüm soruları başarıyla bitirdin.</div>
-                <button class="duel-action-btn" onclick="restartSoloQuiz()">Tekrar Çöz (Yeniden Başla)</button>
+                <button class="duel-action-btn fin-btn" onclick="restartSoloQuiz()">Tekrar Çöz (Yeniden Başla)</button>
             </div>
         </div>
 
@@ -785,10 +786,10 @@
             <div id="duel-setup-view">
                 <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Arkadaşınla ortak tur halinde kapışmak için oda kur ya da kodu gir:</div>
                 <div class="dueling-lobby">
-                    <button class="duel-action-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🌙</button>
+                    <button class="duel-action-btn fin-btn" onclick="createDuelRoom()">Oda Kur ve Kod Üret 🌙</button>
                     <div style="display: flex; gap: 6px; margin-top: 6px;">
                         <input type="text" id="roomCodeInput" class="duel-input" placeholder="Oda Kodu (Örn: 4821)" maxlength="6" inputmode="numeric">
-                        <button class="duel-action-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
+                        <button class="duel-action-btn fin-btn" style="width: 120px;" onclick="joinDuelRoom()">Odaya Katıl</button>
                     </div>
                 </div>
             </div>
@@ -804,21 +805,21 @@
                     <div class="quiz-options" id="duel-options-container"></div>
                     <div id="duel-feedback-text" style="font-size: 0.85rem; font-weight: 600; text-align: center; margin-top: 8px;"></div>
                     <div style="text-align: center; margin-top: 10px;">
-                        <button class="quiz-next-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
+                        <button class="quiz-next-btn fin-btn" id="duel-next-button" onclick="proceedNextDuelQuestion()" style="display: none; width: 100%;">Ortak Soruya Geç</button>
                     </div>
                 </div>
                 <div id="duel-result-view" style="display: none;" class="duel-result-box">
                     <div class="duel-result-title">🏆 Düello Bitti / Sonuç Ekranı</div>
                     <div class="duel-result-scores" id="duel-final-scores-text">Skorlar hesaplanıyor...</div>
                     <div id="duel-winner-announcement" style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;"></div>
-                    <button class="duel-action-btn" onclick="resetDuelLobby()">Yeni Düello Kur / Katıl</button>
+                    <button class="duel-action-btn fin-btn" onclick="resetDuelLobby()">Yeni Düello Kur / Katıl</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- SAYAÇ VE KERAHAT KARTI -->
-    <div class="countdown-card">
+    <div class="countdown-card fin-card">
         <div class="countdown-title" id="next-prayer-title">Vaktine kalan süre</div>
         <div class="countdown-timer" id="countdown-timer">00:00:00</div>
         
@@ -856,7 +857,7 @@
     </div>
 
     <!-- GÜNÜN HİKMETLERİ KARTI -->
-    <div class="countdown-card" style="padding: 15px 0;">
+    <div class="countdown-card fin-card" style="padding: 15px 0;">
         <div class="quotes-header-flex">
             <div style="font-weight: 700; color: var(--text-color); font-size: 1.1rem;">✨ Günün Hikmetleri</div>
             <div style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.8;">Kaydırarak Oku ➔</div>
@@ -999,7 +1000,7 @@
     </div>
     
     <!-- BİLİYOR MUSUNUZ KARTI -->
-    <div class="info-card-container">
+    <div class="info-card-container fin-card">
         <div class="info-card-header">
             <div class="info-card-title">
                 <span>💡</span> <span data-i18n="biliyor_musunuz">Biliyor musunuz?</span>
@@ -1011,7 +1012,7 @@
     </div>
 
     <!-- ESMAÜL HÜSNA KARTI -->
-    <div class="content-card">
+    <div class="content-card fin-card">
         <div class="card-header-flex">
             <div class="card-section-title" data-i18n="esma_card_title">🌙 Esmaül Hüsna</div>
             <button class="esma-refresh-btn" onclick="randomEsma()" title="Rastgele Değiştir">↺</button>
