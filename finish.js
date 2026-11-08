@@ -105,8 +105,8 @@
     document.addEventListener('DOMContentLoaded', sync);
 
     // ---- Parlak görünüm CSS'i (yalnızca gerçek kart ve butonlar) ----
-    var CARDS = '.vakit-card:not(.active), .sweet-dhikr-bar, .mode-bar, .modal-card, .ios-modal-content, .settings-card';
-    var BTNS = '.avm-ico, .avm-item[aria-current="page"], .btn, .tool-btn, .notification-btn, .home-btn, .theme-icon-btn, .menu-btn, .back-btn, .btn-ui, .target-opt-btn:not(.active), .sweet-dhikr-item.active, .mode-item.active';
+    var CARDS = '.fin-card, .vakit-card:not(.active), .sweet-dhikr-bar, .mode-bar, .modal-card, .ios-modal-content, .settings-card';
+    var BTNS = '.fin-btn, .avm-ico, .avm-item[aria-current="page"], .btn, .tool-btn, .notification-btn, .home-btn, .theme-icon-btn, .menu-btn, .back-btn, .btn-ui, .target-opt-btn:not(.active), .sweet-dhikr-item.active, .mode-item.active';
     function pre(list, extra) {
         return list.split(',').map(function (s) { return 'html.finish-glossy ' + s.trim() + (extra || ''); }).join(',\n');
     }
