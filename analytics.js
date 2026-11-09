@@ -42,19 +42,23 @@
         try { s = !!(navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)); } catch (e) {}
         return s ? 'standalone' : 'browser';
     }
-    function loadScript(src) {
-        return new Promise(function (res, rej) {
-            var s = document.createElement('script');
-            s.src = src; s.async = true; s.onload = res; s.onerror = rej;
-            document.head.appendChild(s);
-        });
+    function loadScripts(list) {
+        // Hepsi aynı anda indirilir, sırayla çalışır (app önce, database sonra)
+        return Promise.all(list.map(function (src) {
+            return new Promise(function (res, rej) {
+                var s = document.createElement('script');
+                s.src = src; s.async = false; s.onload = res; s.onerror = rej;
+                document.head.appendChild(s);
+            });
+        }));
     }
     function ready() {
         if (window.firebase && firebase.database) return Promise.resolve();
-        var p = (window.firebase && firebase.initializeApp) ? Promise.resolve() : loadScript(SDK + 'firebase-app-compat.js');
-        return p.then(function () { return loadScript(SDK + 'firebase-database-compat.js'); });
+        if (window.firebase && firebase.initializeApp) return loadScripts([SDK + 'firebase-database-compat.js']);
+        return loadScripts([SDK + 'firebase-app-compat.js', SDK + 'firebase-database-compat.js']);
     }
 
+    var inflight = {};
     function run() {
         var db;
         try {
@@ -62,32 +66,38 @@
             try { app = firebase.app('av-stats'); } catch (e) { app = firebase.initializeApp(CFG, 'av-stats'); }
             db = app.database();
         } catch (e) { return; }
-        function inc(path) {
-            try { return db.ref('stats/' + path).transaction(function (v) { return (v || 0) + 1; }, undefined, false).catch(function () {}); }
-            catch (e) { return null; }
-        }
-        var D = today(), P = pageKey();
 
-        if (!ss('av_s')) {                                   // oturumun ilk sayfası = 1 ziyaret
-            ss('av_s', '1');
-            inc('total/visits');
-            inc('days/' + D + '/visits');
-            inc('days/' + D + '/lang/' + lang());
-            inc('days/' + D + '/mode/' + mode());
-            inc('days/' + D + '/os/' + os());
-            if (ls('av_day') !== D) { ls('av_day', D); inc('days/' + D + '/devices'); }   // günde 1 benzersiz cihaz
-            if (!ls('av_dev')) { ls('av_dev', '1'); inc('total/devices'); }                // ilk kez gelen cihaz
+        // Sayım başarıyla sunucuya yazılınca "yapıldı" işareti konur; yazılamazsa sonraki sayfada yeniden denenir.
+        function incOnce(path, store, flagKey) {
+            if (store(flagKey) || inflight[path]) return;
+            inflight[path] = true;
+            try {
+                db.ref('stats/' + path).transaction(function (v) { return (v || 0) + 1; }, undefined, false)
+                    .then(function (r) { if (r && r.committed) store(flagKey, '1'); })
+                    .catch(function () {})
+                    .then(function () { inflight[path] = false; });
+            } catch (e) { inflight[path] = false; }
         }
-        if (!ss('av_p_' + P)) {                              // aynı oturumda her sayfa 1 kez sayılır
-            ss('av_p_' + P, '1');
-            inc('pages/' + P);
-            inc('days/' + D + '/pages/' + P);
-        }
+
+        var D = today(), P = pageKey();
+        // Oturum başına bir kez
+        incOnce('total/visits', ss, 'av_c_visits');
+        incOnce('days/' + D + '/visits', ss, 'av_c_' + D + '_visits');
+        incOnce('days/' + D + '/lang/' + lang(), ss, 'av_c_' + D + '_lang');
+        incOnce('days/' + D + '/mode/' + mode(), ss, 'av_c_' + D + '_mode');
+        incOnce('days/' + D + '/os/' + os(), ss, 'av_c_' + D + '_os');
+        // Cihaz başına: günde bir, ve ilk kez gelen
+        if (ls('av_dev')) ls('av_c_dev_total', '1');            // eski sürümde zaten sayılmış cihazlar
+        if (ls('av_day') === D) ls('av_c_' + D + '_dev', '1');
+        incOnce('days/' + D + '/devices', ls, 'av_c_' + D + '_dev');
+        incOnce('total/devices', ls, 'av_c_dev_total');
+        // Oturumda her sayfa bir kez
+        incOnce('pages/' + P, ss, 'av_c_page_' + P);
+        incOnce('days/' + D + '/pages/' + P, ss, 'av_c_' + D + '_page_' + P);
     }
 
     function start() {
-        var go = function () { ready().then(run).catch(function () {}); };
-        if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 4000 }); else setTimeout(go, 1500);
+        ready().then(run).catch(function () {});
     }
-    if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
