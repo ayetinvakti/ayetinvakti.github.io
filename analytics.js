@@ -89,7 +89,7 @@
                 if (!k) continue;
                 if (k === 'av_dev' || k === 'av_day' || k.indexOf('av_c_') === 0) { localStorage.removeItem(k); continue; }
                 if (k.indexOf('av4_') === 0 && k !== 'av4_dev_total' && k.indexOf(D) === -1) localStorage.removeItem(k);
-            } 
+            }
         } catch (e) {}
 
         // Açılış (oturum) sayısı: oturum başına bir kez
