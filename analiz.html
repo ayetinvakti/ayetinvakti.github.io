@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f172a">
+<title>Ayetin Vakti • Analiz</title>
+<script>
+(function () {
+    var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+    var light = t ? t === 'light' : !(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    if (light) document.documentElement.classList.add('light-mode');
+})();
+</script>
+<style>
+    :root { --bg-color:#0f172a; --card-bg:#1e293b; --text-color:#f8fafc; --text-muted:#94a3b8; --accent-color:#10b981; --border-color:rgba(255,255,255,0.08); color-scheme: dark; }
+    html.light-mode { --bg-color:#f8fafc; --card-bg:#ffffff; --text-color:#0f172a; --text-muted:#64748b; --accent-color:#059669; --border-color:rgba(0,0,0,0.08); color-scheme: light; }
+    html, body, button, a { touch-action: manipulation; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg-color); color: var(--text-color); padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+    .wrap { max-width: 520px; margin: 0 auto; padding: 16px; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .top h1 { font-size: 1.15rem; }
+    .btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 12px; padding: 9px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+    .card h2 { font-size: 0.9rem; margin-bottom: 10px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px 14px; }
+    .stat b { display: block; font-size: 1.5rem; color: var(--accent-color); }
+    .stat span { font-size: 0.72rem; color: var(--text-muted); }
+    .bars { display: flex; align-items: flex-end; gap: 2px; height: 120px; }
+    .bars .col { flex: 1; height: 100%; display: flex; align-items: flex-end; position: relative; }
+    .bars .v { width: 100%; background: color-mix(in srgb, var(--accent-color) 30%, transparent); border-radius: 3px 3px 0 0; position: relative; min-height: 1px; }
+    .bars .u { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent-color); border-radius: 3px 3px 0 0; }
+    .axis { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-top: 6px; }
+    .legend { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; display: flex; gap: 12px; }
+    .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-inline-end: 4px; }
+    .row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; padding: 6px 0; border-bottom: 1px dashed var(--border-color); }
+    .row:last-child { border-bottom: 0; }
+    .row .n { flex: 1; min-width: 0; }
+    .row .bar { flex: 1.2; height: 6px; border-radius: 99px; background: rgba(128,128,128,0.2); overflow: hidden; }
+    .row .bar i { display: block; height: 100%; background: var(--accent-color); border-radius: 99px; }
+    .row .c { width: 64px; text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .note { font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 6px 8px 18px; line-height: 1.5; }
+    .msg { text-align: center; padding: 40px 10px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+    @media (prefers-reduced-motion: no-preference) { .bars .v, .bars .u { transition: height 0.4s; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="top">
+        <h1>📊 Ayetin Vakti • Analiz</h1>
+        <button class="btn" id="refresh">↺ Yenile</button>
+    </div>
+    <div id="out"><div class="msg">Yükleniyor…</div></div>
+    <div class="note" id="note"></div>
+</div>
+<script>
+(function () {
+    var URL = 'https://ayetinvakti-3eb7f-default-rtdb.firebaseio.com/stats.json';
+    var NAMES = { 'ana-sayfa': 'Ana sayfa', '5-5-namaz': '5-5 Namaz', 'namaz-ogretmeni': 'Namaz Öğretmeni', 'zikirmatik': 'Zikirmatik', 'gunun-ayeti': 'Günün Ayeti', 'ayarlar': 'Ayarlar', 'kuran-oku': 'Kur\'an-ı Kerim', 'namaz-vakitleri': 'Namaz Vakitleri', 'kible-pusulasi': 'Kıble Pusulası', 'islami-tabu': 'İslami Tabu', 'ayet-asistan': 'Ayet Asistan', 'dini-gunler': 'Dini Günler', 'yakindaki-camiler': 'Yakındaki Camiler', 'zekat-hesaplama': 'Zekat Hesaplama', 'ramazan-ozel-imsakiye': 'Ramazan İmsakiyesi', 'haftanin-hutbesi': 'Haftanın Hutbesi', 'gunluk-dualar': 'Günlük Dualar', 'siyer-i-nebi': 'Siyer-i Nebi', 'ilmihal': 'İlmihal', 'kaza-namazi': 'Kaza Namazı', 'esma': 'Esmaül Hüsna', 'diger': 'Diğer' };
+    var LANG = { tr: 'Türkçe', en: 'İngilizce', ar: 'Arapça' }, MODE = { standalone: 'Uygulama (ana ekran)', browser: 'Tarayıcı' }, OS = { ios: 'iPhone / iPad', android: 'Android', other: 'Diğer' };
+    var nf = new Intl.NumberFormat('tr-TR');
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function key(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function short(k) { var p = k.split('-'); return parseInt(p[2], 10) + '.' + parseInt(p[1], 10); }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function sum(o) { var t = 0; for (var k in o) t += o[k] || 0; return t; }
+
+    function dist(title, map, labels) {
+        var tot = sum(map), keys = Object.keys(map).sort(function (a, b) { return map[b] - map[a]; });
+        if (!tot) return '';
+        return '<div class="card"><h2>' + title + '</h2>' + keys.map(function (k) {
+            var pct = map[k] / tot * 100;
+            return '<div class="row"><span class="n">' + esc(labels[k] || k) + '</span><span class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></span><span class="c">%' + pct.toFixed(0) + '</span></div>';
+        }).join('') + '</div>';
+    }
+
+    function render(s) {
+        var out = document.getElementById('out');
+        if (!s || !s.total) {
+            out.innerHTML = '<div class="msg">Henüz veri yok.<br>Sayaç sayfalara eklenip ilk ziyaretler gelince burada görünecek.</div>';
+            return;
+        }
+        var days = s.days || {}, now = new Date(), T = key(now), td = days[T] || {};
+        var last = [], i, d, k;
+        for (i = 29; i >= 0; i--) { d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i); k = key(d); last.push({ k: k, v: (days[k] && days[k].visits) || 0, u: (days[k] && days[k].devices) || 0 }); }
+        var v7 = 0, v30 = 0; last.forEach(function (x, idx) { v30 += x.v; if (idx >= 23) v7 += x.v; });
+        var max = Math.max.apply(null, last.map(function (x) { return x.v; }).concat([1]));
+
+        var pages30 = {}, lang30 = {}, mode30 = {}, os30 = {};
+        function acc(into, from) { for (var q in (from || {})) into[q] = (into[q] || 0) + from[q]; }
+        last.forEach(function (x) { var dd = days[x.k]; if (!dd) return; acc(pages30, dd.pages); acc(lang30, dd.lang); acc(mode30, dd.mode); acc(os30, dd.os); });
+        var allPages = s.pages || {};
+        var pkeys = Object.keys(allPages).sort(function (a, b) { return (pages30[b] || 0) - (pages30[a] || 0) || allPages[b] - allPages[a]; });
+        var pmax = Math.max.apply(null, pkeys.map(function (p) { return pages30[p] || 0; }).concat([1]));
+
+        var h = '<div class="grid">' +
+            '<div class="stat"><b>' + nf.format(td.visits || 0) + '</b><span>Bugün ziyaret</span></div>' +
+            '<div class="stat"><b>' + nf.format(td.devices || 0) + '</b><span>Bugün benzersiz cihaz</span></div>' +
+            '<div class="stat"><b>' + nf.format(v7) + '</b><span>Son 7 gün ziyaret</span></div>' +
+            '<div class="stat"><b>' + nf.format(s.total.visits || 0) + '</b><span>Toplam ziyaret</span></div>' +
+            '<div class="stat"><b>' + nf.format(s.total.devices || 0) + '</b><span>Toplam benzersiz cihaz</span></div>' +
+            '<div class="stat"><b>' + nf.format(Math.round(v30 / 30)) + '</b><span>Günlük ortalama (30 gün)</span></div></div>';
+
+        h += '<div class="card"><h2>Son 30 gün</h2><div class="bars">' + last.map(function (x) {
+            return '<div class="col" title="' + short(x.k) + ': ' + x.v + ' ziyaret, ' + x.u + ' benzersiz"><div class="v" style="height:' + (x.v / max * 100).toFixed(1) + '%"><div class="u" style="height:' + (x.v ? Math.min(100, x.u / x.v * 100) : 0).toFixed(1) + '%"></div></div></div>';
+        }).join('') + '</div><div class="axis"><span>' + short(last[0].k) + '</span><span>' + short(last[14].k) + '</span><span>' + short(last[29].k) + '</span></div>' +
+            '<div class="legend"><span><i style="background:color-mix(in srgb,var(--accent-color) 30%,transparent)"></i>ziyaret</span><span><i style="background:var(--accent-color)"></i>benzersiz cihaz</span></div></div>';
+
+        if (pkeys.length) {
+            h += '<div class="card"><h2>Sayfalar (son 30 gün / toplam)</h2>' + pkeys.map(function (p) {
+                return '<div class="row"><span class="n">' + esc(NAMES[p] || p) + '</span><span class="bar"><i style="width:' + ((pages30[p] || 0) / pmax * 100).toFixed(1) + '%"></i></span><span class="c">' + nf.format(pages30[p] || 0) + ' / ' + nf.format(allPages[p]) + '</span></div>';
+            }).join('') + '</div>';
+        }
+        h += dist('Uygulama mı, tarayıcı mı? (30 gün)', mode30, MODE) + dist('Cihaz (30 gün)', os30, OS) + dist('Dil (30 gün)', lang30, LANG);
+        out.innerHTML = h;
+        document.getElementById('note').innerHTML = 'Sayılar anonim ve toplu; kişi bilgisi tutulmaz. "Benzersiz cihaz" bir tarayıcının günde bir kez sayılmasıdır; tarayıcı verisi silinirse yeniden sayılır.<br>Son güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function load() {
+        var out = document.getElementById('out');
+        fetch(URL, { cache: 'no-store' }).then(function (r) {
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+        }).then(render).catch(function () {
+            out.innerHTML = '<div class="msg">Veri alınamadı.<br>İnternetini ve Firebase kurallarında "stats" bölümünün yayında olduğunu kontrol et.</div>';
+        });
+    }
+    document.getElementById('refresh').onclick = load;
+    load();
+})();
+</script>
+</body>
+</html>
