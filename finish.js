@@ -175,3 +175,17 @@
     st.textContent = css;
     (document.head || d).appendChild(st);
 })();
+
+
+/* Anonim ziyaret sayacı: tüm sayfalar finish.js'i yüklediği için sayaç da buradan gelir.
+   analytics.js kendi içinde çift çalışmayı engeller (ana sayfada da güvenle yüklenir). */
+(function () {
+    try {
+        if (window.__avStatsLoader) return;
+        window.__avStatsLoader = true;
+        var s = document.createElement('script');
+        s.src = 'https://ayetinvakti.github.io/analytics.js';
+        s.async = true;
+        (document.head || document.documentElement).appendChild(s);
+    } catch (e) {}
+})();
