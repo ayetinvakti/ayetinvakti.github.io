@@ -86,7 +86,8 @@
         var days = s.days || {}, now = new Date(), T = key(now), td = days[T] || {};
         var last = [], i, d, k;
         for (i = 29; i >= 0; i--) { d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i); k = key(d); last.push({ k: k, v: (days[k] && days[k].visits) || 0, u: (days[k] && days[k].devices) || 0 }); }
-        var v7 = 0, v30 = 0; last.forEach(function (x, idx) { v30 += x.v; if (idx >= 23) v7 += x.v; });
+        var u7 = 0, u30 = 0, first = -1; last.forEach(function (x, idx) { u30 += x.u; if (idx >= 23) u7 += x.u; if (first < 0 && (x.u || x.v)) first = idx; });
+        var span = first < 0 ? 1 : (30 - first), avg = u30 / span;
         var max = Math.max.apply(null, last.map(function (x) { return x.v; }).concat([1]));
 
         var pages30 = {}, lang30 = {}, mode30 = {}, os30 = {};
@@ -97,26 +98,26 @@
         var pmax = Math.max.apply(null, pkeys.map(function (p) { return pages30[p] || 0; }).concat([1]));
 
         var h = '<div class="grid">' +
-            '<div class="stat"><b>' + nf.format(td.visits || 0) + '</b><span>Bugün ziyaret</span></div>' +
-            '<div class="stat"><b>' + nf.format(td.devices || 0) + '</b><span>Bugün benzersiz cihaz</span></div>' +
-            '<div class="stat"><b>' + nf.format(v7) + '</b><span>Son 7 gün ziyaret</span></div>' +
-            '<div class="stat"><b>' + nf.format(s.total.visits || 0) + '</b><span>Toplam ziyaret</span></div>' +
-            '<div class="stat"><b>' + nf.format(s.total.devices || 0) + '</b><span>Toplam benzersiz cihaz</span></div>' +
-            '<div class="stat"><b>' + nf.format(Math.round(v30 / 30)) + '</b><span>Günlük ortalama (30 gün)</span></div></div>';
+            '<div class="stat"><b>' + nf.format(td.devices || 0) + '</b><span>Bugün ziyaretçi</span></div>' +
+            '<div class="stat"><b>' + nf.format(u7) + '</b><span>Son 7 gün (günlük kişi toplamı)</span></div>' +
+            '<div class="stat"><b>' + nf.format(s.total.devices || 0) + '</b><span>Toplam ziyaretçi (benzersiz cihaz)</span></div>' +
+            '<div class="stat"><b>' + new Intl.NumberFormat('tr-TR', { maximumFractionDigits: avg < 10 ? 1 : 0 }).format(avg) + '</b><span>Günlük ortalama ziyaretçi</span></div>' +
+            '<div class="stat"><b>' + nf.format(td.visits || 0) + '</b><span>Bugün açılış (oturum)</span></div>' +
+            '<div class="stat"><b>' + nf.format(s.total.visits || 0) + '</b><span>Toplam açılış (oturum)</span></div></div>';
 
-        h += '<div class="card"><h2>Son 30 gün</h2><div class="bars">' + last.map(function (x) {
-            return '<div class="col" title="' + short(x.k) + ': ' + x.v + ' ziyaret, ' + x.u + ' benzersiz"><div class="v" style="height:' + (x.v / max * 100).toFixed(1) + '%"><div class="u" style="height:' + (x.v ? Math.min(100, x.u / x.v * 100) : 0).toFixed(1) + '%"></div></div></div>';
+        h += '<div class="card"><h2>Son 30 gün: ziyaretçi ve açılış</h2><div class="bars">' + last.map(function (x) {
+            return '<div class="col" title="' + short(x.k) + ': ' + x.u + ' ziyaretçi, ' + x.v + ' açılış"><div class="v" style="height:' + (x.v / max * 100).toFixed(1) + '%"><div class="u" style="height:' + (x.v ? Math.min(100, x.u / x.v * 100) : 0).toFixed(1) + '%"></div></div></div>';
         }).join('') + '</div><div class="axis"><span>' + short(last[0].k) + '</span><span>' + short(last[14].k) + '</span><span>' + short(last[29].k) + '</span></div>' +
-            '<div class="legend"><span><i style="background:color-mix(in srgb,var(--accent-color) 30%,transparent)"></i>ziyaret</span><span><i style="background:var(--accent-color)"></i>benzersiz cihaz</span></div></div>';
+            '<div class="legend"><span><i style="background:color-mix(in srgb,var(--accent-color) 30%,transparent)"></i>açılış</span><span><i style="background:var(--accent-color)"></i>ziyaretçi (benzersiz cihaz)</span></div></div>';
 
         if (pkeys.length) {
-            h += '<div class="card"><h2>Sayfalar (son 30 gün / toplam)</h2>' + pkeys.map(function (p) {
+            h += '<div class="card"><h2>Sayfalar: kaç cihaz açtı (son 30 gün / toplam)</h2>' + pkeys.map(function (p) {
                 return '<div class="row"><span class="n">' + esc(NAMES[p] || p) + '</span><span class="bar"><i style="width:' + ((pages30[p] || 0) / pmax * 100).toFixed(1) + '%"></i></span><span class="c">' + nf.format(pages30[p] || 0) + ' / ' + nf.format(allPages[p]) + '</span></div>';
             }).join('') + '</div>';
         }
         h += dist('Uygulama mı, tarayıcı mı? (30 gün)', mode30, MODE) + dist('Cihaz (30 gün)', os30, OS) + dist('Dil (30 gün)', lang30, LANG);
         out.innerHTML = h;
-        document.getElementById('note').innerHTML = 'Sayılar anonim ve toplu; kişi bilgisi tutulmaz. "Benzersiz cihaz" bir tarayıcının günde bir kez sayılmasıdır; tarayıcı verisi silinirse yeniden sayılır.<br>Son güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('note').innerHTML = 'Sayılar anonim ve toplu; kişi bilgisi tutulmaz. "Ziyaretçi" bir cihazın günde bir kez sayılmasıdır; aynı kişi hem tarayıcıdan hem uygulamadan girerse 2, tarayıcı verisini silerse yeniden sayılır. "Açılış" çık-gir yapınca artar.<br>Son güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     }
 
     function load() {
