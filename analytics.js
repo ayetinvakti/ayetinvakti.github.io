@@ -1,3 +1,4 @@
+/* Ayetin Vakti sayaç - SÜRÜM 4 */
 /* Ayetin Vakti - anonim ziyaret sayacı
  * Yalnızca toplu sayaçlar tutar (ziyaret, benzersiz cihaz, sayfa, dil, uygulama/tarayıcı, işletim sistemi).
  * Kişi/cihaz kimliği, IP, konum veya metin SUNUCUYA YAZILMAZ.
@@ -81,30 +82,30 @@
 
         var D = today(), P = pageKey();
 
-        // Eski günlerin cihaz işaretlerini temizle (depolama şişmesin)
+        // Eski sürümlerin işaretlerini sil (v1-v3 hatalı "sayıldı" işareti bırakabiliyordu) ve eski günleri temizle
         try {
             for (var i = localStorage.length - 1; i >= 0; i--) {
                 var k = localStorage.key(i);
-                if (k && k.indexOf('av_c_') === 0 && k !== 'av_c_dev_total' && k.indexOf(D) === -1) localStorage.removeItem(k);
+                if (!k) continue;
+                if (k === 'av_dev' || k === 'av_day' || k.indexOf('av_c_') === 0) { localStorage.removeItem(k); continue; }
+                if (k.indexOf('av4_') === 0 && k !== 'av4_dev_total' && k.indexOf(D) === -1) localStorage.removeItem(k);
             }
         } catch (e) {}
 
         // Açılış (oturum) sayısı: oturum başına bir kez
-        incOnce('total/visits', ss, 'av_c_visits');
-        incOnce('days/' + D + '/visits', ss, 'av_c_' + D + '_visits');
+        incOnce('total/visits', ss, 'av4_visits');
+        incOnce('days/' + D + '/visits', ss, 'av4_' + D + '_visits');
 
         // Kişi (benzersiz cihaz) sayıları: aynı cihaz günde yalnızca 1 kez sayılır
-        if (ls('av_dev')) ls('av_c_dev_total', '1');            // eski sürümde zaten sayılmış cihazlar
-        if (ls('av_day') === D) ls('av_c_' + D + '_dev', '1');
-        incOnce('days/' + D + '/devices', ls, 'av_c_' + D + '_dev');
-        incOnce('total/devices', ls, 'av_c_dev_total');
-        incOnce('days/' + D + '/lang/' + lang(), ls, 'av_c_' + D + '_lang');
-        incOnce('days/' + D + '/mode/' + mode(), ls, 'av_c_' + D + '_mode');
-        incOnce('days/' + D + '/os/' + os(), ls, 'av_c_' + D + '_os');
+        incOnce('days/' + D + '/devices', ls, 'av4_' + D + '_dev');
+        incOnce('total/devices', ls, 'av4_dev_total');
+        incOnce('days/' + D + '/lang/' + lang(), ls, 'av4_' + D + '_lang');
+        incOnce('days/' + D + '/mode/' + mode(), ls, 'av4_' + D + '_mode');
+        incOnce('days/' + D + '/os/' + os(), ls, 'av4_' + D + '_os');
 
         // Sayfa sayıları: bir cihaz bir sayfayı günde yalnızca 1 kez sayar
-        incOnce('pages/' + P, ls, 'av_c_' + D + '_pt_' + P);
-        incOnce('days/' + D + '/pages/' + P, ls, 'av_c_' + D + '_page_' + P);
+        incOnce('pages/' + P, ls, 'av4_' + D + '_pt_' + P);
+        incOnce('days/' + D + '/pages/' + P, ls, 'av4_' + D + '_page_' + P);
     }
 
     function start() {
