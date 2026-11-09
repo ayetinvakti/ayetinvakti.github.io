@@ -117,7 +117,7 @@
         }
         h += dist('Uygulama mı, tarayıcı mı? (30 gün)', mode30, MODE) + dist('Cihaz (30 gün)', os30, OS) + dist('Dil (30 gün)', lang30, LANG);
         out.innerHTML = h;
-        document.getElementById('note').innerHTML = 'Sayılar anonim ve toplu; kişi bilgisi tutulmaz. "Ziyaretçi" bir cihazın günde bir kez sayılmasıdır; aynı kişi hem tarayıcıdan hem uygulamadan girerse 2, tarayıcı verisini silerse yeniden sayılır. "Açılış" çık-gir yapınca artar.<br>Son güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('note').innerHTML = 'Sayılar anonim ve toplu; kişi bilgisi tutulmaz. "Ziyaretçi" bir cihazın günde bir kez sayılmasıdır; aynı kişi hem tarayıcıdan hem uygulamadan girerse 2, tarayıcı verisini silerse yeniden sayılır. "Açılış" çık-gir yapınca artar.<br>Panel sürümü 4 • Son güncelleme: ' + now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     }
 
     function load() {
