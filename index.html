@@ -2779,13 +2779,13 @@
     function pad(n) { return (n < 10 ? '0' : '') + n; }
     var d = new Date(), D = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
     var TXT = {
-        tr: function (a, b) { return '👥 Bugün ' + a + ' • Toplam ' + b + ' ziyaret'; },
-        en: function (a, b) { return '👥 Today ' + a + ' • Total ' + b + ' visits'; },
-        ar: function (a, b) { return '👥 اليوم ' + a + ' • الإجمالي ' + b + ' زيارة'; }
+        tr: function (a, b) { return '👥 Bugün ' + a + ' ziyaretçi • Toplam ' + b; },
+        en: function (a, b) { return '👥 Today ' + a + ' visitors • Total ' + b; },
+        ar: function (a, b) { return '👥 اليوم ' + a + ' زائر • الإجمالي ' + b; }
     };
     function get(p) { return fetch(BASE + p + '.json').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
     function show() {
-        Promise.all([get('days/' + D + '/visits'), get('total/visits')]).then(function (r) {
+        Promise.all([get('days/' + D + '/devices'), get('total/devices')]).then(function (r) {
             if (r[1] === null || typeof r[1] !== 'number') return;
             var l = 'tr'; try { l = localStorage.getItem('user_lang') || 'tr'; } catch (e) {}
             if (!TXT[l]) l = 'tr';
