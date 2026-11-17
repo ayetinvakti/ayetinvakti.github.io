@@ -622,6 +622,19 @@
         .bb-track i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--accent-color); transition: width 0.5s ease; }
         @media (prefers-reduced-motion: reduce) { .bb-btn, .bb-track i, .bb-dot { transition: none; } }
     
+
+        /* Ana sayfa kartlarını düzenle + Amel Defteri kartı */
+        .hw-off { display: none !important; }
+        .hw-edit { text-align: center; margin: -4px 0 10px; }
+        .hw-edit button { background: none; border: 1px dashed var(--border-color); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; }
+        .hw-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; margin-top: 8px; font-size: 0.9rem; font-weight: 600; }
+        .hw-sw { width: 46px; height: 26px; border-radius: 99px; border: 0; background: rgba(128,128,128,0.35); position: relative; cursor: pointer; flex: none; transition: background 0.2s; }
+        .hw-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
+        .hw-sw.on { background: var(--accent-color); }
+        .hw-sw.on::after { transform: translateX(20px); }
+        html[dir="rtl"] .hw-sw::after { left: auto; right: 3px; }
+        html[dir="rtl"] .hw-sw.on::after { transform: translateX(-20px); }
+
         /* Site içi arama */
         .sr-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1002; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         .sr-overlay.active { opacity: 1; pointer-events: auto; }
@@ -1010,6 +1023,18 @@
         <div class="bb-month-top"><span id="bb-month-label"></span><b id="bb-month-pct">%0</b></div>
         <div class="bb-track"><i id="bb-fill"></i></div>
     </div>
+
+    <!-- AMEL DEFTERİ MİNİ KARTI (5-5 Namaz kartının altında) -->
+    <div class="bb-card fin-card" id="ad-card">
+        <div class="bb-head">
+            <div class="bb-title" id="ad-title">🌳 Amel Defteri</div>
+            <a class="bb-link" id="ad-link" href="amel-defteri/">Defterini aç ›</a>
+        </div>
+        <div class="bb-sub" id="ad-sub"></div>
+        <div class="bb-month-top" style="margin-top: 12px;"><span id="ad-label"></span><b id="ad-pct">%0</b></div>
+        <div class="bb-track"><i id="ad-fill"></i></div>
+    </div>
+    <div class="hw-edit"><button type="button" id="hw-open" onclick="hwOpen()">⚙️ Kartları düzenle</button></div>
 
     <!-- GÜNÜN HİKMETLERİ KARTI -->
     <div class="countdown-card fin-card" style="padding: 15px 0;">
@@ -2688,6 +2713,89 @@
     window.addEventListener('pageshow', function (e) { if (e.persisted) render(); });
 })();
 </script>
+<script>
+// Ana sayfa kartları: gizle/aç tercihi ('home_widgets_v1') + Amel Defteri mini kartı.
+// Amel Defteri sayfasıyla aynı kaydı ('amel_v1') paylaşır; ağaç seviyesi sayfadaki hesapla aynıdır.
+(function () {
+    var DEF = ['q1','q2','q3','d1','d2','d3','d4','s1','s2','s3','a1','a2','a3','a4','i1','i2','i3'], GOAL = 5;
+    var T = {
+        tr: { title: '🌳 Amel Defteri', link: 'Defterini aç ›', today: 'Bugün {n} amel', streak: '🔥 {n} gün seri', edit: '⚙️ Kartları düzenle',
+              sheet: 'Ana sayfa kartları', bes: '🕋 5-5 Namaz kartı', amel: '🌳 Amel Defteri kartı',
+              hint: 'Kartı gizleyebilir, istediğin zaman geri açabilirsin. Sayfalara sol menüden her zaman ulaşırsın.',
+              sp: ['Zeytin','Hurma','İncir','Nar','Üzüm','Sidr'], lv: ['Filiz','Fidan','Genç ağaç','Çiçekli ağaç','Meyveli ağaç'], loc: 'tr-TR' },
+        en: { title: '🌳 Deeds Journal', link: 'Open journal ›', today: '{n} deeds today', streak: '🔥 {n}-day streak', edit: '⚙️ Edit cards',
+              sheet: 'Home page cards', bes: '🕋 5-5 Namaz card', amel: '🌳 Deeds Journal card',
+              hint: 'You can hide a card and bring it back any time. All pages stay available from the side menu.',
+              sp: ['Olive','Date palm','Fig','Pomegranate','Grape','Sidr'], lv: ['Sprout','Sapling','Young tree','Blossoming tree','Fruiting tree'], loc: 'en-US' },
+        ar: { title: '🌳 دفتر الأعمال', link: 'افتح الدفتر ›', today: 'اليوم {n} عملًا', streak: '🔥 متتالية {n} يومًا', edit: '⚙️ تعديل البطاقات',
+              sheet: 'بطاقات الصفحة الرئيسية', bes: '🕋 بطاقة 5-5 Namaz', amel: '🌳 بطاقة دفتر الأعمال',
+              hint: 'يمكنك إخفاء البطاقة وإعادتها في أي وقت. تبقى كل الصفحات متاحة من القائمة الجانبية.',
+              sp: ['الزيتون','النخل','التين','الرمان','العنب','السدر'], lv: ['برعم','شتلة','شجرة فتية','شجرة مزهرة','شجرة مثمرة'], loc: 'ar-u-ca-gregory-nu-latn' }
+    };
+    function lang() { var l = null; try { l = localStorage.getItem('user_lang'); } catch (e) {} return T[l] ? l : 'tr'; }
+    function prefs() {
+        var p = { bes: true, amel: true };
+        try { var o = JSON.parse(localStorage.getItem('home_widgets_v1') || 'null'); if (o) { if (o.bes === false) p.bes = false; if (o.amel === false) p.amel = false; } } catch (e) {}
+        return p;
+    }
+    function applyPrefs() {
+        var p = prefs();
+        var bes = document.getElementById('bb-card'), ad = document.getElementById('ad-card');
+        if (bes) bes.classList.toggle('hw-off', !p.bes);
+        if (ad) ad.classList.toggle('hw-off', !p.amel);
+        ['bes', 'amel'].forEach(function (k) { var b = document.getElementById('hw-' + k); if (b) b.classList.toggle('on', p[k]); });
+    }
+    window.hwToggle = function (k) {
+        var p = prefs(); p[k] = !p[k];
+        try { localStorage.setItem('home_widgets_v1', JSON.stringify(p)); } catch (e) {}
+        applyPrefs();
+    };
+    window.hwOpen = function () { applyPrefs(); var o = document.getElementById('hwOverlay'); if (o) o.classList.add('active'); };
+    window.hwClose = function () { var o = document.getElementById('hwOverlay'); if (o) o.classList.remove('active'); };
+
+    function load() {
+        try { var o = JSON.parse(localStorage.getItem('amel_v1') || 'null'); if (o && o.days) return { days: o.days, cust: o.cust || [] }; } catch (e) {}
+        return { days: {}, cust: [] };
+    }
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function render() {
+        var L = T[lang()], S = load(), ids = {};
+        DEF.concat(S.cust.map(function (c) { return c.id; })).forEach(function (id) { ids[id] = 1; });
+        function cnt(k) { return (S.days[k] || []).filter(function (q) { return ids[q]; }).length; }
+        var now = new Date(), y = now.getFullYear(), m = now.getMonth();
+        var set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+        set('ad-title', L.title); set('ad-link', L.link); set('hw-open', L.edit);
+        set('hw-title', L.sheet); set('hw-l-bes', L.bes); set('hw-l-amel', L.amel); set('hw-hint', L.hint);
+        var today = cnt(ymd(now)), d = new Date(), st = 0;
+        if (!cnt(ymd(d))) d.setDate(d.getDate() - 1);
+        while (cnt(ymd(d))) { st++; d.setDate(d.getDate() - 1); }
+        set('ad-sub', L.today.replace('{n}', today) + (st ? ' • ' + L.streak.replace('{n}', st) : ''));
+        var dim = new Date(y, m + 1, 0).getDate(), c = 0;
+        for (var k = 1; k <= dim; k++) c += cnt(y + '-' + pad(m + 1) + '-' + pad(k));
+        var p = Math.min(100, Math.floor(c / (dim * GOAL) * 100));
+        var lv = p >= 100 ? 5 : p >= 75 ? 4 : p >= 50 ? 3 : p >= 25 ? 2 : 1;
+        set('ad-label', new Intl.DateTimeFormat(L.loc, { month: 'long' }).format(new Date(y, m, 1)) + ' • ' + L.sp[m % 6] + ' • ' + L.lv[lv - 1]);
+        set('ad-pct', '%' + p);
+        var f = document.getElementById('ad-fill'); if (f) f.style.width = p + '%';
+    }
+    document.addEventListener('DOMContentLoaded', function () { applyPrefs(); render(); });
+    window.addEventListener('storage', function (e) { if (!e.key || e.key === 'amel_v1' || e.key === 'home_widgets_v1') { applyPrefs(); render(); } });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) render(); });
+})();
+</script>
+<div class="sr-overlay" id="hwOverlay" onclick="if(event.target===this)hwClose()">
+    <div class="sr-panel fin-card" role="dialog" aria-modal="true">
+        <div class="sr-bar">
+            <div class="bb-title" id="hw-title" style="flex:1">Ana sayfa kartları</div>
+            <button type="button" class="sr-close" onclick="hwClose()" aria-label="✕">✕</button>
+        </div>
+        <div class="hw-row"><span id="hw-l-bes">🕋 5-5 Namaz kartı</span><button type="button" class="hw-sw on" id="hw-bes" onclick="hwToggle('bes')" aria-label="5-5"></button></div>
+        <div class="hw-row"><span id="hw-l-amel">🌳 Amel Defteri kartı</span><button type="button" class="hw-sw on" id="hw-amel" onclick="hwToggle('amel')" aria-label="Amel"></button></div>
+        <div class="sr-hint" id="hw-hint"></div>
+    </div>
+</div>
 <div class="sr-overlay" id="srOverlay" onclick="if(event.target===this)closeSiteSearch()">
     <div class="sr-panel fin-card" role="dialog" aria-modal="true" aria-label="Ara">
         <div class="sr-bar">
@@ -2728,6 +2836,7 @@
         { u: 'Islami-Tabu', i: '🤫', n: ['İslami Tabu', 'Islamic Taboo', 'تابو الإسلامي'], d: ['İslami kelime oyunu', 'Islamic word game', 'لعبة كلمات إسلامية'], k: 'tabu islami oyun eglence kelime taboo game word لعبة' },
         { u: 'ayet-asistan', i: '💬', n: ['Ayet Asistan', 'Ayet Assistant', 'مساعد آية'], d: ['Ayet Asistan ile sohbet', 'Chat with Ayet Assistant', 'تحدث مع مساعد آية'], k: 'asistan ayet asistan yapay zeka soru sor sohbet assistant ai chat ask مساعد' },
         { u: 'ayarlar', i: '⚙️', n: ['Ayarlar', 'Settings', 'الإعدادات'], d: ['Tema, dil ve görünüm', 'Theme, language and appearance', 'السمة واللغة والمظهر'], k: 'ayarlar ayar tema dil renk yazi arka plan mat parlak gorunum settings theme language color background إعدادات' },
+        { u: 'amel-defteri/', i: '🌳', n: ['Amel Defteri', 'Deeds Journal', 'دفتر الأعمال'], d: ['Günlük amel takibi ve ay ağacı', 'Daily deed tracker and monthly tree', 'متابعة الأعمال اليومية وشجرة الشهر'], k: 'amel defteri ameller takip agac bahce gunluk iyilik hayir deeds journal tracker tree دفتر اعمال' },
         { s: '.quiz-card', i: '📝', n: ['Bilgi Testi', 'Knowledge Quiz', 'اختبار المعلومات'], d: ['Ana sayfada bilgi testi ve düello', 'Quiz and duel on this page', 'اختبار ومبارزة في هذه الصفحة'], k: 'bilgi testi test quiz yarisma duello duel soru knowledge اختبار' }
     ];
     var POPULAR = [0, 1, 6, 7, 3, 10];   // ilk açılışta gösterilen öneriler
