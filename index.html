@@ -625,6 +625,12 @@
 
         /* Ana sayfa kartlarını düzenle + Amel Defteri kartı */
         .hw-off { display: none !important; }
+        .hw-mv { width: 34px; height: 34px; flex: none; border-radius: 10px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); font-size: 0.9rem; cursor: pointer; }
+        .hw-mv:disabled { opacity: 0.3; }
+        .hw-list { overflow-y: auto; max-height: 52vh; -webkit-overflow-scrolling: touch; }
+        .hw-foot { display: flex; gap: 8px; margin-top: 12px; }
+        .hw-foot button { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .hw-foot .hw-done { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
         .hw-edit { text-align: center; margin: -4px 0 10px; }
         .hw-edit button { background: none; border: 1px dashed var(--border-color); color: var(--text-muted); border-radius: 20px; padding: 6px 14px; font-size: 0.75rem; cursor: pointer; }
         .hw-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; margin-top: 8px; font-size: 0.9rem; font-weight: 600; }
@@ -909,6 +915,7 @@
         </div>
     </div>
 
+    <div class="hw-edit" id="hw-top"><button type="button" id="hw-open" onclick="hwOpen()">✏️ Ana sayfayı düzenle</button></div>
     <!-- İslam Dini ve Kültürü Bilgi Testi & Canlı Düello Kartı -->
     <div class="quiz-card fin-card">
         <div class="card-header-flex">
@@ -1034,7 +1041,6 @@
         <div class="bb-month-top" style="margin-top: 12px;"><span id="ad-label"></span><b id="ad-pct">%0</b></div>
         <div class="bb-track"><i id="ad-fill"></i></div>
     </div>
-    <div class="hw-edit"><button type="button" id="hw-open" onclick="hwOpen()">⚙️ Kartları düzenle</button></div>
 
     <!-- GÜNÜN HİKMETLERİ KARTI -->
     <div class="countdown-card fin-card" style="padding: 15px 0;">
@@ -2714,45 +2720,95 @@
 })();
 </script>
 <script>
-// Ana sayfa kartları: gizle/aç tercihi ('home_widgets_v1') + Amel Defteri mini kartı.
-// Amel Defteri sayfasıyla aynı kaydı ('amel_v1') paylaşır; ağaç seviyesi sayfadaki hesapla aynıdır.
+// Ana sayfa düzenleme: kartları gizle/aç ve ▲▼ ile sırala ('home_layout_v2'). Konum çubuğu hep yerinde kalır.
+// Amel Defteri mini kartı: Amel Defteri sayfasıyla aynı kaydı ('amel_v1') paylaşır; ağaç seviyesi sayfadaki hesapla aynıdır.
 (function () {
     var DEF = ['q1','q2','q3','d1','d2','d3','d4','s1','s2','s3','a1','a2','a3','a4','i1','i2','i3'], GOAL = 5;
+    var IDS = ['quiz', 'sayac', 'bes', 'amel', 'hikmet', 'bilgi', 'esma'];
     var T = {
-        tr: { title: '🌳 Amel Defteri', link: 'Defterini aç ›', today: 'Bugün {n} amel', streak: '🔥 {n} gün seri', edit: '⚙️ Kartları düzenle',
-              sheet: 'Ana sayfa kartları', bes: '🕋 5-5 Namaz kartı', amel: '🌳 Amel Defteri kartı',
-              hint: 'Kartı gizleyebilir, istediğin zaman geri açabilirsin. Sayfalara sol menüden her zaman ulaşırsın.',
+        tr: { title: '🌳 Amel Defteri', link: 'Defterini aç ›', today: 'Bugün {n} amel', streak: '🔥 {n} gün seri', edit: '✏️ Ana sayfayı düzenle',
+              sheet: 'Ana sayfayı düzenle', reset: 'Varsayılana dön', done: 'Bitti',
+              hint: 'Düğmeyle kartı gizle veya aç, ▲▼ ile sırasını değiştir. Konum çubuğu hep yerinde kalır; kartlar menüden her zaman açılabilir.',
+              names: { quiz: '📝 Bilgi Testi ve Düello', sayac: '⏱️ Namaz Vakitleri ve Sayaç', bes: '🕋 5-5 Namaz', amel: '🌳 Amel Defteri', hikmet: '✨ Günün Hikmetleri', bilgi: '💡 Biliyor muydunuz?', esma: '🌙 Esmaül Hüsna' },
               sp: ['Zeytin','Hurma','İncir','Nar','Üzüm','Sidr'], lv: ['Filiz','Fidan','Genç ağaç','Çiçekli ağaç','Meyveli ağaç'], loc: 'tr-TR' },
-        en: { title: '🌳 Deeds Journal', link: 'Open journal ›', today: '{n} deeds today', streak: '🔥 {n}-day streak', edit: '⚙️ Edit cards',
-              sheet: 'Home page cards', bes: '🕋 5-5 Namaz card', amel: '🌳 Deeds Journal card',
-              hint: 'You can hide a card and bring it back any time. All pages stay available from the side menu.',
+        en: { title: '🌳 Deeds Journal', link: 'Open journal ›', today: '{n} deeds today', streak: '🔥 {n}-day streak', edit: '✏️ Edit home page',
+              sheet: 'Edit home page', reset: 'Reset to default', done: 'Done',
+              hint: 'Use the switch to hide or show a card and ▲▼ to reorder. The location bar always stays; every page remains available from the side menu.',
+              names: { quiz: '📝 Knowledge Quiz & Duel', sayac: '⏱️ Prayer Times & Countdown', bes: '🕋 5-5 Namaz', amel: '🌳 Deeds Journal', hikmet: '✨ Daily Wisdom', bilgi: '💡 Did you know?', esma: '🌙 Asmaul Husna' },
               sp: ['Olive','Date palm','Fig','Pomegranate','Grape','Sidr'], lv: ['Sprout','Sapling','Young tree','Blossoming tree','Fruiting tree'], loc: 'en-US' },
-        ar: { title: '🌳 دفتر الأعمال', link: 'افتح الدفتر ›', today: 'اليوم {n} عملًا', streak: '🔥 متتالية {n} يومًا', edit: '⚙️ تعديل البطاقات',
-              sheet: 'بطاقات الصفحة الرئيسية', bes: '🕋 بطاقة 5-5 Namaz', amel: '🌳 بطاقة دفتر الأعمال',
-              hint: 'يمكنك إخفاء البطاقة وإعادتها في أي وقت. تبقى كل الصفحات متاحة من القائمة الجانبية.',
+        ar: { title: '🌳 دفتر الأعمال', link: 'افتح الدفتر ›', today: 'اليوم {n} عملًا', streak: '🔥 متتالية {n} يومًا', edit: '✏️ تعديل الصفحة الرئيسية',
+              sheet: 'تعديل الصفحة الرئيسية', reset: 'استعادة الافتراضي', done: 'تم',
+              hint: 'استخدم المفتاح لإخفاء البطاقة أو إظهارها و ▲▼ لتغيير الترتيب. يبقى شريط الموقع دائمًا، وكل الصفحات متاحة من القائمة الجانبية.',
+              names: { quiz: '📝 اختبار المعلومات والمبارزة', sayac: '⏱️ أوقات الصلاة والعدّاد', bes: '🕋 5-5 Namaz', amel: '🌳 دفتر الأعمال', hikmet: '✨ حِكَم اليوم', bilgi: '💡 هل تعلم؟', esma: '🌙 أسماء الله الحسنى' },
               sp: ['الزيتون','النخل','التين','الرمان','العنب','السدر'], lv: ['برعم','شتلة','شجرة فتية','شجرة مزهرة','شجرة مثمرة'], loc: 'ar-u-ca-gregory-nu-latn' }
     };
     function lang() { var l = null; try { l = localStorage.getItem('user_lang'); } catch (e) {} return T[l] ? l : 'tr'; }
-    function prefs() {
-        var p = { bes: true, amel: true };
-        try { var o = JSON.parse(localStorage.getItem('home_widgets_v1') || 'null'); if (o) { if (o.bes === false) p.bes = false; if (o.amel === false) p.amel = false; } } catch (e) {}
-        return p;
+
+    // ---- kart bulma / düzen kaydı ----
+    function cardEl(id) {
+        var c = document.querySelector('.container'); if (!c) return null;
+        if (id === 'quiz') return c.querySelector(':scope > .quiz-card');
+        if (id === 'bes') return document.getElementById('bb-card');
+        if (id === 'amel') return document.getElementById('ad-card');
+        if (id === 'bilgi') return c.querySelector(':scope > .info-card-container');
+        if (id === 'esma') return c.querySelector(':scope > .content-card');
+        var cd = c.querySelectorAll(':scope > .countdown-card'), out = null;
+        for (var i = 0; i < cd.length; i++) {
+            var hasSlider = !!cd[i].querySelector('.quotes-slider');
+            if ((id === 'hikmet') === hasSlider) { out = cd[i]; break; }
+        }
+        return out;
     }
-    function applyPrefs() {
-        var p = prefs();
-        var bes = document.getElementById('bb-card'), ad = document.getElementById('ad-card');
-        if (bes) bes.classList.toggle('hw-off', !p.bes);
-        if (ad) ad.classList.toggle('hw-off', !p.amel);
-        ['bes', 'amel'].forEach(function (k) { var b = document.getElementById('hw-' + k); if (b) b.classList.toggle('on', p[k]); });
+    function layout() {
+        var o = null, order = [], hidden = [];
+        try { o = JSON.parse(localStorage.getItem('home_layout_v2') || 'null'); } catch (e) {}
+        if (o && Array.isArray(o.order)) o.order.forEach(function (i) { if (IDS.indexOf(i) >= 0 && order.indexOf(i) < 0) order.push(i); });
+        if (o && Array.isArray(o.hidden)) hidden = o.hidden.filter(function (i) { return IDS.indexOf(i) >= 0; });
+        else {
+            try { var w = JSON.parse(localStorage.getItem('home_widgets_v1') || 'null'); if (w) { if (w.bes === false) hidden.push('bes'); if (w.amel === false) hidden.push('amel'); } } catch (e) {}
+        }
+        IDS.forEach(function (i) { if (order.indexOf(i) < 0) order.push(i); });
+        return { order: order, hidden: hidden };
     }
-    window.hwToggle = function (k) {
-        var p = prefs(); p[k] = !p[k];
-        try { localStorage.setItem('home_widgets_v1', JSON.stringify(p)); } catch (e) {}
-        applyPrefs();
+    function save(L) { try { localStorage.setItem('home_layout_v2', JSON.stringify(L)); } catch (e) {} }
+    function apply() {
+        var ref = document.getElementById('hw-top'); if (!ref) return;
+        var L = layout();
+        L.order.forEach(function (id) {
+            var el = cardEl(id); if (!el) return;
+            ref.after(el); ref = el;
+            el.classList.toggle('hw-off', L.hidden.indexOf(id) >= 0);
+        });
+    }
+    function renderSheet() {
+        var g = T[lang()], L = layout(), list = document.getElementById('hw-list'); if (!list) return;
+        list.innerHTML = L.order.map(function (id, i) {
+            var on = L.hidden.indexOf(id) < 0, nm = g.names[id];
+            return '<div class="hw-row"><button type="button" class="hw-sw' + (on ? ' on' : '') + '" onclick="hwToggle(\'' + id + '\')" aria-label="' + nm + '"></button>' +
+                '<span style="flex:1">' + nm + '</span>' +
+                '<button type="button" class="hw-mv" onclick="hwMove(\'' + id + '\',-1)"' + (i === 0 ? ' disabled' : '') + ' aria-label="▲">▲</button>' +
+                '<button type="button" class="hw-mv" onclick="hwMove(\'' + id + '\',1)"' + (i === L.order.length - 1 ? ' disabled' : '') + ' aria-label="▼">▼</button></div>';
+        }).join('');
+    }
+    window.hwToggle = function (id) {
+        var L = layout(), k = L.hidden.indexOf(id);
+        if (k >= 0) L.hidden.splice(k, 1); else L.hidden.push(id);
+        save(L); apply(); renderSheet();
     };
-    window.hwOpen = function () { applyPrefs(); var o = document.getElementById('hwOverlay'); if (o) o.classList.add('active'); };
+    window.hwMove = function (id, d) {
+        var L = layout(), i = L.order.indexOf(id), j = i + d;
+        if (i < 0 || j < 0 || j >= L.order.length) return;
+        L.order.splice(i, 1); L.order.splice(j, 0, id);
+        save(L); apply(); renderSheet();
+    };
+    window.hwReset = function () {
+        try { localStorage.removeItem('home_layout_v2'); localStorage.removeItem('home_widgets_v1'); } catch (e) {}
+        apply(); renderSheet();
+    };
+    window.hwOpen = function () { renderSheet(); var o = document.getElementById('hwOverlay'); if (o) o.classList.add('active'); };
     window.hwClose = function () { var o = document.getElementById('hwOverlay'); if (o) o.classList.remove('active'); };
 
+    // ---- Amel Defteri mini kartı ----
     function load() {
         try { var o = JSON.parse(localStorage.getItem('amel_v1') || 'null'); if (o && o.days) return { days: o.days, cust: o.cust || [] }; } catch (e) {}
         return { days: {}, cust: [] };
@@ -2766,7 +2822,7 @@
         var now = new Date(), y = now.getFullYear(), m = now.getMonth();
         var set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
         set('ad-title', L.title); set('ad-link', L.link); set('hw-open', L.edit);
-        set('hw-title', L.sheet); set('hw-l-bes', L.bes); set('hw-l-amel', L.amel); set('hw-hint', L.hint);
+        set('hw-title', L.sheet); set('hw-reset', L.reset); set('hw-done', L.done); set('hw-hint', L.hint);
         var today = cnt(ymd(now)), d = new Date(), st = 0;
         if (!cnt(ymd(d))) d.setDate(d.getDate() - 1);
         while (cnt(ymd(d))) { st++; d.setDate(d.getDate() - 1); }
@@ -2779,21 +2835,22 @@
         set('ad-pct', '%' + p);
         var f = document.getElementById('ad-fill'); if (f) f.style.width = p + '%';
     }
-    document.addEventListener('DOMContentLoaded', function () { applyPrefs(); render(); });
-    window.addEventListener('storage', function (e) { if (!e.key || e.key === 'amel_v1' || e.key === 'home_widgets_v1') { applyPrefs(); render(); } });
+    apply();
+    document.addEventListener('DOMContentLoaded', function () { apply(); render(); });
+    window.addEventListener('storage', function (e) { if (!e.key || e.key === 'amel_v1' || e.key === 'home_layout_v2' || e.key === 'home_widgets_v1') { apply(); render(); } });
     document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
-    window.addEventListener('pageshow', function (e) { if (e.persisted) render(); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { apply(); render(); } });
 })();
 </script>
 <div class="sr-overlay" id="hwOverlay" onclick="if(event.target===this)hwClose()">
     <div class="sr-panel fin-card" role="dialog" aria-modal="true">
         <div class="sr-bar">
-            <div class="bb-title" id="hw-title" style="flex:1">Ana sayfa kartları</div>
+            <div class="bb-title" id="hw-title" style="flex:1">Ana sayfayı düzenle</div>
             <button type="button" class="sr-close" onclick="hwClose()" aria-label="✕">✕</button>
         </div>
-        <div class="hw-row"><span id="hw-l-bes">🕋 5-5 Namaz kartı</span><button type="button" class="hw-sw on" id="hw-bes" onclick="hwToggle('bes')" aria-label="5-5"></button></div>
-        <div class="hw-row"><span id="hw-l-amel">🌳 Amel Defteri kartı</span><button type="button" class="hw-sw on" id="hw-amel" onclick="hwToggle('amel')" aria-label="Amel"></button></div>
+        <div class="hw-list" id="hw-list"></div>
         <div class="sr-hint" id="hw-hint"></div>
+        <div class="hw-foot"><button type="button" id="hw-reset" onclick="hwReset()">Varsayılana dön</button><button type="button" class="hw-done" id="hw-done" onclick="hwClose()">Bitti</button></div>
     </div>
 </div>
 <div class="sr-overlay" id="srOverlay" onclick="if(event.target===this)closeSiteSearch()">
