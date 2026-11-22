@@ -625,6 +625,9 @@
 
         /* Ana sayfa kartlarını düzenle + Amel Defteri kartı */
         .hw-off { display: none !important; }
+        .rm-timer { font-size: 2rem; font-weight: 700; text-align: center; color: var(--accent-color); margin: 12px 0 4px; font-variant-numeric: tabular-nums; }
+        .rm-times { display: flex; justify-content: space-around; gap: 8px; font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+        .rm-times b { color: var(--text-color); font-size: 0.95rem; display: block; text-align: center; }
         .hw-mv { width: 34px; height: 34px; flex: none; border-radius: 10px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); font-size: 0.9rem; cursor: pointer; }
         .hw-mv:disabled { opacity: 0.3; }
         .hw-list { overflow-y: auto; max-height: 52vh; -webkit-overflow-scrolling: touch; }
@@ -1040,6 +1043,18 @@
         <div class="bb-sub" id="ad-sub"></div>
         <div class="bb-month-top" style="margin-top: 12px;"><span id="ad-label"></span><b id="ad-pct">%0</b></div>
         <div class="bb-track"><i id="ad-fill"></i></div>
+    </div>
+
+    <!-- RAMAZAN İMSAKİYE KARTI (varsayılan kapalı; Ana sayfayı düzenle'den açılır) -->
+    <div class="bb-card fin-card hw-off" id="rm-card">
+        <div class="bb-head">
+            <div class="bb-title" id="rm-title">🌙 Ramazan İmsakiyesi</div>
+            <a class="bb-link" id="rm-link" href="Ramazan-ozel-imsakiye/">İmsakiyeyi aç ›</a>
+        </div>
+        <div class="bb-sub" id="rm-sub"></div>
+        <div class="rm-timer" id="rm-timer" style="display: none;">00:00:00</div>
+        <div class="bb-sub" id="rm-label" style="text-align: center; display: none;"></div>
+        <div class="rm-times" id="rm-times" style="display: none;"></div>
     </div>
 
     <!-- GÜNÜN HİKMETLERİ KARTI -->
@@ -2726,23 +2741,27 @@
 // Amel Defteri mini kartı: Amel Defteri sayfasıyla aynı kaydı ('amel_v1') paylaşır; ağaç seviyesi sayfadaki hesapla aynıdır.
 (function () {
     var DEF = ['q1','q2','q3','d1','d2','d3','d4','s1','s2','s3','a1','a2','a3','a4','i1','i2','i3'], GOAL = 5;
-    var IDS = ['quiz', 'sayac', 'bes', 'amel', 'hikmet', 'bilgi', 'esma'];
+    var IDS = ['quiz', 'sayac', 'imsak', 'bes', 'amel', 'hikmet', 'bilgi', 'esma'];
+    var DEFHIDE = ['imsak'];   // Ramazan kartı: kullanıcı açana kadar kapalı (kayıtta henüz yer almayan kartlar için de geçerli)
     var T = {
         tr: { title: '🌳 Amel Defteri', link: 'Defterini aç ›', today: 'Bugün {n} amel', streak: '🔥 {n} gün seri', edit: '✏️ Ana sayfayı düzenle',
               sheet: 'Ana sayfayı düzenle', reset: 'Varsayılana dön', done: 'Bitti',
               hint: 'Düğmeyle kartı gizle veya aç, ▲▼ ile sırasını değiştir. Konum çubuğu hep yerinde kalır; kartlar menüden her zaman açılabilir.',
-              names: { quiz: '📝 Bilgi Testi ve Düello', sayac: '⏱️ Namaz Vakitleri ve Sayaç', bes: '🕋 5-5 Namaz', amel: '🌳 Amel Defteri', hikmet: '✨ Günün Hikmetleri', bilgi: '💡 Biliyor muydunuz?', esma: '🌙 Esmaül Hüsna' },
-              sp: ['Zeytin','Hurma','İncir','Nar','Üzüm','Sidr'], lv: ['Filiz','Fidan','Genç ağaç','Çiçekli ağaç','Meyveli ağaç'], loc: 'tr-TR' },
+              names: { quiz: '📝 Bilgi Testi ve Düello', sayac: '⏱️ Namaz Vakitleri ve Sayaç', imsak: '🌙 Ramazan İmsakiyesi', bes: '🕋 5-5 Namaz', amel: '🌳 Amel Defteri', hikmet: '✨ Günün Hikmetleri', bilgi: '💡 Biliyor muydunuz?', esma: '🌙 Esmaül Hüsna' },
+              sp: ['Zeytin','Hurma','İncir','Nar','Üzüm','Sidr'], lv: ['Filiz','Fidan','Genç ağaç','Çiçekli ağaç','Meyveli ağaç'], loc: 'tr-TR',
+              rm: { title: '🌙 Ramazan İmsakiyesi', link: 'İmsakiyeyi aç ›', before: 'Ramazan’a {n} gün kaldı', start: 'Ramazan başlangıcı: ', day: 'Ramazan’ın {n}. günü', toIftar: 'İftara kalan süre', toImsak: 'İmsaka kalan süre', iftarNow: 'İftar vakti girdi, hayırlı iftarlar.', imsak: 'İmsak', iftar: 'İftar', done: 'Ramazan ayı tamamlandı. Bayramınız mübarek olsun!' } },
         en: { title: '🌳 Deeds Journal', link: 'Open journal ›', today: '{n} deeds today', streak: '🔥 {n}-day streak', edit: '✏️ Edit home page',
               sheet: 'Edit home page', reset: 'Reset to default', done: 'Done',
               hint: 'Use the switch to hide or show a card and ▲▼ to reorder. The location bar always stays; every page remains available from the side menu.',
-              names: { quiz: '📝 Knowledge Quiz & Duel', sayac: '⏱️ Prayer Times & Countdown', bes: '🕋 5-5 Namaz', amel: '🌳 Deeds Journal', hikmet: '✨ Daily Wisdom', bilgi: '💡 Did you know?', esma: '🌙 Asmaul Husna' },
-              sp: ['Olive','Date palm','Fig','Pomegranate','Grape','Sidr'], lv: ['Sprout','Sapling','Young tree','Blossoming tree','Fruiting tree'], loc: 'en-US' },
+              names: { quiz: '📝 Knowledge Quiz & Duel', sayac: '⏱️ Prayer Times & Countdown', imsak: '🌙 Ramadan Timetable', bes: '🕋 5-5 Namaz', amel: '🌳 Deeds Journal', hikmet: '✨ Daily Wisdom', bilgi: '💡 Did you know?', esma: '🌙 Asmaul Husna' },
+              sp: ['Olive','Date palm','Fig','Pomegranate','Grape','Sidr'], lv: ['Sprout','Sapling','Young tree','Blossoming tree','Fruiting tree'], loc: 'en-US',
+              rm: { title: '🌙 Ramadan Timetable', link: 'Open timetable ›', before: '{n} days until Ramadan', start: 'Ramadan begins: ', day: 'Day {n} of Ramadan', toIftar: 'Time left until Iftar', toImsak: 'Time left until Imsak', iftarNow: 'It is time for Iftar.', imsak: 'Imsak', iftar: 'Iftar', done: 'Ramadan has ended. Eid Mubarak!' } },
         ar: { title: '🌳 دفتر الأعمال', link: 'افتح الدفتر ›', today: 'اليوم {n} عملًا', streak: '🔥 متتالية {n} يومًا', edit: '✏️ تعديل الصفحة الرئيسية',
               sheet: 'تعديل الصفحة الرئيسية', reset: 'استعادة الافتراضي', done: 'تم',
               hint: 'استخدم المفتاح لإخفاء البطاقة أو إظهارها و ▲▼ لتغيير الترتيب. يبقى شريط الموقع دائمًا، وكل الصفحات متاحة من القائمة الجانبية.',
-              names: { quiz: '📝 اختبار المعلومات والمبارزة', sayac: '⏱️ أوقات الصلاة والعدّاد', bes: '🕋 5-5 Namaz', amel: '🌳 دفتر الأعمال', hikmet: '✨ حِكَم اليوم', bilgi: '💡 هل تعلم؟', esma: '🌙 أسماء الله الحسنى' },
-              sp: ['الزيتون','النخل','التين','الرمان','العنب','السدر'], lv: ['برعم','شتلة','شجرة فتية','شجرة مزهرة','شجرة مثمرة'], loc: 'ar-u-ca-gregory-nu-latn' }
+              names: { quiz: '📝 اختبار المعلومات والمبارزة', sayac: '⏱️ أوقات الصلاة والعدّاد', imsak: '🌙 إمساكية رمضان', bes: '🕋 5-5 Namaz', amel: '🌳 دفتر الأعمال', hikmet: '✨ حِكَم اليوم', bilgi: '💡 هل تعلم؟', esma: '🌙 أسماء الله الحسنى' },
+              sp: ['الزيتون','النخل','التين','الرمان','العنب','السدر'], lv: ['برعم','شتلة','شجرة فتية','شجرة مزهرة','شجرة مثمرة'], loc: 'ar-u-ca-gregory-nu-latn',
+              rm: { title: '🌙 إمساكية رمضان', link: 'افتح الإمساكية ›', before: 'بقي {n} يومًا على رمضان', start: 'بداية رمضان: ', day: 'اليوم {n} من رمضان', toIftar: 'الوقت المتبقي للإفطار', toImsak: 'الوقت المتبقي للإمساك', iftarNow: 'حان وقت الإفطار.', imsak: 'الإمساك', iftar: 'الإفطار', done: 'انتهى شهر رمضان. عيدكم مبارك!' } }
     };
     function lang() { var l = null; try { l = localStorage.getItem('user_lang'); } catch (e) {} return T[l] ? l : 'tr'; }
 
@@ -2752,6 +2771,7 @@
         if (id === 'quiz') return c.querySelector(':scope > .quiz-card');
         if (id === 'bes') return document.getElementById('bb-card');
         if (id === 'amel') return document.getElementById('ad-card');
+        if (id === 'imsak') return document.getElementById('rm-card');
         if (id === 'bilgi') return c.querySelector(':scope > .info-card-container');
         if (id === 'esma') return c.querySelector(':scope > .content-card');
         var cd = c.querySelectorAll(':scope > .countdown-card'), out = null;
@@ -2769,6 +2789,11 @@
         else {
             try { var w = JSON.parse(localStorage.getItem('home_widgets_v1') || 'null'); if (w) { if (w.bes === false) hidden.push('bes'); if (w.amel === false) hidden.push('amel'); } } catch (e) {}
         }
+        // Kayıtlı düzende henüz yer almayan, varsayılanı kapalı kartlar kapalı başlar (kullanıcı açınca kayda girer)
+        DEFHIDE.forEach(function (i) {
+            var known = o && Array.isArray(o.order) && o.order.indexOf(i) >= 0;
+            if (!known && hidden.indexOf(i) < 0) hidden.push(i);
+        });
         IDS.forEach(function (i) { if (order.indexOf(i) < 0) order.push(i); });
         return { order: order, hidden: hidden };
     }
@@ -2795,7 +2820,7 @@
     window.hwToggle = function (id) {
         var L = layout(), k = L.hidden.indexOf(id);
         if (k >= 0) L.hidden.splice(k, 1); else L.hidden.push(id);
-        save(L); apply(); renderSheet();
+        save(L); apply(); renderSheet(); renderRm();
     };
     window.hwMove = function (id, d) {
         var L = layout(), i = L.order.indexOf(id), j = i + d;
@@ -2837,8 +2862,48 @@
         set('ad-pct', '%' + p);
         var f = document.getElementById('ad-fill'); if (f) f.style.width = p + '%';
     }
+    // ---- Ramazan imsakiye kartı ----
+    // Tarihler: Diyanet dinî günler takvimi (Ramazan 1448: 8 Şubat 2027, 29 gün). Vakitler ana sayfanın aynı Aladhan (Diyanet yöntemi) verisinden gelir; İmsak = Fajr.
+    var RM = { start: '2027-02-08', days: 29 };
+    function rmDay(d) { return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); }
+    function rmParse(s) { var a = s.split('-').map(Number); return Date.UTC(a[0], a[1] - 1, a[2]); }
+    function rmAt(hhmm) {
+        var m = String(hhmm || '').match(/(\d{1,2}):(\d{2})/); if (!m) return NaN;
+        var d = new Date(); d.setHours(+m[1], +m[2], 0, 0); return d.getTime();
+    }
+    function rmPad(n) { return String(n).padStart(2, '0'); }
+    function rmFmt(sec) { sec = Math.max(0, Math.floor(sec)); return rmPad(Math.floor(sec / 3600)) + ':' + rmPad(Math.floor((sec % 3600) / 60)) + ':' + rmPad(sec % 60); }
+    function renderRm() {
+        var card = document.getElementById('rm-card'); if (!card || card.classList.contains('hw-off')) return;
+        var g = T[lang()].rm, set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+        var show = function (id, on) { var e = document.getElementById(id); if (e) e.style.display = on ? '' : 'none'; };
+        set('rm-title', g.title); set('rm-link', g.link);
+        var now = new Date(), today = rmDay(now), start = rmParse(RM.start), idx = Math.round((today - start) / 86400000);
+        var timer = document.getElementById('rm-timer'), times = document.getElementById('rm-times');
+        if (idx < 0) {   // Ramazan'dan önce
+            set('rm-sub', g.before.replace('{n}', -idx));
+            show('rm-timer', false); show('rm-label', true); show('rm-times', false);
+            set('rm-label', g.start + new Intl.DateTimeFormat(T[lang()].loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(start + 12 * 3600000)));
+            return;
+        }
+        if (idx >= RM.days) {   // Ramazan bitti
+            set('rm-sub', g.done); show('rm-timer', false); show('rm-label', false); show('rm-times', false);
+            return;
+        }
+        set('rm-sub', g.day.replace('{n}', idx + 1));
+        var data = (typeof lastFetchedData !== 'undefined') ? lastFetchedData : null, tm = data && data.timings;
+        if (!tm) { show('rm-timer', false); show('rm-label', false); show('rm-times', false); return; }
+        var imsak = rmAt(tm.Fajr), iftar = rmAt(tm.Maghrib), t = now.getTime();
+        show('rm-times', true);
+        times.innerHTML = '<span>' + g.imsak + '<b>' + tm.Fajr + '</b></span><span>' + g.iftar + '<b>' + tm.Maghrib + '</b></span>';
+        if (t < imsak) { timer.textContent = rmFmt((imsak - t) / 1000); set('rm-label', g.toImsak); show('rm-timer', true); show('rm-label', true); }
+        else if (t < iftar) { timer.textContent = rmFmt((iftar - t) / 1000); set('rm-label', g.toIftar); show('rm-timer', true); show('rm-label', true); }
+        else { show('rm-timer', false); set('rm-label', g.iftarNow); show('rm-label', true); }
+    }
+    setInterval(renderRm, 1000);
+
     apply();
-    document.addEventListener('DOMContentLoaded', function () { apply(); render(); });
+    document.addEventListener('DOMContentLoaded', function () { apply(); render(); renderRm(); });
     window.addEventListener('storage', function (e) { if (!e.key || e.key === 'amel_v1' || e.key === 'home_layout_v2' || e.key === 'home_widgets_v1') { apply(); render(); } });
     document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
     window.addEventListener('pageshow', function (e) { if (e.persisted) { apply(); render(); } });
