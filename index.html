@@ -336,36 +336,36 @@
         .footer { text-align: center; padding: 16px; font-size: 0.8rem; color: var(--text-muted); }
         html.light-mode .drawer-item { background: rgba(0,0,0,0.01); }
 
-        /* --- Asistan Yüzen Buton --- */
-        .ai-float-btn {
+        /* --- Yüzen butonlar (sohbet + hızlı erişim): tema yüzeyine ve vurgu rengine uyar --- */
+        .ai-float-btn, .floating-quick-btn {
             position: fixed;
-            bottom: 24px;
             right: 24px;
-            width: 56px;
-            height: 56px;
-            background-color: var(--accent-color);
-            color: #ffffff;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: var(--card-bg);
+            color: var(--accent-color);
+            border: 1.5px solid color-mix(in srgb, var(--accent-color) 55%, var(--border-color));
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22), 0 0 0 4px color-mix(in srgb, var(--accent-color) 12%, transparent);
             z-index: 999;
-            text-decoration: none;
             cursor: pointer;
-            border: none;
-            transition: transform 0.2s, background-color 0.2s;
+            padding: 0;
+            text-decoration: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
         }
+        .ai-float-btn { bottom: 24px; }
+        .floating-quick-btn { bottom: 90px; }
+        .ai-float-btn svg, .floating-quick-btn svg { width: 26px; height: 26px; color: var(--accent-color); stroke: currentColor; pointer-events: none; }
         @media (hover: hover) {
-            .ai-float-btn:hover {
-                transform: scale(1.05);
-                background-color: color-mix(in srgb, var(--accent-color) 85%, #000);
-            }
+            .ai-float-btn:hover, .floating-quick-btn:hover { transform: scale(1.05); border-color: var(--accent-color); }
         }
-        .ai-float-btn:active {
-            transform: scale(0.9);
-        }
+        .ai-float-btn:active, .floating-quick-btn:active { transform: scale(0.9); }
 
         .assistant-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
         .assistant-option-btn { background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); color: var(--text-color); padding: 12px 14px; border-radius: 12px; text-align: left; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-decoration: none; transition: 0.2s; }
@@ -389,7 +389,7 @@
         html[dir="rtl"] .duel-scoreboard, 
         html[dir="rtl"] .dueling-lobby > div { flex-direction: row-reverse; }
         html[dir="rtl"] .drawer-item { flex-direction: row-reverse; text-align: right; }
-        html[dir="rtl"] .ai-float-btn { right: auto; left: 24px; }
+        html[dir="rtl"] .ai-float-btn, html[dir="rtl"] .floating-quick-btn { right: auto; left: 24px; }
         html[dir="rtl"] .quiz-option-btn, 
         html[dir="rtl"] .assistant-option-btn { text-align: right; }
         html[dir="rtl"] .badge-yeni { right: auto; left: 6px; }
@@ -522,30 +522,7 @@
         }
 
         /* --- Hızlı Erişim (AssistiveTouch) Butonu ve Menü Stilleri --- */
-        .floating-quick-btn {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            width: 56px;
-            height: 56px;
-            background-color: var(--accent-color, #00bcd4);
-            color: var(--btn-text-color, #121824);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 999;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            transition: transform 0.2s, background-color 0.3s;
-        }
-
-        .floating-quick-btn:active {
-            transform: scale(0.90);
-        }
+        /* (.floating-quick-btn stili ortak blokta: Asistan Yüzen Buton bölümü) */
 
         .assistive-menu-container {
             position: fixed;
@@ -816,12 +793,11 @@
 </div>
 
 <!-- Sağ Alttaki Hızlı Erişim Butonu (Sohbet butonunun hemen üstünde) -->
-<div id="quick-touch-btn" class="floating-quick-btn">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="7" height="7"></rect>
-        <rect x="14" y="3" width="7" height="7"></rect>
-        <rect x="14" y="14" width="7" height="7"></rect>
-        <rect x="3" y="14" width="7" height="7"></rect>
+<div id="quick-touch-btn" class="floating-quick-btn fin-btn" aria-label="Hızlı erişim">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5.2" y="5.2" width="13.6" height="13.6" rx="1.2"></rect>
+        <rect x="5.2" y="5.2" width="13.6" height="13.6" rx="1.2" transform="rotate(45 12 12)"></rect>
+        <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"></circle>
     </svg>
 </div>
 
@@ -1235,8 +1211,11 @@
 </div>
 
 <!-- Asistan Yüzen Buton -->
-<button class="ai-float-btn" onclick="toggleAssistantModal()" title="Asistana Sor">
-    💬
+<button class="ai-float-btn fin-btn" onclick="toggleAssistantModal()" title="Asistana Sor" aria-label="Asistana Sor">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+        <path d="M14 8.8A3.7 3.7 0 1 0 14 15.2A3.4 3.4 0 0 1 14 8.8Z" fill="currentColor" stroke="none" transform="translate(0.6 -1)"></path>
+    </svg>
 </button>
 
 <script>
