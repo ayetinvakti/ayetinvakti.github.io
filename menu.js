@@ -25,6 +25,7 @@
       ['menu_dhikr', '📿', 'Zikirmatik']
     ] },
     { title: 'cat_learn', items: [
+      ['menu_elifba', '🔤', 'elif-ba'],
       ['menu_quran', '📖', 'kuran-oku'],
       ['menu_verse', '✨', 'gunun-ayeti'],
       ['menu_esma', '☪️', 'esma.html'],
@@ -46,15 +47,15 @@
   var T = {
     tr: { title: 'Ayetin Vakti', close: 'Menüyü kapat', home: 'Ana Sayfa', cat_worship: 'İbadet & Vakitler', cat_learn: 'Okuma & Öğrenme', cat_interact: 'Etkileşim',
       menu_prayer: 'Namaz Vakitleri', menu_kaza: 'Kaza Namazı', menu_55: '5-5 Namaz', menu_amel: 'Amel Defteri', menu_imsakiye: 'Ramazan İmsakiyesi', menu_qibla: 'Kıble Pusulası', menu_mosques: 'Yakındaki Camiler', menu_zekat: 'Zekat Hesaplama', menu_dhikr: 'Zikirmatik',
-      menu_quran: "Kur'an-ı Kerim Oku", menu_verse: 'Günün Ayeti', menu_esma: 'Esmaül Hüsna', menu_catechism: 'İlmihal', menu_prayers: 'Günlük Dualar', menu_days: 'Dini Günler', menu_sermon: 'Haftanın Hutbesi', menu_teacher: 'Namaz Öğretmeni', menu_biography_of_the_Prophet: 'Siyer-i Nebi',
+      menu_elifba: 'Elif-Ba (Okuma Öğren)', menu_quran: "Kur'an-ı Kerim Oku", menu_verse: 'Günün Ayeti', menu_esma: 'Esmaül Hüsna', menu_catechism: 'İlmihal', menu_prayers: 'Günlük Dualar', menu_days: 'Dini Günler', menu_sermon: 'Haftanın Hutbesi', menu_teacher: 'Namaz Öğretmeni', menu_biography_of_the_Prophet: 'Siyer-i Nebi',
       menu_assistant: 'Ayet Asistan', menu_taboo: 'İslami Tabu', menu_youtube: 'YouTube Kanalı', menu_settings: 'Ayarlar' },
     en: { title: 'Ayetin Vakti', close: 'Close menu', home: 'Home', cat_worship: 'Worship & Times', cat_learn: 'Reading & Learning', cat_interact: 'Interactive',
       menu_prayer: 'Prayer Times', menu_kaza: 'Missed Prayers', menu_55: '5-5 Namaz', menu_amel: 'Deeds Journal', menu_imsakiye: 'Ramadan Timetable', menu_qibla: 'Qibla Compass', menu_mosques: 'Nearby Mosques', menu_zekat: 'Zakat Calculator', menu_dhikr: 'Tasbih Counter',
-      menu_quran: 'Read Holy Quran', menu_verse: 'Verse of the Day', menu_esma: 'Asmaul Husna', menu_catechism: 'Ilmihal (Islamic Catechism)', menu_prayers: 'Daily Supplications', menu_days: 'Religious Days', menu_sermon: 'Weekly Sermon', menu_teacher: 'Prayer Teacher', menu_biography_of_the_Prophet: 'Life of the Prophet',
+      menu_elifba: 'Alif-Ba (Learn to Read)', menu_quran: 'Read Holy Quran', menu_verse: 'Verse of the Day', menu_esma: 'Asmaul Husna', menu_catechism: 'Ilmihal (Islamic Catechism)', menu_prayers: 'Daily Supplications', menu_days: 'Religious Days', menu_sermon: 'Weekly Sermon', menu_teacher: 'Prayer Teacher', menu_biography_of_the_Prophet: 'Life of the Prophet',
       menu_assistant: 'Verse Assistant', menu_taboo: 'Islamic Taboo', menu_youtube: 'YouTube Channel', menu_settings: 'Settings' },
     ar: { title: 'Ayetin Vakti', close: 'إغلاق القائمة', home: 'الرئيسية', cat_worship: 'العبادة والأوقات', cat_learn: 'القراءة والتعلّم', cat_interact: 'تفاعلي',
       menu_prayer: 'أوقات الصلاة', menu_kaza: 'الصلوات الفائتة', menu_55: '5-5 Namaz', menu_amel: 'دفتر الأعمال', menu_imsakiye: 'إمساكية رمضان', menu_qibla: 'بوصلة القبلة', menu_mosques: 'المساجد القريبة', menu_zekat: 'حساب الزكاة', menu_dhikr: 'مسبحة إلكترونية',
-      menu_quran: 'قراءة القرآن الكريم', menu_verse: 'آية اليوم', menu_esma: 'أسماء الله الحسنى', menu_catechism: 'الفقه الميسر (العلمحال)', menu_prayers: 'الأدعية اليومية', menu_days: 'الأيام الدينية', menu_sermon: 'خطبة الأسبوع', menu_teacher: 'معلّم الصلاة', menu_biography_of_the_Prophet: 'السيرة النبوية',
+      menu_elifba: 'الألف باء (تعلّم القراءة)', menu_quran: 'قراءة القرآن الكريم', menu_verse: 'آية اليوم', menu_esma: 'أسماء الله الحسنى', menu_catechism: 'الفقه الميسر (العلمحال)', menu_prayers: 'الأدعية اليومية', menu_days: 'الأيام الدينية', menu_sermon: 'خطبة الأسبوع', menu_teacher: 'معلّم الصلاة', menu_biography_of_the_Prophet: 'السيرة النبوية',
       menu_assistant: 'مساعد الآيات', menu_taboo: 'تابو إسلامي', menu_youtube: 'قناة يوتيوب', menu_settings: 'الإعدادات' }
   };
 
