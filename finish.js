@@ -1,7 +1,8 @@
-/* Ayetin Vakti - ortak yüzey görünümü (Mat / Parlak) - finish.js
+/* Ayetin Vakti - ortak yüzey görünümü (Mat / Parlak / Simli) - finish.js
    Sayfaların <head> kısmında, diğer scriptlerden ÖNCE yüklenir. Sayfa kodunda değişiklik gerektirmez.
    Yaptıkları:
    1) Kayıtlı 'custom_finish' = 'glossy' ise <html> üzerine .finish-glossy ekler (mat = sınıf yok).
+      'sparkle' ise .finish-glossy + .finish-sparkle ekler ve sparkle.css'i yükler (simli katman orada).
    2) Yüzeyin (kart/buton zemini) açık mı koyu mu olduğunu bulur: özel arka plan varsa onun açıklığına,
       yoksa temaya göre. <html> üzerine .surf-light / .surf-dark koyar. Parlama bu sınıfa göre çalışır;
       böylece "açık mod + koyu özel zemin" gibi karışık durumlarda bozulmaz.
@@ -42,6 +43,24 @@
         if (d.style.getPropertyValue(name)) d.style.removeProperty(name);
     }
 
+    // Simli görünüm CSS'i yalnızca seçiliyse yüklenir (diğer kullanıcılara ek yük bindirmez)
+    var sparkleLoaded = false;
+    function loadSparkle() {
+        if (sparkleLoaded || document.getElementById('sparkle-css')) { sparkleLoaded = true; return; }
+        sparkleLoaded = true;
+        var l = document.createElement('link');
+        l.id = 'sparkle-css';
+        l.rel = 'stylesheet';
+        l.href = 'https://ayetinvakti.github.io/sparkle.css?v=1';
+        (document.head || d).appendChild(l);
+    }
+    // Düşük donanımda (az RAM / az çekirdek) simler sabit kalır, hareket kapatılır
+    try {
+        if ((navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)) {
+            d.classList.add('fin-still');
+        }
+    } catch (e) {}
+
     var DERIVED = ['--btn-bg', '--btn-hover', '--bead-inactive', '--shadow'];
     var hadCustomBg = false;
 
@@ -52,7 +71,11 @@
             // Tema sınıfı sayfanın kendi scripti tarafından konur; henüz yoksa kayıttan/sistemden hesaplanır
             var isLightTheme = d.classList.contains('light-mode') || themeIsLight();
 
-            setCls('finish-glossy', ls('custom_finish') === 'glossy');
+            // custom_finish: 'glossy' (Parlak) | 'sparkle' (Simli = parlak taban + simli katman) | yok (Mat)
+            var fin = ls('custom_finish');
+            setCls('finish-glossy', fin === 'glossy' || fin === 'sparkle');
+            setCls('finish-sparkle', fin === 'sparkle');
+            if (fin === 'sparkle') loadSparkle();
 
             // Bazı sayfalarda (ör. Vakit Asistanı) kart yüzeyi özel arka plandan değil 'custom_card'tan gelir:
             // <html data-finish-surface="card"> yazılırsa yüzey açıklığı önce custom_card, yoksa custom_bg'den hesaplanır
