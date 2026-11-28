@@ -1,0 +1,505 @@
+/* Ayetin Vakti - SİMLİ yüzey görünümü (sparkle.css)
+   Kayıtlı 'custom_finish' = 'sparkle' ise finish.js bu dosyayı yükler; Ayarlar sayfası önizleme için kendisi yükler.
+   <html> üzerinde .finish-sparkle (ve parlak taban için .finish-glossy) + .surf-light / .surf-dark sınıfları bulunmalıdır.
+   Katmanlar (üstten alta): kayan ışık huzmesi, iki katman sabit simli nokta, parlak taban.
+   Yazının üstüne ayrı bir katman konmaz; yalnızca kart/buton arka planına çizilir, okunabilirlik bozulmaz. */
+
+html.finish-sparkle.surf-dark {
+  --sp-a: rgba(255,255,255,0.95);
+  --sp-b: rgba(255,224,130,0.95);
+  --sp-sheen: rgba(255,255,255,0.22);
+}
+html.finish-sparkle.surf-light {
+  --sp-a: color-mix(in srgb, var(--accent-color, #059669) 80%, #fff);
+  --sp-b: rgba(214,164,40,0.9);
+  --sp-sheen: rgba(255,255,255,0.85);
+}
+
+html:root.finish-sparkle.surf-dark .fin-card,
+html:root.finish-sparkle.surf-dark .vakit-card:not(.active),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-bar,
+html:root.finish-sparkle.surf-dark .mode-bar,
+html:root.finish-sparkle.surf-dark .modal-card,
+html:root.finish-sparkle.surf-dark .ios-modal-content,
+html:root.finish-sparkle.surf-dark .settings-card {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 40%, rgba(255,255,255,0) 62%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 6px 18px rgba(0,0,0,0.25), 0 0 12px color-mix(in srgb, var(--accent-color, #10b981) 22%, transparent);
+  animation: fin-sp9 9s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-dark .fin-btn,
+html:root.finish-sparkle.surf-dark .avm-ico,
+html:root.finish-sparkle.surf-dark .avm-item[aria-current="page"],
+html:root.finish-sparkle.surf-dark .btn,
+html:root.finish-sparkle.surf-dark .tool-btn,
+html:root.finish-sparkle.surf-dark .notification-btn,
+html:root.finish-sparkle.surf-dark .home-btn,
+html:root.finish-sparkle.surf-dark .theme-icon-btn,
+html:root.finish-sparkle.surf-dark .menu-btn,
+html:root.finish-sparkle.surf-dark .back-btn,
+html:root.finish-sparkle.surf-dark .btn-ui,
+html:root.finish-sparkle.surf-dark .finish-btn,
+html:root.finish-sparkle.surf-dark .target-opt-btn:not(.active),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-item.active,
+html:root.finish-sparkle.surf-dark .mode-item.active {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0) 62%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(0,0,0,0.22);
+  animation: fin-sp9 6s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-dark .vakit-card.active {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 0 14px color-mix(in srgb, var(--accent-color, #10b981) 40%, transparent);
+  animation: fin-sp9 7s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-dark .avm-drawer {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 28%, rgba(255,255,255,0) 50%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 5px 0 25px rgba(0,0,0,0.3);
+  animation: fin-sp9 10s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-light .fin-card,
+html:root.finish-sparkle.surf-light .vakit-card:not(.active),
+html:root.finish-sparkle.surf-light .sweet-dhikr-bar,
+html:root.finish-sparkle.surf-light .mode-bar,
+html:root.finish-sparkle.surf-light .modal-card,
+html:root.finish-sparkle.surf-light .ios-modal-content,
+html:root.finish-sparkle.surf-light .settings-card {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(0deg, rgba(15,23,42,0.06) 0%, rgba(15,23,42,0) 40%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 18px rgba(15,23,42,0.12), 0 0 12px color-mix(in srgb, var(--accent-color, #10b981) 22%, transparent);
+  animation: fin-sp10 9s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-light .fin-btn,
+html:root.finish-sparkle.surf-light .avm-ico,
+html:root.finish-sparkle.surf-light .avm-item[aria-current="page"],
+html:root.finish-sparkle.surf-light .btn,
+html:root.finish-sparkle.surf-light .tool-btn,
+html:root.finish-sparkle.surf-light .notification-btn,
+html:root.finish-sparkle.surf-light .home-btn,
+html:root.finish-sparkle.surf-light .theme-icon-btn,
+html:root.finish-sparkle.surf-light .menu-btn,
+html:root.finish-sparkle.surf-light .back-btn,
+html:root.finish-sparkle.surf-light .btn-ui,
+html:root.finish-sparkle.surf-light .finish-btn,
+html:root.finish-sparkle.surf-light .target-opt-btn:not(.active),
+html:root.finish-sparkle.surf-light .sweet-dhikr-item.active,
+html:root.finish-sparkle.surf-light .mode-item.active {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0) 62%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 6px rgba(15,23,42,0.15);
+  animation: fin-sp9 6s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-light .vakit-card.active {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 60%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 0 14px color-mix(in srgb, var(--accent-color, #10b981) 40%, transparent);
+  animation: fin-sp9 7s ease-in-out infinite;
+}
+
+html:root.finish-sparkle.surf-light .avm-drawer {
+  background-image: linear-gradient(105deg, transparent 38%, var(--sp-sheen) 50%, transparent 62%),
+    radial-gradient(circle at 14px 19px, var(--sp-a) 0, var(--sp-a) 0.9px, transparent 2.5px),
+    radial-gradient(circle at 47px 71px, var(--sp-b) 0, var(--sp-b) 1.3px, transparent 2.9px),
+    radial-gradient(circle at 88px 33px, var(--sp-a) 0, var(--sp-a) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 101px 96px, var(--sp-b) 0, var(--sp-b) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 23px 52px, var(--sp-b) 0, var(--sp-b) 0.8px, transparent 2.4px),
+    radial-gradient(circle at 58px 14px, var(--sp-a) 0, var(--sp-a) 1.1px, transparent 2.7px),
+    radial-gradient(circle at 9px 63px, var(--sp-a) 0, var(--sp-a) 0.7px, transparent 2.3px),
+    linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 40%),
+    linear-gradient(0deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0) 35%);
+  background-size: 300% 100%, 113px 113px, 113px 113px, 113px 113px, 113px 113px, 71px 71px, 71px 71px, 71px 71px, auto, auto;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+  background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 5px 0 25px rgba(15,23,42,0.18);
+  animation: fin-sp10 10s ease-in-out infinite;
+}
+
+html[dir="rtl"]:root.finish-sparkle.surf-dark .avm-drawer { box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), -5px 0 25px rgba(0,0,0,0.3); }
+html[dir="rtl"]:root.finish-sparkle.surf-light .avm-drawer { box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), -5px 0 25px rgba(15,23,42,0.18); }
+
+@keyframes fin-sp9 {
+  0% { background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  55%, 100% { background-position: 0% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+}
+
+@keyframes fin-sp10 {
+  0% { background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  55%, 100% { background-position: 0% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+}
+
+html:root.finish-sparkle.surf-dark .fin-card:nth-child(2n),
+html:root.finish-sparkle.surf-dark .vakit-card:not(.active):nth-child(2n),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-bar:nth-child(2n),
+html:root.finish-sparkle.surf-dark .mode-bar:nth-child(2n),
+html:root.finish-sparkle.surf-dark .modal-card:nth-child(2n),
+html:root.finish-sparkle.surf-dark .ios-modal-content:nth-child(2n),
+html:root.finish-sparkle.surf-dark .settings-card:nth-child(2n),
+html:root.finish-sparkle.surf-dark .fin-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .avm-ico:nth-child(2n),
+html:root.finish-sparkle.surf-dark .avm-item[aria-current="page"]:nth-child(2n),
+html:root.finish-sparkle.surf-dark .btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .tool-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .notification-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .home-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .theme-icon-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .menu-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .back-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .btn-ui:nth-child(2n),
+html:root.finish-sparkle.surf-dark .finish-btn:nth-child(2n),
+html:root.finish-sparkle.surf-dark .target-opt-btn:not(.active):nth-child(2n),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-item.active:nth-child(2n),
+html:root.finish-sparkle.surf-dark .mode-item.active:nth-child(2n),
+html:root.finish-sparkle.surf-light .fin-card:nth-child(2n),
+html:root.finish-sparkle.surf-light .vakit-card:not(.active):nth-child(2n),
+html:root.finish-sparkle.surf-light .sweet-dhikr-bar:nth-child(2n),
+html:root.finish-sparkle.surf-light .mode-bar:nth-child(2n),
+html:root.finish-sparkle.surf-light .modal-card:nth-child(2n),
+html:root.finish-sparkle.surf-light .ios-modal-content:nth-child(2n),
+html:root.finish-sparkle.surf-light .settings-card:nth-child(2n),
+html:root.finish-sparkle.surf-light .fin-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .avm-ico:nth-child(2n),
+html:root.finish-sparkle.surf-light .avm-item[aria-current="page"]:nth-child(2n),
+html:root.finish-sparkle.surf-light .btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .tool-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .notification-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .home-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .theme-icon-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .menu-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .back-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .btn-ui:nth-child(2n),
+html:root.finish-sparkle.surf-light .finish-btn:nth-child(2n),
+html:root.finish-sparkle.surf-light .target-opt-btn:not(.active):nth-child(2n),
+html:root.finish-sparkle.surf-light .sweet-dhikr-item.active:nth-child(2n),
+html:root.finish-sparkle.surf-light .mode-item.active:nth-child(2n) { animation-delay: -3s; }
+
+html:root.finish-sparkle.surf-dark .fin-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .vakit-card:not(.active):nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-bar:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .mode-bar:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .modal-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .ios-modal-content:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .settings-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .fin-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .avm-ico:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .avm-item[aria-current="page"]:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .tool-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .notification-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .home-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .theme-icon-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .menu-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .back-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .btn-ui:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .finish-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .target-opt-btn:not(.active):nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-item.active:nth-child(3n+1),
+html:root.finish-sparkle.surf-dark .mode-item.active:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .fin-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .vakit-card:not(.active):nth-child(3n+1),
+html:root.finish-sparkle.surf-light .sweet-dhikr-bar:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .mode-bar:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .modal-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .ios-modal-content:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .settings-card:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .fin-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .avm-ico:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .avm-item[aria-current="page"]:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .tool-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .notification-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .home-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .theme-icon-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .menu-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .back-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .btn-ui:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .finish-btn:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .target-opt-btn:not(.active):nth-child(3n+1),
+html:root.finish-sparkle.surf-light .sweet-dhikr-item.active:nth-child(3n+1),
+html:root.finish-sparkle.surf-light .mode-item.active:nth-child(3n+1) { animation-delay: -6s; }
+
+@media (prefers-reduced-motion: reduce) {
+html:root.finish-sparkle.surf-dark .fin-card,
+html:root.finish-sparkle.surf-dark .vakit-card:not(.active),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-bar,
+html:root.finish-sparkle.surf-dark .mode-bar,
+html:root.finish-sparkle.surf-dark .modal-card,
+html:root.finish-sparkle.surf-dark .ios-modal-content,
+html:root.finish-sparkle.surf-dark .settings-card,
+html:root.finish-sparkle.surf-dark .fin-btn,
+html:root.finish-sparkle.surf-dark .avm-ico,
+html:root.finish-sparkle.surf-dark .avm-item[aria-current="page"],
+html:root.finish-sparkle.surf-dark .btn,
+html:root.finish-sparkle.surf-dark .tool-btn,
+html:root.finish-sparkle.surf-dark .notification-btn,
+html:root.finish-sparkle.surf-dark .home-btn,
+html:root.finish-sparkle.surf-dark .theme-icon-btn,
+html:root.finish-sparkle.surf-dark .menu-btn,
+html:root.finish-sparkle.surf-dark .back-btn,
+html:root.finish-sparkle.surf-dark .btn-ui,
+html:root.finish-sparkle.surf-dark .finish-btn,
+html:root.finish-sparkle.surf-dark .target-opt-btn:not(.active),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-item.active,
+html:root.finish-sparkle.surf-dark .mode-item.active,
+html:root.finish-sparkle.surf-dark .vakit-card.active,
+html:root.finish-sparkle.surf-dark .avm-drawer,
+html:root.finish-sparkle.surf-light .fin-card,
+html:root.finish-sparkle.surf-light .vakit-card:not(.active),
+html:root.finish-sparkle.surf-light .sweet-dhikr-bar,
+html:root.finish-sparkle.surf-light .mode-bar,
+html:root.finish-sparkle.surf-light .modal-card,
+html:root.finish-sparkle.surf-light .ios-modal-content,
+html:root.finish-sparkle.surf-light .settings-card,
+html:root.finish-sparkle.surf-light .fin-btn,
+html:root.finish-sparkle.surf-light .avm-ico,
+html:root.finish-sparkle.surf-light .avm-item[aria-current="page"],
+html:root.finish-sparkle.surf-light .btn,
+html:root.finish-sparkle.surf-light .tool-btn,
+html:root.finish-sparkle.surf-light .notification-btn,
+html:root.finish-sparkle.surf-light .home-btn,
+html:root.finish-sparkle.surf-light .theme-icon-btn,
+html:root.finish-sparkle.surf-light .menu-btn,
+html:root.finish-sparkle.surf-light .back-btn,
+html:root.finish-sparkle.surf-light .btn-ui,
+html:root.finish-sparkle.surf-light .finish-btn,
+html:root.finish-sparkle.surf-light .target-opt-btn:not(.active),
+html:root.finish-sparkle.surf-light .sweet-dhikr-item.active,
+html:root.finish-sparkle.surf-light .mode-item.active,
+html:root.finish-sparkle.surf-light .vakit-card.active,
+html:root.finish-sparkle.surf-light .avm-drawer { animation: none; }
+}
+
+html:root.finish-sparkle.fin-still.surf-dark .fin-card,
+html:root.finish-sparkle.fin-still.surf-dark .vakit-card:not(.active),
+html:root.finish-sparkle.fin-still.surf-dark .sweet-dhikr-bar,
+html:root.finish-sparkle.fin-still.surf-dark .mode-bar,
+html:root.finish-sparkle.fin-still.surf-dark .modal-card,
+html:root.finish-sparkle.fin-still.surf-dark .ios-modal-content,
+html:root.finish-sparkle.fin-still.surf-dark .settings-card,
+html:root.finish-sparkle.fin-still.surf-dark .fin-btn,
+html:root.finish-sparkle.fin-still.surf-dark .avm-ico,
+html:root.finish-sparkle.fin-still.surf-dark .avm-item[aria-current="page"],
+html:root.finish-sparkle.fin-still.surf-dark .btn,
+html:root.finish-sparkle.fin-still.surf-dark .tool-btn,
+html:root.finish-sparkle.fin-still.surf-dark .notification-btn,
+html:root.finish-sparkle.fin-still.surf-dark .home-btn,
+html:root.finish-sparkle.fin-still.surf-dark .theme-icon-btn,
+html:root.finish-sparkle.fin-still.surf-dark .menu-btn,
+html:root.finish-sparkle.fin-still.surf-dark .back-btn,
+html:root.finish-sparkle.fin-still.surf-dark .btn-ui,
+html:root.finish-sparkle.fin-still.surf-dark .finish-btn,
+html:root.finish-sparkle.fin-still.surf-dark .target-opt-btn:not(.active),
+html:root.finish-sparkle.fin-still.surf-dark .sweet-dhikr-item.active,
+html:root.finish-sparkle.fin-still.surf-dark .mode-item.active,
+html:root.finish-sparkle.fin-still.surf-dark .vakit-card.active,
+html:root.finish-sparkle.fin-still.surf-dark .avm-drawer,
+html:root.finish-sparkle.fin-still.surf-light .fin-card,
+html:root.finish-sparkle.fin-still.surf-light .vakit-card:not(.active),
+html:root.finish-sparkle.fin-still.surf-light .sweet-dhikr-bar,
+html:root.finish-sparkle.fin-still.surf-light .mode-bar,
+html:root.finish-sparkle.fin-still.surf-light .modal-card,
+html:root.finish-sparkle.fin-still.surf-light .ios-modal-content,
+html:root.finish-sparkle.fin-still.surf-light .settings-card,
+html:root.finish-sparkle.fin-still.surf-light .fin-btn,
+html:root.finish-sparkle.fin-still.surf-light .avm-ico,
+html:root.finish-sparkle.fin-still.surf-light .avm-item[aria-current="page"],
+html:root.finish-sparkle.fin-still.surf-light .btn,
+html:root.finish-sparkle.fin-still.surf-light .tool-btn,
+html:root.finish-sparkle.fin-still.surf-light .notification-btn,
+html:root.finish-sparkle.fin-still.surf-light .home-btn,
+html:root.finish-sparkle.fin-still.surf-light .theme-icon-btn,
+html:root.finish-sparkle.fin-still.surf-light .menu-btn,
+html:root.finish-sparkle.fin-still.surf-light .back-btn,
+html:root.finish-sparkle.fin-still.surf-light .btn-ui,
+html:root.finish-sparkle.fin-still.surf-light .finish-btn,
+html:root.finish-sparkle.fin-still.surf-light .target-opt-btn:not(.active),
+html:root.finish-sparkle.fin-still.surf-light .sweet-dhikr-item.active,
+html:root.finish-sparkle.fin-still.surf-light .mode-item.active,
+html:root.finish-sparkle.fin-still.surf-light .vakit-card.active,
+html:root.finish-sparkle.fin-still.surf-light .avm-drawer { animation: none; }
+
+html:root.finish-sparkle.fin-still.surf-dark .fin-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .vakit-card:not(.active):nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .sweet-dhikr-bar:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .mode-bar:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .modal-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .ios-modal-content:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .settings-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .fin-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .avm-ico:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .avm-item[aria-current="page"]:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .tool-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .notification-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .home-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .theme-icon-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .menu-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .back-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .btn-ui:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .finish-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .target-opt-btn:not(.active):nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .sweet-dhikr-item.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .mode-item.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .vakit-card.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-dark .avm-drawer:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .fin-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .vakit-card:not(.active):nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .sweet-dhikr-bar:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .mode-bar:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .modal-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .ios-modal-content:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .settings-card:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .fin-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .avm-ico:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .avm-item[aria-current="page"]:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .tool-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .notification-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .home-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .theme-icon-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .menu-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .back-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .btn-ui:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .finish-btn:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .target-opt-btn:not(.active):nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .sweet-dhikr-item.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .mode-item.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .vakit-card.active:nth-child(n),
+html:root.finish-sparkle.fin-still.surf-light .avm-drawer:nth-child(n) { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+html:root.finish-sparkle.surf-dark .fin-card:nth-child(n),
+html:root.finish-sparkle.surf-dark .vakit-card:not(.active):nth-child(n),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-bar:nth-child(n),
+html:root.finish-sparkle.surf-dark .mode-bar:nth-child(n),
+html:root.finish-sparkle.surf-dark .modal-card:nth-child(n),
+html:root.finish-sparkle.surf-dark .ios-modal-content:nth-child(n),
+html:root.finish-sparkle.surf-dark .settings-card:nth-child(n),
+html:root.finish-sparkle.surf-dark .fin-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .avm-ico:nth-child(n),
+html:root.finish-sparkle.surf-dark .avm-item[aria-current="page"]:nth-child(n),
+html:root.finish-sparkle.surf-dark .btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .tool-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .notification-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .home-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .theme-icon-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .menu-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .back-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .btn-ui:nth-child(n),
+html:root.finish-sparkle.surf-dark .finish-btn:nth-child(n),
+html:root.finish-sparkle.surf-dark .target-opt-btn:not(.active):nth-child(n),
+html:root.finish-sparkle.surf-dark .sweet-dhikr-item.active:nth-child(n),
+html:root.finish-sparkle.surf-dark .mode-item.active:nth-child(n),
+html:root.finish-sparkle.surf-dark .vakit-card.active:nth-child(n),
+html:root.finish-sparkle.surf-dark .avm-drawer:nth-child(n),
+html:root.finish-sparkle.surf-light .fin-card:nth-child(n),
+html:root.finish-sparkle.surf-light .vakit-card:not(.active):nth-child(n),
+html:root.finish-sparkle.surf-light .sweet-dhikr-bar:nth-child(n),
+html:root.finish-sparkle.surf-light .mode-bar:nth-child(n),
+html:root.finish-sparkle.surf-light .modal-card:nth-child(n),
+html:root.finish-sparkle.surf-light .ios-modal-content:nth-child(n),
+html:root.finish-sparkle.surf-light .settings-card:nth-child(n),
+html:root.finish-sparkle.surf-light .fin-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .avm-ico:nth-child(n),
+html:root.finish-sparkle.surf-light .avm-item[aria-current="page"]:nth-child(n),
+html:root.finish-sparkle.surf-light .btn:nth-child(n),
+html:root.finish-sparkle.surf-light .tool-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .notification-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .home-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .theme-icon-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .menu-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .back-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .btn-ui:nth-child(n),
+html:root.finish-sparkle.surf-light .finish-btn:nth-child(n),
+html:root.finish-sparkle.surf-light .target-opt-btn:not(.active):nth-child(n),
+html:root.finish-sparkle.surf-light .sweet-dhikr-item.active:nth-child(n),
+html:root.finish-sparkle.surf-light .mode-item.active:nth-child(n),
+html:root.finish-sparkle.surf-light .vakit-card.active:nth-child(n),
+html:root.finish-sparkle.surf-light .avm-drawer:nth-child(n) { animation: none; }
+}
